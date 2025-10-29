@@ -1,0 +1,77 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 10  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+bot_drive_controller:
+  ros__parameters:
+    type: diff_drive_controller/DiffDriveController
+
+    left_wheel_names: ["left_wheel"]
+    right_wheel_names: ["right_wheel"]
+
+    # TODO
+    wheel_separation: 1.0
+    wheel_radius: 1.0
+
+    wheels_per_side: 1 # TODO look into if we need to make it 2 because we have non-powered steers in the front
+
+    # Correction factors when radii differ from wheel_radius
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+
+    tf_frame_prefix_enable: true
+#    tf_frame_prefix:
+
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_link
+
+    #TODO
+    pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
+
+    open_loop: true # TODO eventually make false, but keep true for initial sims
+    position_feedback: false # TODO we don't have sensors implemented atm
+
+    enable_odom_tf: true
+
+    cmd_vel_timeout: 0.5
+    publish_limited_velocity: false # TODO what does this do?
+    velocity_rolling_window_size: 10
+
+    # TODO
+    linear.x.has_velocity_limits: true
+    linear.x.max_velocity: 1.0
+    linear.x.min_velocity: -1.0
+
+    # TODO
+    linear.x.has_acceleration_limits: true
+    linear.x.max_acceleration: 1.0
+    linear.x.max_deceleration: 1.0
+    linear.x.max_acceleration_reverse: 1.0
+    linear.x.max_deceleration_reverse: 1.0
+
+    #TODO
+    linear.x.has_jerk_limits: false
+    linear.x.max_jerk: 0.0
+    linear.x.min_jerk: 0.0
+
+    # TODO
+    angular.z.has_velocity_limits: true
+    angular.z.max_velocity: 1.0
+    angular.z.min_velocity: -1.0
+
+    # TODO
+    angular.z.has_acceleration_limits: true
+    angular.z.max_acceleration: 1.0
+    angular.z.min_acceleration: -1.0
+
+    # TODO
+    angular.z.has_jerk_limits: false
+    angular.z.max_jerk: 0.0
+    angular.z.min_jerk: 0.0
