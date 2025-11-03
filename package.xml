@@ -1,13 +1,25 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-    <name>Hardware</name>
+    <name>hardware</name>
     <version>0.0.0</version>
     <description>The hardware superstructure for the IGVC bot</description>
     <license>MIT</license>
 
+    <maintainer email="ciccot@rpi.edu">Tag Ciccone</maintainer>
+    <maintainer email="spellt@rpi.edu">Titan Spellos</maintainer>
+    <!-- <maintainer email="@rpi.edu">Zion Lastname</maintainer> -->
+
+
     <buildtool_depend>ament_cmake</buildtool_depend>
     <build_depend>ros2_control_cmake</build_depend>
+
+    <depend>hardware_interface</depend>
+    <depend>pluginlib</depend>
+    <depend>rclcpp</depend>
+    <depend>rclcpp_lifecycle</depend>
+
+    <depend>backward_ros</depend>
 
     <exec_depend>controller_manager</exec_depend>
     <exec_depend>diff_drive_controller</exec_depend>
