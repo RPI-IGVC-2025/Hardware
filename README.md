@@ -8,5 +8,5 @@ Git branching strategy: https://nvie.com/posts/a-successful-git-branching-model/
 
 ## Contributors
 Tag Ciccone (ciccot@rpi.edu, tagciccone@gmail.com) \
-Titan Lastname (@rpi.edu) \
+Titan Spellos (spellt@rpi.edu) \
 Zion Lastname (@rpi.edu)
