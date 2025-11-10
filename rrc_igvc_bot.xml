@@ -1,0 +1,9 @@
+<library path="rrc_igvc_bot">
+    <class name="rrc_igvc_bot/BotSystemHardware"
+           type="rrc_igvc_bot::BotSystemHardware"
+           base_class_type="hardware_interface::SystemInterface">
+        <description>
+            RPI Robotics Club's robot for the 2025 Intelligent Ground Vehicle Competition
+        </description>
+    </class>
+</library>
