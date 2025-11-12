@@ -21,7 +21,7 @@
 
 ## CLion
 
-1. Follow [these instructions](https://www.jetbrains.com/help/clion/ros-setup-tutorial.html)
+1. Follow [these instructions](https://www.jetbrains.com/help/clion/ros2-tutorial.html)
     - For this to properly work, you need to open CLion from the terminal, sourced to the ROS and workspace setup files. I've decided that I'm not going to bother with this because I'd have to do it from powershell (icky) instead of WSL. If you come up with a better solution, add it here.
 
 
