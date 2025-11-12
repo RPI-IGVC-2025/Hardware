@@ -46,12 +46,12 @@ install(
 )
 
 install(
-    FILES bot.xml
+    FILES rrc_igvc_bot.xml
     DESTINATION share/${PROJECT_NAME}
 )
 
 install(
-    DIRECTORY description launch
+    DIRECTORY config/description launch
     DESTINATION share/${PROJECT_NAME}
 )
 
@@ -63,7 +63,7 @@ install(TARGETS ${PROJECT_NAME}_library
 )
 
 # Plugin Export
-pluginlib_export_plugin_description_file(hardware_interface bot.xml)
+pluginlib_export_plugin_description_file(hardware_interface rrc_igvc_bot.xml)
 
 ament_export_targets(export_${PROJECT_NAME}_library HAS_LIBRARY_TARGET)
 ament_export_dependencies(
