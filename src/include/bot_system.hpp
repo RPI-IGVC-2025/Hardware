@@ -10,6 +10,8 @@ class BotSystemHardware : public hardware_interface::SystemInterface {
     public:
 
     private:
+};
+
 }
 
 #endif //BOT_SYSTEM_HPP
