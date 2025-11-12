@@ -10,6 +10,7 @@
 7. cd up one directory
 8. ``source opt/ros/jazzy/setup.bash ``
 9. ``colcon build --symlink-install``
+    - you can add ``--cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja`` if you want to create a compile_commands.json for native support with IDEs like CLion
 
 
 # Running
