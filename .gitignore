@@ -101,3 +101,6 @@ CATKIN_IGNORE
 
 # VS Code
 .vscode
+
+# Dependencies (that i didn't want to use subrepos for)
+ros_odrive
