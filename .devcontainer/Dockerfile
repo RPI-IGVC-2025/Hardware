@@ -22,7 +22,7 @@ RUN apt-get install -y python3-pip
 RUN apt-get install -y ros-jazzy-depthai-ros 
 
 # IMU Lib dependencies
-RUN apt-get install libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
+RUN apt-get install -y libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
 
 ENV SHELL /bin/bash
 
