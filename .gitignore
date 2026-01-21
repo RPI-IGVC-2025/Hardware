@@ -104,6 +104,7 @@ CATKIN_IGNORE
 
 # Dependencies (that i didn't want to use subrepos for)
 ros_odrive
+imu_ros2
 
 # ROS stuff
 install
