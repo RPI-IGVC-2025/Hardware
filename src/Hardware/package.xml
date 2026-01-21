@@ -19,6 +19,7 @@
     <depend>rclcpp</depend>
     <depend>rclcpp_lifecycle</depend>
     <depend>adi_imu</depend>
+    <depend>depthai_ros_driver</depend>
 
     <depend>backward_ros</depend>
 
