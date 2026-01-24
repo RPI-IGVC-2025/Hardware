@@ -18,11 +18,14 @@ RUN groupadd --gid $USER_GID $USERNAME \
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip
 
-# Camera Lib
-RUN apt-get install -y ros-jazzy-depthai-ros 
 
+RUN apt-get update \
+# Missing ROS packages
+&& apt-get install -y ros-jazzy-rqt* \
+# Camera Lib
+ros-jazzy-depthai-ros \
 # IMU Lib dependencies
-RUN apt-get install -y libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
+libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
 
 ENV SHELL /bin/bash
 
