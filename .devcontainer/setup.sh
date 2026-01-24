@@ -21,3 +21,6 @@ if [ ! -d "libiio" ]; then
 fi
 
 cd ..
+
+echo '. /opt/ros/jazzy/setup.sh' >> ~/.bashrc
+
