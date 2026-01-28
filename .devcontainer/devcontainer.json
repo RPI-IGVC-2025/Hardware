@@ -8,8 +8,8 @@
             "USERNAME": "ros_user"
         }
     },
-    "workspaceFolder": "/home/ws",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/ws,type=bind",
+    "workspaceFolder": "/home/ros2_ws",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/ros2_ws,type=bind",
     "customizations": {
         "vscode": {
             "extensions":[
