@@ -8,7 +8,6 @@
 
     <maintainer email="ciccot@rpi.edu">Tag Ciccone</maintainer>
     <maintainer email="spellt@rpi.edu">Titan Spellos</maintainer>
-    <!-- <maintainer email="@rpi.edu">Zion Lastname</maintainer> -->
 
 
     <buildtool_depend>ament_cmake</buildtool_depend>
