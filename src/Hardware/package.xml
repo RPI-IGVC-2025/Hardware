@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+    <name>hardware</name>
+    <version>0.0.0</version>
+    <description>The hardware superstructure for the IGVC bot</description>
+    <license>MIT</license>
+
+    <maintainer email="ciccot@rpi.edu">Tag Ciccone</maintainer>
+    <maintainer email="spellt@rpi.edu">Titan Spellos</maintainer>
+
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <build_depend>ros2_control_cmake</build_depend>
+
+    <depend>hardware_interface</depend>
+    <depend>pluginlib</depend>
+    <depend>rclcpp</depend>
+    <depend>rclcpp_lifecycle</depend>
+    <depend>adi_imu</depend>
+    <depend>depthai_ros_driver</depend>
+
+    <depend>backward_ros</depend>
+
+    <exec_depend>controller_manager</exec_depend>
+    <exec_depend>diff_drive_controller</exec_depend>
+    <exec_depend>joint_state_broadcaster</exec_depend>
+    <exec_depend>joint_state_publisher_gui</exec_depend>
+    <exec_depend>robot_state_publisher</exec_depend>
+    <exec_depend>ros2_controllers_test_nodes</exec_depend>
+    <exec_depend>ros2controlcli</exec_depend>
+    <exec_depend>ros2launch</exec_depend>
+    <exec_depend>rviz2</exec_depend>
+    <exec_depend>odrive_ros2_control</exec_depend>
+    <exec_depend>xacro</exec_depend>
+
+
+    <test_depend>ament_lint_auto</test_depend>
+    <test_depend>ament_lint_common</test_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+</package>

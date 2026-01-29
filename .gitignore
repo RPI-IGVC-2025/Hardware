@@ -98,3 +98,10 @@ CATKIN_IGNORE
 # Jetbrains
 
 .idea
+
+# VS Code
+.vscode
+
+# ROS stuff
+install
+log
