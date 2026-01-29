@@ -1,6 +1,8 @@
 mkdir -p lib
 cd lib
 
+apt-get update --fix-missing
+
 . /opt/ros/jazzy/setup.sh
 
 if [ ! -d "ros_odrive" ]; then
@@ -23,4 +25,3 @@ fi
 cd ..
 
 echo '. /opt/ros/jazzy/setup.sh' >> ~/.bashrc
-
