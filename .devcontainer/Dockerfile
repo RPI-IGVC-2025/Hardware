@@ -29,9 +29,5 @@ libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev lib
 
 ENV SHELL /bin/bash
 
-# ********************************************************
-# * Anything else you want to do like clean up goes here *
-# ********************************************************
-
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 CMD ["/bin/bash"]
