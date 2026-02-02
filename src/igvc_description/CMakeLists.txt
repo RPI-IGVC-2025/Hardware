@@ -8,13 +8,6 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 
-# Define the library target
-add_library(
-    ${PROJECT_NAME}_library
-    SHARED
-        src/bot_system.cpp
-)
-
 install(
   DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
