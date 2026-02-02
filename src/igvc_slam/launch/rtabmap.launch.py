@@ -15,6 +15,17 @@ def generate_launch_description():
 
     rtabmap_launch_path = os.path.join(rtabmap_package, 'launch', 'rtabmap.launch.py')
     realsense_launch_path = os.path.join(realsense_package, 'launch', 'rs_launch.py')
+    urdf_path = os.path.join(get_package_share_directory('osr_slam'), 'urdf', 'osr.urdf.xacro')
+
+    xacro_doc = xacro.parse(open(urdf_path))
+    xacro.process_doc(xacro_doc)
+
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[{'robot_description': xacro_doc.toxml()}]
+    )
 
     imu_filter = Node(
         package='imu_filter_madgwick', 
@@ -79,6 +90,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        robot_state_publisher,
         imu_filter,
         rtabmap,
         realsense
