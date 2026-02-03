@@ -120,7 +120,6 @@ ros2 pkg list | head
 rviz2
 ```
 
-> **Note:** You may be logged in as `root` in the container. This is fine for development.
 
 ---
 
@@ -135,7 +134,7 @@ echo 'export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"' >> ~/
 echo 'export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"' >> ~/.bash_profile
 ```
 
-Then **restart Cursor completely** (`Cmd + Q`, reopen).
+Then **restart VS Code completely** (`Cmd + Q`, reopen).
 
 ### `ros2: command not found` (inside container)
 
@@ -153,13 +152,13 @@ echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
 ### GUI apps don't open / Display errors
 
 1. Make sure XQuartz is running: `open -a XQuartz`
-2. Run `xhost +localhost` in **XQuartz terminal or Terminal.app** (not in Cursor)
+2. Run `xhost +localhost` in **XQuartz terminal or Terminal.app** (not in VS code)
 3. Verify DISPLAY is set inside container: `echo $DISPLAY`
    - Should show `host.docker.internal:0`
 
 ### No config picker appears
 
-If Cursor doesn't show a picker with multiple configs:
+If VS code doesn't show a picker with multiple configs:
 - Make sure you opened the `RobotCode2026` folder (not a parent or subfolder)
 - Try: `Cmd + Shift + P` → "Dev Containers: Rebuild and Reopen in Container"
 
@@ -193,7 +192,7 @@ sudo chown -R $(whoami) /home/ros2_ws/
 
 ## Quick Reference
 
-### Start XQuartz and enable forwarding (run in Terminal.app, not Cursor)
+### Start XQuartz and enable forwarding (run in Terminal.app, not VS Code)
 ```bash
 open -a XQuartz && sleep 2 && xhost +localhost
 ```
