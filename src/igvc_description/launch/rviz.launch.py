@@ -1,6 +1,7 @@
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
@@ -13,9 +14,12 @@ def generate_launch_description():
 
   # Set the path to the RViz configuration settings
   default_rviz_config_path = os.path.join(pkg_share, 'rviz/rviz_settings.rviz')
-
+  
   # Set the path to the URDF file
   default_urdf_model_path = os.path.join(pkg_share, 'urdf/robot.urdf.xacro')
+
+  # Set the path to the Publisher launch file
+  publisher_launch_path = os.path.join(pkg_share, 'launch/publisher.launch.py')
 
   # Launch configuration variables specific to simulation
   gui = LaunchConfiguration('gui')
@@ -56,30 +60,16 @@ def generate_launch_description():
     default_value='True',
     description='Use simulation (Gazebo) clock if true')
    
-  # Specify the actions
-
-  # Publish the joint state values for the non-fixed joints in the URDF file.
-  start_joint_state_publisher_cmd = Node(
-    condition=UnlessCondition(gui),
-    package='joint_state_publisher',
-    executable='joint_state_publisher',
-    name='joint_state_publisher')
-
-  # A GUI to manipulate the joint state values
-  start_joint_state_publisher_gui_node = Node(
-    condition=IfCondition(gui),
-    package='joint_state_publisher_gui',
-    executable='joint_state_publisher_gui',
-    name='joint_state_publisher_gui')
-
-  # Subscribe to the joint states of the robot, and publish the 3D pose of each link.
-  start_robot_state_publisher_cmd = Node(
-    condition=IfCondition(use_robot_state_pub),
-    package='robot_state_publisher',
-    executable='robot_state_publisher',
-    parameters=[{'use_sim_time': use_sim_time, 
-    'robot_description': Command(['xacro ', urdf_model])}],
-    arguments=[default_urdf_model_path])
+  # Specify the publisher action
+  start_publisher_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(publisher_launch_path),
+        launch_arguments={
+          'urdf_model' : urdf_model,
+          'gui' : gui,
+          'use_robot_state_pub' : use_robot_state_pub,
+          'use_sim_time' : use_sim_time,
+        }.items()
+    )
 
   # Launch RViz
   start_rviz_cmd = Node(
@@ -102,9 +92,7 @@ def generate_launch_description():
   ld.add_action(declare_use_sim_time_cmd)
 
   # Add any actions
-  ld.add_action(start_joint_state_publisher_cmd)
-  ld.add_action(start_joint_state_publisher_gui_node)
-  ld.add_action(start_robot_state_publisher_cmd)
+  ld.add_action(start_publisher_cmd)
   ld.add_action(start_rviz_cmd)
 
   return ld
