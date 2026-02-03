@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- Generated using onshape-to-robot -->
 <!-- Onshape https://cad.onshape.com/documents/bd8c1cbb3cbd66454183450f/w/dfd94c9f83ff0fc6c8761109/e/c765fc0d53504544c054bc0a -->
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="igvc">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- Link part_1 -->
   <link name="part_1">
     <inertial>
