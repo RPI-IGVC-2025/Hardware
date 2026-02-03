@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="$(find realsense2_description)/urdf/_d435i.urdf.xacro"/>
+
+    <xacro:sensor_d435i parent="base_link" use_nominal_extrinsics="false">
+        <origin xyz="0.169586 0.00312814 0.06" rpy="0 0 0"/>
+    </xacro:sensor_d435i>
+
+    <joint name="camera_optical_link" type="fixed">
+        <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+        <parent link="camera_link"/>
+        <child link="camera_link_optical"/>
+    </joint>
+
+    <link name="camera_link_optical"></link>
+    
+    <gazebo reference="camera_link">
+        <sensor name="oak_depth" type="depth">
+            <pose> 0 0 0 0 0 0 </pose>
+            <topic>oak/depth</topic>
+            <update_rate>30</update_rate>
+            <always_on>1</always_on>
+            <gz_frame_id>camera_link_optical</gz_frame_id>
+            <camera>
+                <horizontal_fov>1.51843645</horizontal_fov>
+                <image>
+                    <format>R_FLOAT32</format>
+                    <width>1280</width>
+                    <height>720</height>
+                </image>
+                <clip>
+                    <near>0.28</near>
+                    <far>10</far>
+                </clip>
+            </camera>
+            <plugin filename="libgz-sim8-sensors-system.so" name="gz::sim::v8::systems::Sensors"></plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="camera_link">
+        <sensor name="oak_color" type="camera">
+            <pose> 0 0 0 0 0 0 </pose>
+            <topic>oak/color</topic>
+            <update_rate>30</update_rate>
+            <always_on>1</always_on>
+            <gz_frame_id>camera_link_optical</gz_frame_id>
+            <camera>
+                <horizontal_fov>1.51843645</horizontal_fov>
+                <image>
+                    <format>R8G8B8</format>
+                    <width>1280</width>
+                    <height>720</height>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>100</far>
+                </clip>
+            </camera>
+        </sensor>
+    </gazebo>
+</robot>
