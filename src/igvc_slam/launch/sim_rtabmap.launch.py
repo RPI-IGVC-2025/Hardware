@@ -9,21 +9,6 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    imu_filter = Node(
-        package='imu_filter_madgwick', 
-        executable='imu_filter_madgwick_node',
-        output='screen',
-        remappings=[
-            ('/imu/data_raw', '/imu_plugin/out'),
-            ('imu/data', '/rtabmap/imu')
-        ],
-        parameters=[
-            {'use_mag' : False},
-            {'publish_tf' : False},
-            {'fixed_frame' : 'imu_link'}
-        ]
-    )
-        
     rtabmap_package = get_package_share_directory('rtabmap_launch')
 
     rtabmap_launch_path = os.path.join(rtabmap_package, 'launch', 'rtabmap.launch.py')
@@ -60,6 +45,5 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        imu_filter,
         rtabmap
     ])
