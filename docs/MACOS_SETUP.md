@@ -85,46 +85,7 @@ which docker
 # Should output: /Applications/Docker.app/Contents/Resources/bin/docker
 ```
 
-### Install Dev Containers Extension
-
-In Cursor:
-1. Open Extensions (`Cmd + Shift + X`)
-2. Search for "Dev Containers"
-3. Install **Dev Containers** (by Anysphere or Microsoft)
-
----
-
-## Step 4: Understand the Devcontainer Setup
-
-This repository has multiple devcontainer configurations to support different platforms:
-
-```
-.devcontainer/
-├── devcontainer.json    # Linux/WSL config
-├── Dockerfile           # Shared Dockerfile
-├── setup.sh             # Shared setup script
-└── macos/
-    └── devcontainer.json    # macOS-specific config
-```
-
-When you open the container, Cursor will show a **picker** — make sure to select the correct config for your platform.
-
----
-
-## Step 5: Build and Open the Container
-
-1. Open the `RobotCode2026` folder in Cursor
-2. Press `Cmd + Shift + P`
-3. Type: **"Dev Containers: Reopen in Container"**
-4. **Select "ROS 2 Development Container (macOS)"** from the picker
-
-> **Important:** Do NOT select the Linux config — it has incompatible settings for macOS.
-
-The first build will take **5-15 minutes** as it:
-- Downloads the `ros:jazzy` base image
-- Installs ROS 2 packages and dependencies
-
-After the build completes, Cursor will automatically connect to the container.
+Follow the main Install.md starting from step 2
 
 ---
 
