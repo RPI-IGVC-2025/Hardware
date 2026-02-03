@@ -31,12 +31,12 @@ After installation:
 1. Open **XQuartz** (from Applications → Utilities)
 2. Go to **XQuartz → Preferences** (or `Cmd + ,`)
 3. Click the **Security** tab
-4. ✅ Check **"Allow connections from network clients"**
+4. Check **"Allow connections from network clients"**
 5. Close Preferences and **restart XQuartz**
 
 ### Enable X11 forwarding
 
-> **⚠️ IMPORTANT:** Run this command in the **XQuartz terminal** or a **macOS Terminal.app** — NOT in Cursor's integrated terminal.
+> **IMPORTANT:** Run this command in the **XQuartz terminal** or a **macOS Terminal.app** — NOT in VS Code's integrated terminal.
 
 1. Open XQuartz
 2. Go to **Applications → Terminal** in the XQuartz menu bar (or use Terminal.app)
@@ -67,7 +67,7 @@ chmod u+w /usr/local/bin /usr/local/include /usr/local/lib /usr/local/lib/pkgcon
 
 ---
 
-## Step 3: Configure Docker CLI and Install Extensions
+## Step 3: Configure Docker CLI
 
 ### Add Docker to PATH
 
@@ -118,7 +118,7 @@ When you open the container, Cursor will show a **picker** — make sure to sele
 3. Type: **"Dev Containers: Reopen in Container"**
 4. **Select "ROS 2 Development Container (macOS)"** from the picker
 
-> ⚠️ **Important:** Do NOT select the Linux config — it has incompatible settings for macOS.
+> **Important:** Do NOT select the Linux config — it has incompatible settings for macOS.
 
 The first build will take **5-15 minutes** as it:
 - Downloads the `ros:jazzy` base image
