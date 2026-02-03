@@ -2,7 +2,7 @@
 
 This guide walks through setting up the ROS 2 development container on macOS.
 
-> **Note**: This devcontainer was originally designed for Linux/WSL. Some features (hardware access, multi-machine ROS networking, GPU acceleration) will not work on macOS.
+> **Note**: This devcontainer was originally designed for a Linux environment. Some features (hardware access, multi-machine ROS networking, GPU acceleration) will not work on macOS.
 
 ---
 
@@ -14,24 +14,7 @@ This guide walks through setting up the ROS 2 development container on macOS.
 
 ---
 
-## Step 1: Install Docker Desktop
-
-Docker Desktop provides the container runtime on macOS.
-
-```bash
-brew install --cask docker
-```
-
-If you see `Error: It seems there is already an App at '/Applications/Docker.app'`, Docker is already installed.
-
-**After installation:**
-1. Open Docker Desktop from Applications
-2. Complete the initial setup wizard
-3. Ensure Docker is running (whale icon in menu bar)
-
----
-
-## Step 2: Install XQuartz (for GUI applications)
+## Step 1: Install XQuartz (for GUI applications)
 
 XQuartz provides X11 display server for GUI apps like `rviz2` and `rqt`.
 
@@ -41,11 +24,9 @@ XQuartz provides X11 display server for GUI apps like `rviz2` and `rqt`.
 brew install --cask xquartz
 ```
 
-**⚠️ IMPORTANT: You must log out and log back in after installing XQuartz.**
-
 ### Configure XQuartz
 
-After logging back in:
+After installation:
 
 1. Open **XQuartz** (from Applications → Utilities)
 2. Go to **XQuartz → Preferences** (or `Cmd + ,`)
@@ -75,7 +56,7 @@ echo 'xhost +localhost 2>/dev/null' >> ~/.zshrc
 
 ---
 
-## Step 3: Fix Homebrew Permissions (if needed)
+## Step 2: Fix Homebrew Permissions (if needed)
 
 If you saw permission errors during installation, fix them:
 
@@ -86,7 +67,7 @@ chmod u+w /usr/local/bin /usr/local/include /usr/local/lib /usr/local/lib/pkgcon
 
 ---
 
-## Step 4: Configure Docker CLI and Install Extensions
+## Step 3: Configure Docker CLI and Install Extensions
 
 ### Add Docker to PATH
 
@@ -113,7 +94,7 @@ In Cursor:
 
 ---
 
-## Step 5: Understand the Devcontainer Setup
+## Step 4: Understand the Devcontainer Setup
 
 This repository has multiple devcontainer configurations to support different platforms:
 
@@ -130,7 +111,7 @@ When you open the container, Cursor will show a **picker** — make sure to sele
 
 ---
 
-## Step 6: Build and Open the Container
+## Step 5: Build and Open the Container
 
 1. Open the `RobotCode2026` folder in Cursor
 2. Press `Cmd + Shift + P`
@@ -147,7 +128,7 @@ After the build completes, Cursor will automatically connect to the container.
 
 ---
 
-## Step 7: Setup ROS 2 Environment
+## Step 6: Setup ROS 2 Environment
 
 Once inside the container, ROS 2 commands require sourcing the setup file.
 
