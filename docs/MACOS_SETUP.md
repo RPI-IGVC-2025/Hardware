@@ -56,24 +56,13 @@ echo 'xhost +localhost 2>/dev/null' >> ~/.zshrc
 
 ---
 
-## Step 2: Fix Homebrew Permissions (if needed)
-
-If you saw permission errors during installation, fix them:
-
-```bash
-sudo chown -R $(whoami) /usr/local/bin /usr/local/include /usr/local/lib /usr/local/lib/pkgconfig
-chmod u+w /usr/local/bin /usr/local/include /usr/local/lib /usr/local/lib/pkgconfig
-```
-
----
-
-## Step 3: Configure Docker CLI
+## Step 2: Configure Docker CLI
 
 Follow the main Install.md starting from step 2
 
 ---
 
-## Step 4: Setup ROS 2 Environment
+## Step 3: Setup ROS 2 Environment
 
 Once inside the container, ROS 2 commands require sourcing the setup file.
 
