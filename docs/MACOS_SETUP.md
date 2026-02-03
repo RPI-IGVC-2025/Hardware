@@ -58,7 +58,7 @@ echo 'xhost +localhost 2>/dev/null' >> ~/.zshrc
 
 ## Step 2: Configure Docker CLI
 
-Follow the main Install.md starting from step 2
+Follow the main [install.md](../install.md) starting from step 2
 
 ---
 
@@ -80,7 +80,9 @@ Run this once to automatically source ROS 2 in every new terminal:
 echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
 ```
 
-### Verify ROS 2 is working see install.md 
+### Verify ROS 2 is working
+
+See [install.md](../install.md) for verification steps. 
 
 
 

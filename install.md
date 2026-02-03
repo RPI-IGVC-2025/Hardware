@@ -22,12 +22,10 @@ Open a new terminal in the container and run:
 ```bash
 # Check ROS 2 help
 ros2 --help
-
 # List installed packages
 ros2 pkg list | head
-
 # Test GUI (requires XQuartz running on macOS)
-rqt
+rviz2
 ```
 
 You're ready to develop!
