@@ -14,7 +14,7 @@ This guide walks through setting up the ROS 2 development container on macOS.
 
 ---
 
-## Step 1: Install Docker Desktop ✅
+## Step 1: Install Docker Desktop
 
 Docker Desktop provides the container runtime on macOS.
 
@@ -31,9 +31,11 @@ If you see `Error: It seems there is already an App at '/Applications/Docker.app
 
 ---
 
-## Step 2: Install XQuartz (for GUI applications) ✅
+## Step 2: Install XQuartz (for GUI applications)
 
 XQuartz provides X11 display server for GUI apps like `rviz2` and `rqt`.
+
+> **Skip this step** if you don't need GUI apps (rviz2, rqt, Gazebo).
 
 ```bash
 brew install --cask xquartz
@@ -53,10 +55,10 @@ After logging back in:
 
 ### Enable X11 forwarding
 
-> **⚠️ IMPORTANT:** Run this command in the **XQuartz terminal** or a **macOS terminal** — NOT in VS Code/Cursor's integrated terminal.
+> **⚠️ IMPORTANT:** Run this command in the **XQuartz terminal** or a **macOS Terminal.app** — NOT in Cursor's integrated terminal.
 
 1. Open XQuartz
-2. Go to **Applications → Terminal** in the XQuartz menu bar (or use a regular macOS Terminal)
+2. Go to **Applications → Terminal** in the XQuartz menu bar (or use Terminal.app)
 3. Run:
 
 ```bash
@@ -104,10 +106,10 @@ which docker
 
 ### Install Dev Containers Extension
 
-Install manually in Cursor:
+In Cursor:
 1. Open Extensions (`Cmd + Shift + X`)
 2. Search for "Dev Containers"
-3. Install **Dev Containers** (by Anysphere/Cursor or Microsoft)
+3. Install **Dev Containers** (by Anysphere or Microsoft)
 
 ---
 
@@ -117,62 +119,53 @@ This repository has multiple devcontainer configurations to support different pl
 
 ```
 .devcontainer/
-├── devcontainer.json    # Linux/WSL (default - DO NOT MODIFY)
+├── devcontainer.json    # Linux/WSL config
 ├── Dockerfile           # Shared Dockerfile
 ├── setup.sh             # Shared setup script
 └── macos/
     └── devcontainer.json    # macOS-specific config
 ```
 
-**Important:** The main `devcontainer.json` is configured for Linux/WSL users. macOS users should use the script in the next step instead of modifying this file.
+When you open the container, Cursor will show a **picker** — make sure to select the correct config for your platform.
 
 ---
 
 ## Step 6: Build and Open the Container
 
-macOS users should use the provided script to launch the container with the correct configuration.
+1. Open the `RobotCode2026` folder in Cursor
+2. Press `Cmd + Shift + P`
+3. Type: **"Dev Containers: Reopen in Container"**
+4. **Select "ROS 2 Development Container (macOS)"** from the picker
 
-### Run the macOS launch script
-
-```bash
-cd RobotCode2026
-./scripts/devcontainer-macos.sh
-```
-
-This script:
-- Builds the Docker image using the macOS-compatible settings
-- Starts a container named `ros2-igvc-dev`
-- Mounts your workspace at `/home/ros2_ws`
-- **Automatically sources ROS 2** in `.bashrc`
-- **Runs `setup.sh`** to clone required libraries (odrive, imu)
-- Handles existing containers gracefully (won't fail if already running)
-- Doesn't modify any files that would affect Linux/WSL users
-- **Does NOT require npm/Node.js** — uses Docker directly
+> ⚠️ **Important:** Do NOT select the Linux config — it has incompatible settings for macOS.
 
 The first build will take **5-15 minutes** as it:
 - Downloads the `ros:jazzy` base image
 - Installs ROS 2 packages and dependencies
 
-### Attach Cursor to the Container
-
-After the container starts:
-1. `Cmd + Shift + P`
-2. Type: **"Dev Containers: Attach to Running Container"**
-3. Select **`ros2-igvc-dev`**
-
-A new Cursor window will open connected to the container.
+After the build completes, Cursor will automatically connect to the container.
 
 ---
 
-## Step 7: Verify the Setup
+## Step 7: Setup ROS 2 Environment
 
-The launch script automatically:
-- Sources ROS 2 in `.bashrc` (no manual setup needed)
-- Runs `setup.sh` to clone required libraries
+Once inside the container, ROS 2 commands require sourcing the setup file.
+
+### Source ROS 2 (required each new terminal)
+
+```bash
+source /opt/ros/jazzy/setup.bash
+```
+
+### Make it permanent
+
+Run this once to automatically source ROS 2 in every new terminal:
+
+```bash
+echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
+```
 
 ### Verify ROS 2 is working
-
-Open a new terminal in the container and run:
 
 ```bash
 # Check ROS 2 help
@@ -185,16 +178,7 @@ ros2 pkg list | head
 rviz2
 ```
 
-> **Note:** You're logged in as `root` in the container. This is fine for development.
-
-### If ROS 2 commands aren't found
-
-If you're in an existing terminal session that was opened before setup completed:
-
-```bash
-source ~/.bashrc
-# or just open a new terminal
-```
+> **Note:** You may be logged in as `root` in the container. This is fine for development.
 
 ---
 
@@ -226,10 +210,16 @@ echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
 
 ### GUI apps don't open / Display errors
 
-1. Make sure XQuartz is running
-2. Run `xhost +localhost` in a **macOS terminal** (not inside the container, not in Cursor)
+1. Make sure XQuartz is running: `open -a XQuartz`
+2. Run `xhost +localhost` in **XQuartz terminal or Terminal.app** (not in Cursor)
 3. Verify DISPLAY is set inside container: `echo $DISPLAY`
    - Should show `host.docker.internal:0`
+
+### No config picker appears
+
+If Cursor doesn't show a picker with multiple configs:
+- Make sure you opened the `RobotCode2026` folder (not a parent or subfolder)
+- Try: `Cmd + Shift + P` → "Dev Containers: Rebuild and Reopen in Container"
 
 ### Container build fails
 
@@ -238,27 +228,10 @@ echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
   - Docker Desktop → Settings → Resources
   - Recommend: 4+ CPUs, 8+ GB RAM
 
-### "No matching distribution" or package errors
-
-The ROS Jazzy packages may have architecture issues on Apple Silicon. Try:
-```bash
-# In devcontainer.json, add to build args:
-"platform": "linux/amd64"
-```
-
 ### Permission denied errors inside container
 
 ```bash
 sudo chown -R $(whoami) /home/ros2_ws/
-```
-
-### Container already exists error
-
-If you see "container name already in use":
-
-```bash
-docker stop ros2-igvc-dev && docker rm ros2-igvc-dev
-./scripts/devcontainer-macos.sh
 ```
 
 ---
@@ -278,37 +251,19 @@ docker stop ros2-igvc-dev && docker rm ros2-igvc-dev
 
 ## Quick Reference
 
-### Start XQuartz and enable forwarding (run in macOS terminal, not Cursor)
+### Start XQuartz and enable forwarding (run in Terminal.app, not Cursor)
 ```bash
 open -a XQuartz && sleep 2 && xhost +localhost
 ```
 
-### Start macOS container
-```bash
-cd RobotCode2026
-./scripts/devcontainer-macos.sh
+### Reopen in container
 ```
-
-### Attach to running container
-```
-Cmd + Shift + P → "Dev Containers: Attach to Running Container" → select "ros2-igvc-dev"
-```
-
-### Open shell in container (alternative to attaching Cursor)
-```bash
-docker exec -it ros2-igvc-dev bash
-```
-
-### Stop the container
-```bash
-docker stop ros2-igvc-dev && docker rm ros2-igvc-dev
+Cmd + Shift + P → "Dev Containers: Reopen in Container" → select macOS config
 ```
 
 ### Rebuild container from scratch
-```bash
-docker stop ros2-igvc-dev && docker rm ros2-igvc-dev
-docker rmi ros2-igvc-macos
-./scripts/devcontainer-macos.sh
+```
+Cmd + Shift + P → "Dev Containers: Rebuild Container Without Cache"
 ```
 
 ---
@@ -322,4 +277,4 @@ After setup is complete:
 
 ---
 
-*Last updated: February 2026*
+*Last updated: January 2026*
