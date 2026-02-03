@@ -10,8 +10,6 @@ from launch_ros.substitutions import FindPackageShare
 
 from launch_ros.actions import Node
 
-import xacro
-
 def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     pkg_description = FindPackageShare(package='igvc_description').find('igvc_description')
