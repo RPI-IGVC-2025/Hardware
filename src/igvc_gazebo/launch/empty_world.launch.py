@@ -55,11 +55,12 @@ def generate_launch_description():
     
     spawn_entity = Node(package='ros_gz_sim', executable='create',
         arguments=['-topic', 'robot_description',
-                    '-name', 'rover'],
+                    '-name', 'igvc_robot'],
         output='screen'
     )
 
     bridge_params = os.path.join(get_package_share_directory('igvc_gazebo'), 'config', 'gz_bridge.yaml')
+    
     ros_gz_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
