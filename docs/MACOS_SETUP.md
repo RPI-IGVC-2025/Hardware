@@ -69,22 +69,6 @@ chmod u+w /usr/local/bin /usr/local/include /usr/local/lib /usr/local/lib/pkgcon
 
 ## Step 3: Configure Docker CLI
 
-### Add Docker to PATH
-
-After a fresh macOS install or if `docker` command isn't found, add Docker to your PATH:
-
-```bash
-echo 'export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"' >> ~/.zshrc
-echo 'export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"' >> ~/.bash_profile
-source ~/.zshrc  # or restart your terminal
-```
-
-Verify it works:
-```bash
-which docker
-# Should output: /Applications/Docker.app/Contents/Resources/bin/docker
-```
-
 Follow the main Install.md starting from step 2
 
 ---
@@ -125,30 +109,6 @@ rviz2
 
 ## Troubleshooting
 
-### `docker: command not found`
-
-Docker CLI isn't in your PATH. Fix it:
-
-```bash
-echo 'export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"' >> ~/.zshrc
-echo 'export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"' >> ~/.bash_profile
-```
-
-Then **restart VS Code completely** (`Cmd + Q`, reopen).
-
-### `ros2: command not found` (inside container)
-
-ROS 2 isn't sourced. Run inside the container:
-
-```bash
-source /opt/ros/jazzy/setup.bash
-```
-
-To make permanent:
-```bash
-echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
-```
-
 ### GUI apps don't open / Display errors
 
 1. Make sure XQuartz is running: `open -a XQuartz`
@@ -161,32 +121,6 @@ echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
 If VS code doesn't show a picker with multiple configs:
 - Make sure you opened the `RobotCode2026` folder (not a parent or subfolder)
 - Try: `Cmd + Shift + P` → "Dev Containers: Rebuild and Reopen in Container"
-
-### Container build fails
-
-- Ensure Docker Desktop is running
-- Check Docker has enough resources:
-  - Docker Desktop → Settings → Resources
-  - Recommend: 4+ CPUs, 8+ GB RAM
-
-### Permission denied errors inside container
-
-```bash
-sudo chown -R $(whoami) /home/ros2_ws/
-```
-
----
-
-## macOS Limitations
-
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Code editing & building | ✅ Works | Full functionality |
-| ROS 2 nodes (localhost) | ✅ Works | Single-machine only |
-| GUI apps (rviz2, rqt) | ⚠️ Partial | Requires XQuartz setup |
-| Multi-machine ROS networking | ❌ Broken | `--net=host` doesn't work on Mac |
-| USB/Serial hardware access | ⚠️ Limited | Requires Docker Desktop USB config |
-| GPU acceleration | ❌ None | No `/dev/dri` on Mac |
 
 ---
 
@@ -207,15 +141,5 @@ Cmd + Shift + P → "Dev Containers: Reopen in Container" → select macOS confi
 Cmd + Shift + P → "Dev Containers: Rebuild Container Without Cache"
 ```
 
----
 
-## Next Steps
-
-After setup is complete:
-1. Read the main [README.md](../README.md)
-2. Check [Hardware docs](../src/Hardware/docs/install.md)
-3. Try building a package: `colcon build --packages-select hardware`
-
----
-
-*Last updated: January 2026*
+*Last updated: February 2026*
