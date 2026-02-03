@@ -45,11 +45,6 @@ install(
 )
 
 install(
-    FILES rrc_igvc_bot.xml
-    DESTINATION share/${PROJECT_NAME}
-)
-
-install(
     DIRECTORY launch
     DESTINATION share/${PROJECT_NAME}
 )
@@ -60,9 +55,6 @@ install(TARGETS ${PROJECT_NAME}_library
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
-
-# Plugin Export
-pluginlib_export_plugin_description_file(hardware_interface rrc_igvc_bot.xml)
 
 ament_export_targets(export_${PROJECT_NAME}_library HAS_LIBRARY_TARGET)
 ament_export_dependencies(
