@@ -80,18 +80,8 @@ Run this once to automatically source ROS 2 in every new terminal:
 echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
 ```
 
-### Verify ROS 2 is working
+### Verify ROS 2 is working see install.md 
 
-```bash
-# Check ROS 2 help
-ros2 --help
-
-# List installed packages
-ros2 pkg list | head
-
-# Test GUI (requires XQuartz running on macOS)
-rviz2
-```
 
 
 ---
