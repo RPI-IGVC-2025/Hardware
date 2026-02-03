@@ -73,7 +73,7 @@ Follow the main Install.md starting from step 2
 
 ---
 
-## Step 6: Setup ROS 2 Environment
+## Step 4: Setup ROS 2 Environment
 
 Once inside the container, ROS 2 commands require sourcing the setup file.
 
@@ -112,13 +112,13 @@ rviz2
 ### GUI apps don't open / Display errors
 
 1. Make sure XQuartz is running: `open -a XQuartz`
-2. Run `xhost +localhost` in **XQuartz terminal or Terminal.app** (not in VS code)
+2. Run `xhost +localhost` in **XQuartz terminal or Terminal.app** (not in VS Code)
 3. Verify DISPLAY is set inside container: `echo $DISPLAY`
    - Should show `host.docker.internal:0`
 
 ### No config picker appears
 
-If VS code doesn't show a picker with multiple configs:
+If VS Code doesn't show a picker with multiple configs:
 - Make sure you opened the `RobotCode2026` folder (not a parent or subfolder)
 - Try: `Cmd + Shift + P` → "Dev Containers: Rebuild and Reopen in Container"
 
@@ -142,4 +142,4 @@ Cmd + Shift + P → "Dev Containers: Rebuild Container Without Cache"
 ```
 
 
-*Last updated: February 2026*
+*Last updated: January 2026*
