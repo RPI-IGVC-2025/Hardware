@@ -11,30 +11,30 @@
   direction: GZ_TO_ROS
   qos_profile: SENSOR_DATA
 
-# D435i Depth Camera 
+# Depth Camera 
 
 - ros_topic_name: "camera/camera/color/image_raw"
-  gz_topic_name: "d435i/color"
+  gz_topic_name: "oak_depth/color"
   ros_type_name: "sensor_msgs/msg/Image"
   gz_type_name: "gz.msgs.Image"
   direction: "GZ_TO_ROS"
   qos_profile: SENSOR_DATA
 
 - ros_topic_name: "camera/camera/depth/image_rect_raw"
-  gz_topic_name: "d435i/depth"
+  gz_topic_name: "oak_depth/depth"
   ros_type_name: "sensor_msgs/msg/Image"
   gz_type_name: "gz.msgs.Image"
   direction: GZ_TO_ROS
   qos_profile: SENSOR_DATA
 
 - ros_topic_name: "camera/camera/depth/camera_info" #TODO: verify this matches real ros topic
-  gz_topic_name: "d435i/camera_info"
+  gz_topic_name: "oak_depth/camera_info"
   ros_type_name: "sensor_msgs/msg/CameraInfo"
   gz_type_name: "gz.msgs.CameraInfo"
   direction: GZ_TO_ROS
 
 - ros_topic_name: "camera/camera/depth/color/points"
-  gz_topic_name: "d435i/depth/points"
+  gz_topic_name: "oak_depth/depth/points"
   ros_type_name: "sensor_msgs/msg/PointCloud2"
   gz_type_name: "gz.msgs.PointCloudPacked"
   direction: GZ_TO_ROS
