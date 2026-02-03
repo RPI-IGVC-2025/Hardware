@@ -48,7 +48,7 @@ xhost +localhost
 
 You'll need to run this each time you restart XQuartz.
 
-To make this permanent, add it to your shell profile:
+To make this permanent, add it to your shell profile you may have a different shell to zshrc, so double check this:
 
 ```bash
 echo 'xhost +localhost 2>/dev/null' >> ~/.zshrc
