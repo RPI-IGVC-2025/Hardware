@@ -13,4 +13,7 @@
     <!-- <xacro:include filename="$(find igvc_description)/urdf/control.urdf.xacro"/> -->
     <xacro:include filename="$(find igvc_description)/urdf/sensors.urdf.xacro"/>
 
+    <xacro:include filename="$(find igvc_hardware)/description/bot.xacro" />
+
+
 </robot>
