@@ -1,7 +1,9 @@
 from launch import LaunchDescription
-from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
+from launch.substitutions import  PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
+
+IMU_NAME = "TODO" # TODO
 
 def generate_launch_description():
     # Declare args
@@ -29,9 +31,16 @@ def generate_launch_description():
     robot_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["drivetrain_controller", "--controller-manager", "/controller_manager"],
+        arguments=["bot_controller", "--controller-manager", "/controller_manager"],
+    )
+    
+    imu_node = Node(
+        package="adi_imu",
+        executable="adi_imu_node",
+        ros_arguments=["-p", f"imu_device_name:=${IMU_NAME}"]
     )
 
+    # TODO depthai (camera)
 
     # TODO In the examples, the controller manager is not spawned until the joint state broadcaster is finished spawning. Implement if we have problems regarding that.
     
