@@ -15,4 +15,19 @@
 6. Use `Ctrl+Shift+P` to open the command pallete and run `Dev containers: Rebuild and Reopen in Container`
     - While within the devcontainer, the command will be `Dev containrs: Reopen in Container`
 
+7. Verify ROS 2 is working
+
+Open a new terminal in the container and run:
+
+```bash
+# Check ROS 2 help
+ros2 --help
+
+# List installed packages
+ros2 pkg list | head
+
+# Test GUI (requires XQuartz running on macOS)
+rqt
+```
+
 You're ready to develop!

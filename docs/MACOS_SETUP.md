@@ -142,4 +142,4 @@ Cmd + Shift + P → "Dev Containers: Rebuild Container Without Cache"
 ```
 
 
-*Last updated: January 2026*
+*Last updated: February 2026*
