@@ -14,7 +14,7 @@ install(
 )
 
 install(
-  DIRECTORY meshes
+  DIRECTORY assets
   DESTINATION share/${PROJECT_NAME}
 )
 
