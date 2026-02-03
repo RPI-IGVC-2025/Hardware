@@ -9,9 +9,8 @@
         <axis xyz="0 0 1"/>
     </joint>
 
-
     <xacro:include filename="$(find igvc_description)/urdf/model.urdf.xacro"/>
     <!-- <xacro:include filename="$(find igvc_description)/urdf/control.urdf.xacro"/> -->
-    <!-- <xacro:include filename="$(find igvc_description)/urdf/sensors.urdf.xacro"/> -->
+    <xacro:include filename="$(find igvc_description)/urdf/sensors.urdf.xacro"/>
 
 </robot>

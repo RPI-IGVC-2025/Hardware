@@ -1,15 +1,31 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:include filename="$(find realsense2_description)/urdf/_d435i.urdf.xacro"/>
+    <xacro:include filename="$(find depthai_descriptions)/urdf/depthai_descr.urdf.xacro"/>
 
-    <xacro:sensor_d435i parent="base_link" use_nominal_extrinsics="false">
-        <origin xyz="0.169586 0.00312814 0.06" rpy="0 0 0"/>
-    </xacro:sensor_d435i>
+    <xacro:depthai_camera 
+        camera_name="oak_depth"
+        camera_model="OAK-D-POE"
+        base_frame="camera_link" 
+        parent="base_footprint"
+        cam_pos_x="0.0"
+        cam_pos_y="0.0"
+        cam_pos_z="0.0"
+        cam_roll="0.0"
+        cam_pitch="0.0"
+        cam_yaw="0.0"
+        rs_compat="true"
+    />
 
-    <joint name="camera_optical_link" type="fixed">
+    <joint name="camera_base_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="oak-d-base-frame"/>
         <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+
+    <joint name="camera_optical_joint" type="fixed">
         <parent link="camera_link"/>
         <child link="camera_link_optical"/>
+        <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
     </joint>
 
     <link name="camera_link_optical"></link>
