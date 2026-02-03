@@ -6,16 +6,15 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch_ros.substitutions import FindPackageShare
 
 from launch_ros.actions import Node
 
-def generate_launch_description():
-    ros_gz_sim_package = get_package_share_directory('ros_gz_sim')
-    package_description = FindPackageShare(package='igvc_description').find('igvc_description')
+import xacro
 
-    gz_launch_path = os.path.join(ros_gz_sim_package, 'launch', 'gz_sim.launch.py')
-    publisher_launch_path = os.path.join(package_description, 'launch/publisher.launch.py')
+def generate_launch_description():
+    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+
+    gz_launch_path = os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
 
     world = LaunchConfiguration('world')
 
@@ -36,18 +35,31 @@ def generate_launch_description():
             launch_arguments={'gz_args': ['-r -v4 ', world], 'on_exit_shutdown': 'true'}.items()
         )
 
-    start_publisher_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(publisher_launch_path)
+    urdf_path = os.path.join(
+        get_package_share_directory('igvc_description'))
+
+    xacro_file = os.path.join(urdf_path,
+                              'urdf',
+                              'robot.urdf.xacro')
+
+    doc = xacro.parse(open(xacro_file))
+    xacro.process_doc(doc)
+    params = {'robot_description': doc.toxml()}
+
+    node_robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[params]
     )
     
     spawn_entity = Node(package='ros_gz_sim', executable='create',
         arguments=['-topic', 'robot_description',
-                    '-name', 'igvc_robot'],
+                    '-name', 'rover'],
         output='screen'
     )
 
     bridge_params = os.path.join(get_package_share_directory('igvc_gazebo'), 'config', 'gz_bridge.yaml')
-    
     ros_gz_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
@@ -61,7 +73,7 @@ def generate_launch_description():
     return LaunchDescription([
         world_arg,
         gazebo,
-        start_publisher_cmd,
+        node_robot_state_publisher,
         spawn_entity,
         ros_gz_bridge
     ])

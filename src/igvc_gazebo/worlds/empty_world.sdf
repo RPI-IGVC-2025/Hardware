@@ -29,10 +29,7 @@
           </geometry>
           <surface>
             <friction>
-              <ode>
-                <mu>100</mu>
-                <mu2>50</mu2>
-              </ode>
+              <ode/>
             </friction>
             <bounce/>
             <contact/>
