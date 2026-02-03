@@ -10,7 +10,7 @@ This guide walks through setting up the ROS 2 development container on macOS.
 
 - macOS 10.15 (Catalina) or later
 - [Homebrew](https://brew.sh/) installed
-- Admin access for installations
+- Ability to run `sudo` commands (your user must be an Administrator)
 
 ---
 
