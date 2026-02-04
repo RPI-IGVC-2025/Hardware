@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:include filename="$(find depthai_descriptions)/urdf/depthai_descr.urdf.xacro"/>
+    <xacro:include filename="$(find depthai_descriptions)/urdf/include/depthai_macro.urdf.xacro"/>
 
     <xacro:depthai_camera 
         camera_name="oak_depth"
@@ -8,17 +8,17 @@
         base_frame="camera_link" 
         parent="base_footprint"
         cam_pos_x="0.0"
-        cam_pos_y="0.0"
-        cam_pos_z="0.0"
+        cam_pos_y="-0.4"
+        cam_pos_z="0.8"
         cam_roll="0.0"
         cam_pitch="0.0"
-        cam_yaw="0.0"
+        cam_yaw="${pi/2}"
         rs_compat="true"
     />
 
     <joint name="camera_base_joint" type="fixed">
         <parent link="base_footprint"/>
-        <child link="oak-d-base-frame"/>
+        <child link="camera_link"/>
         <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
     </joint>
 
