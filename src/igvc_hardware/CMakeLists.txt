@@ -49,6 +49,11 @@ install(
     DESTINATION share/${PROJECT_NAME}
 )
 
+install(
+    DIRECTORY description
+    DESTINATION share/${PROJECT_NAME}
+)
+
 install(TARGETS ${PROJECT_NAME}_library
   EXPORT export_${PROJECT_NAME}_library
   ARCHIVE DESTINATION lib
