@@ -14,8 +14,8 @@ def generate_launch_description():
     package_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     package_description = FindPackageShare(package='igvc_description').find('igvc_description')
 
-    gz_launch_path = os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
-    publisher_launch_path = os.path.join(pkg_description, 'launch/publisher.launch.py')
+    gz_launch_path = os.path.join(package_ros_gz_sim, 'launch', 'gz_sim.launch.py')
+    publisher_launch_path = os.path.join(package_description, 'launch/publisher.launch.py')
 
     world = LaunchConfiguration('world')
 
