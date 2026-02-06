@@ -179,7 +179,8 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`alpha1`**
   - Type: `double`
   - Default: `0.2`
-  - Expected process noise in odometry’s rotation estimate from rotation.
+  - Expected process noise in odometry's rotation estimate from rotation.
+  - *Note: The alpha parameters (alpha1-5) represent expected error. For example, if you tell the robot to rotate, how much do you expect it to accidentally drift forward?*
 
 - **`alpha2`**
   - Type: `double`
@@ -209,22 +210,22 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`base_frame_id`**
   - Type: `string`
   - Default: `“base_footprint”`
-  - Robot base frame.
+  - Robot base frame. Identifies the specific coordinate frame that the robot is attached to — it is the center of the robot's universe. Everything the robot knows about its shape, sensors, or wheels is calculated relative to this point.
 
 - **`beam_skip_distance`**
   - Type: `double`
   - Default: `0.5`
-  - Ignore beams that most particles disagree with in Likelihood field model. Maximum distance to consider skipping for (m).
+  - Ignore beams that most particles disagree with in Likelihood field model. Maximum distance to consider skipping for (m). Defines how far a laser hit must be from a known wall on the map to be considered "suspect." If it's further than this distance from a known wall, it might be skipped.
 
 - **`beam_skip_error_threshold`**
   - Type: `double`
   - Default: `0.9`
-  - Percentage of beams after not matching map to force full update due to bad convergence.
+  - Percentage of beams after not matching map to force full update due to bad convergence. If more than 90% of beams are being skipped, AMCL assumes the robot is lost and stops skipping beams to try and re-localize.
 
 - **`beam_skip_threshold`**
   - Type: `double`
   - Default: `0.3`
-  - Percentage of beams required to skip.
+  - Percentage of beams required to skip. This is the percentage of particles that must agree that a beam is "bad" (e.g., 30%) before it gets skipped.
 
 - **`bond_heartbeat_period`**
   - Type: `double`
@@ -289,7 +290,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`max_beams`**
   - Type: `int`
   - Default: `60`
-  - How many evenly-spaced beams in each scan to be used when updating the filter.
+  - How many evenly-spaced beams in each scan to be used when updating the filter. Tells AMCL to only use this many points from each laser scan to calculate position.
 
 - **`max_particles`**
   - Type: `int`
@@ -304,7 +305,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`odom_frame_id`**
   - Type: `string`
   - Default: `“odom”`
-  - Which frame to use for odometry.
+  - Which frame to use for odometry. This is the frame provided by wheel encoders, used to track movement between laser updates.
 
 - **`pf_err`**
   - Type: `double`
@@ -324,7 +325,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`recovery_alpha_fast`**
   - Type: `double`
   - Default: `0.0`
-  - Exponential decay rate for the fast average weight filter, used in deciding when to recover by adding random poses. A good value might be 0.1.
+  - Exponential decay rate for the fast average weight filter, used in deciding when to recover by adding random poses. A good value might be 0.1. Along with recovery_alpha_slow, these control how fast or slow particle injection will help a lost robot find itself.
 
 - **`recovery_alpha_slow`**
   - Type: `double`
@@ -339,7 +340,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`robot_model_type`**
   - Type: `string`
   - Default: `“nav2_amcl::DifferentialMotionModel”`
-  - The fully-qualified type of the plugin class. Options are “nav2_amcl::DifferentialMotionModel” and “nav2_amcl::OmniMotionModel”. Users can also provide their own custom motion model plugin type.
+  - The fully-qualified type of the plugin class. Options are "nav2_amcl::DifferentialMotionModel" and "nav2_amcl::OmniMotionModel". Users can also provide their own custom motion model plugin type. This tells AMCL how the robot physically moves so it can predict where the robot "should" be after a motor command.
 
 - **`save_pose_rate`**
   - Type: `double`
@@ -369,7 +370,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`transform_tolerance`**
   - Type: `double`
   - Default: `1.0`
-  - Time with which to post-date the transform that is published, to indicate that this transform is valid into the future.
+  - Time with which to post-date the transform that is published, to indicate that this transform is valid into the future. This is effectively how many seconds AMCL can "lag" behind real-time before the system throws an error.
 
 - **`update_min_a`**
   - Type: `double`
@@ -625,7 +626,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`behavior_plugins`**
   - Type: `vector<string>`
   - Default: `{“spin”, “back_up”, “drive_on_heading”, “wait”}`
-  - List of plugin names to use, also matches action server names.
+  - List of plugin names to use, also matches action server names. Defines the actions that will be enabled by the behavior tree.
 
 - **`bond_heartbeat_period`**
   - Type: `double`
@@ -640,7 +641,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`cycle_frequency`**
   - Type: `double`
   - Default: `10.0`
-  - Frequency to run behavior plugins.
+  - Frequency to run behavior plugins (Hz). Affects how fast the behavior plugins run.
 
 - **`drive_on_heading.acceleration_limit`**
   - Type: `double`
@@ -735,7 +736,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`transform_tolerance`**
   - Type: `double`
   - Default: `0.1`
-  - TF transform tolerance.
+  - TF transform tolerance. How much time difference (in seconds) is acceptable between the timestamp of a transform and the time at which it is needed.
 
 - **`“backup”`**
 
@@ -881,7 +882,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`bt_loop_duration`**
   - Type: `int`
   - Default: `10`
-  - Duration (in milliseconds) for each iteration of BT execution.
+  - Duration (in milliseconds) for each iteration of BT execution. This controls how often the behavior tree makes decisions.
 
 - **`bt_search_directories`**
   - Type: `vector<string>`
@@ -906,7 +907,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`default_server_timeout`**
   - Type: `int`
   - Default: `20`
-  - Default timeout value (in milliseconds) while a BT action node is waiting for acknowledgement from an action server. This value will be overwritten for a BT node if the input port “server_timeout” ...
+  - Default timeout value (in milliseconds) while a BT action node is waiting for acknowledgement from an action server. How long to wait for navigation to respond.
 
 - **`error_code_name_prefixes`**
   - Type: `vector<string>`
@@ -946,7 +947,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`navigators`**
   - Type: `vector<string>`
   - Default: `{‘navigate_to_pose’, ‘navigate_through_poses’}`
-  - New to Iron: Plugins for navigator types implementing thenav2_core::BehaviorTreeNavigatorinterface. They implement custom action servers with custom interface definitions and use that data to popul...
+  - New to Iron: Plugins for navigator types implementing the nav2_core::BehaviorTreeNavigator interface. navigate_to_pose navigates to a single location, navigate_through_poses navigates to a series of locations.
 
 - **`odom_topic`**
   - Type: `string`
@@ -971,7 +972,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`wait_for_service_timeout`**
   - Type: `int`
   - Default: `1000`
-  - Default timeout value (in milliseconds) while Action or Service BT nodes will waiting for acknowledgement from an service or action server on BT initialization (e.g.wait_for_action_server(timeout))...
+  - Default timeout value (in milliseconds) while Action or Service BT nodes will wait for acknowledgement from a service or action server on BT initialization. This is effectively the startup/initialization time.
 
 ---
 
@@ -4298,7 +4299,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`batch_size`**
   - Type: `int`
   - Default: `1000`
-  - Count of randomly sampled candidate trajectories from current optimal control sequence in a given iteration. 1000 @ 50 Hz or 2000 @ 30 Hz seems to produce good results.
+  - Count of randomly sampled candidate trajectories from current optimal control sequence in a given iteration. How many trajectories are simulated in parallel. 1000 @ 50 Hz or 2000 @ 30 Hz seems to produce good results.
 
 - **`collision_cost`**
   - Type: `double`
@@ -4318,7 +4319,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`consider_footprint`**
   - Type: `bool`
   - Default: `false`
-  - Whether to consider the robot’s footprint when validating the trajectory. Else, will use the center point cost of a circular robot
+  - Whether to consider the robot's footprint when validating the trajectory (i.e., consider own size). If false, will use the center point cost of a circular robot.
 
 - **`cost_power`**
   - Type: `int`
@@ -4348,7 +4349,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`critics`**
   - Type: `string vector`
   - Default: `N/A`
-  - A vector of critic plugin functions to use, withoutmppi::critic::namespace which will be automatically added on loading.
+  - A vector of critic plugin functions to use, without mppi::critic:: namespace which will be automatically added on loading. Common critics include: GoalCritic (reach destination), CostCritic (obstacle avoidance), PathAlignCritic (stay on decided path), PathFollowCritic, PathAngleCritic, PreferForwardCritic, VelocityDeadbandCritic.
 
 - **`deadband_velocities`**
   - Type: `array of double`
@@ -4398,7 +4399,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`model_dt`**
   - Type: `double`
   - Default: `0.05`
-  - Length of each time step’sdttimestep, in seconds.time_steps*model_dtis the prediction horizon.
+  - Length of each time step's dt timestep, in seconds. time_steps * model_dt is the prediction horizon. This is the difference between time-steps.
 
 - **`motion_model`**
   - Type: `string`
@@ -4463,12 +4464,12 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`temperature`**
   - Type: `double`
   - Default: `0.3`
-  - Selectiveness of trajectories by their costs (The closer this value to 0, the “more” we take in consideration controls with less cost), 0 mean use control with best cost, huge value will lead to ju...
+  - Selectiveness of trajectories by their costs. Lower values stick only to low cost paths, higher values allow more random exploration. 0 means use control with best cost only.
 
 - **`threshold_to_consider`**
   - Type: `double`
   - Default: `0.5`
-  - Minimal distance (m) between robot and goal above which angle goal cost considered.
+  - Minimal distance (m) between robot and goal above which angle goal cost is considered. When closer than this distance to the goal, the critic may "stop caring" or increase/decrease importance.
 
 - **`time_step`**
   - Type: `int`
@@ -4478,7 +4479,7 @@ Use Ctrl+F / Cmd+F to search for specific parameters.
 - **`time_steps`**
   - Type: `int`
   - Default: `56`
-  - Number of time steps (points) in candidate trajectories
+  - Number of time steps (points) in candidate trajectories. Plan this many time-steps ahead.
 
 - **`trajectory_point_step`**
   - Type: `int`
