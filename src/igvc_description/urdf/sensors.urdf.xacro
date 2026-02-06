@@ -3,37 +3,29 @@
     <xacro:arg name="camera_name"   default="oak" />
     <xacro:arg name="camera_model"  default="OAK-D-POE" />
     <xacro:arg name="base_frame"    default="oak_base" />
-    <xacro:arg name="parent_frame"  default="camera_link" />
+    <xacro:arg name="parent_frame"  default="oak_parent" />
     <xacro:arg name="cam_pos_x"     default="0.0" />
-    <xacro:arg name="cam_pos_y"     default="-0.4" />
-    <xacro:arg name="cam_pos_z"     default="0.8" />
+    <xacro:arg name="cam_pos_y"     default="0.0" />
+    <xacro:arg name="cam_pos_z"     default="0.0" />
     <xacro:arg name="cam_roll"      default="0.0" />
     <xacro:arg name="cam_pitch"     default="0.0" />
-    <xacro:arg name="cam_yaw"       default="${pi/2}" />
+    <xacro:arg name="cam_yaw"       default="0.0" />
     <xacro:arg name="rs_compat"     default="true" />
     <xacro:include filename="$(find depthai_descriptions)/urdf/depthai_descr.urdf.xacro" />
-
+    
     <joint name="camera_base_joint" type="fixed">
         <parent link="base_footprint"/>
-        <child link="camera_link"/>
-        <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+        <child link="oak_parent"/>
+        <origin xyz="0 -0.4 0.95" rpy="0 0 ${pi/2}"/>
     </joint>
 
-    <link name="camera_link_optical"></link>
-
-    <joint name="camera_optical_joint" type="fixed">
-        <parent link="camera_link"/>
-        <child link="camera_link_optical"/>
-        <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
-    </joint>
-    
-    <gazebo reference="camera_link">
+    <gazebo reference="oak_color_frame">
         <sensor name="oak_depth" type="depth">
             <pose> 0 0 0 0 0 0 </pose>
             <topic>oak/depth</topic>
             <update_rate>30</update_rate>
             <always_on>1</always_on>
-            <gz_frame_id>camera_link_optical</gz_frame_id>
+            <gz_frame_id>oak_color_optical_frame</gz_frame_id>
             <camera>
                 <horizontal_fov>1.51843645</horizontal_fov>
                 <image>
@@ -50,13 +42,13 @@
         </sensor>
     </gazebo>
 
-    <gazebo reference="camera_link">
+    <gazebo reference="oak_color_frame">
         <sensor name="oak_color" type="camera">
             <pose> 0 0 0 0 0 0 </pose>
             <topic>oak/color</topic>
             <update_rate>30</update_rate>
             <always_on>1</always_on>
-            <gz_frame_id>camera_link_optical</gz_frame_id>
+            <gz_frame_id>oak_color_optical_frame</gz_frame_id>
             <camera>
                 <horizontal_fov>1.51843645</horizontal_fov>
                 <image>
