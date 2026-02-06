@@ -26,8 +26,8 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_description'),
-                 'launch',
-                 'publisher.launch.py']
+                 '/launch',
+                 '/publisher.launch.py']
             )
         ),
 
@@ -35,8 +35,8 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_gazebo'), 
-                 'launch',
-                 'gazebo.launch.py']
+                 '/launch',
+                 '/gazebo.launch.py']
             ),
             condition=IfCondition(use_sim),
             launch_arguments={
@@ -48,8 +48,8 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_hardware'),
-                 'launch',
-                 'control.launch.py']
+                 '/launch',
+                 '/control.launch.py']
             ),
         ),
 
@@ -57,8 +57,8 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_hardware'),
-                 'launch',
-                 'hardware.launch.py']
+                 '/launch',
+                 '/hardware.launch.py']
             ),
             condition = UnlessCondition(use_sim)
         ),
@@ -67,8 +67,8 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_slam'),
-                 'launch',
-                 'rtabmap.launch.py']
+                 '/launch',
+                 '/rtabmap.launch.py']
             ),
         ),
 
@@ -76,8 +76,8 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_nav'),
-                 'launch',
-                 'igvc_nav.launch.py']
+                 '/launch',
+                 '/igvc_nav.launch.py']
             ),
         ),
     ])
