@@ -23,7 +23,7 @@ def generate_launch_description():
             'approx_sync' : 'true',
             'frame_id' : 'base_footprint',
             'log_level' : 'debug', 
-            'publish_tf_odom' : 'false',
+            'publish_tf_odom' : 'true',
             'odom_topic' : '/odom',
             'odom_frame_id' : 'odom',
             'sync_queue_size' : '10', #TODO verify
@@ -39,7 +39,7 @@ def generate_launch_description():
             'use_sim_time' : 'true',
             'wait_for_transform' : '0.4',
             'imu_topic' : '/rtabmap/imu',
-            'wait_imu_to_init' : 'true',
+            'wait_imu_to_init' : 'false',
             'map_topic' : '/map'
         }.items()
     )
