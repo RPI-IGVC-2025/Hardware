@@ -32,6 +32,15 @@ def generate_launch_description():
             condition=IfCondition(use_sim),
         ),
 
+        # Control
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare('igvc_bringup'),
+                 '/launch/hardware.launch.py']
+            ),
+            condition=IfCondition(use_sim),
+        ),
+
         # Real hardware
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
