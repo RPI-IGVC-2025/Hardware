@@ -8,61 +8,76 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     use_sim = LaunchConfiguration('use_sim')
-
+        
     return LaunchDescription([
+        # Launch Arguments
         DeclareLaunchArgument(
             'use_sim',
-            default_value='true',
-            description='Run in Gazebo'
+            default_value='false',
+            description='Run in Simulation'
+        ),
+        DeclareLaunchArgument(
+            'sim_scenario',
+            default_value='empty_world',
+            description='The name of the scenario to open in Gazebo'
         ),
 
-        # Robot description (URDF)
+        # Publishers & URDF
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_bringup'),
-                 '/launch/description.launch.py']
+                [FindPackageShare('igvc_description'),
+                 'launch',
+                 'publisher.launch.py']
             )
         ),
 
         # Simulation
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_bringup'), '/launch/gazebo.launch.py']
+                [FindPackageShare('igvc_gazebo'), 
+                 'launch',
+                 'gazebo.launch.py']
             ),
             condition=IfCondition(use_sim),
+            launch_arguments={
+                'scenario': LaunchConfiguration('sim_scenario'), 
+            }.items(),
         ),
 
-        # Control
+        # ROS2_Control
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_bringup'),
-                 '/launch/hardware.launch.py']
+                [FindPackageShare('igvc_hardware'),
+                 'launch',
+                 'control.launch.py']
             ),
-            condition=IfCondition(use_sim),
         ),
 
         # Real hardware
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_bringup'),
-                 '/launch/hardware.launch.py']
+                [FindPackageShare('igvc_hardware'),
+                 'launch',
+                 'hardware.launch.py']
             ),
-            condition=UnlessCondition(use_sim),
+            condition = UnlessCondition(use_sim)
         ),
 
         # SLAM
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_bringup'),
-                 '/launch/slam.launch.py']
-            )
+                [FindPackageShare('igvc_slam'),
+                 'launch',
+                 'rtabmap.launch.py']
+            ),
         ),
 
         # Navigation
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_bringup'),
-                 '/launch/nav.launch.py']
-            )
+                [FindPackageShare('igvc_nav'),
+                 'launch',
+                 'igvc_nav.launch.py']
+            ),
         ),
     ])
