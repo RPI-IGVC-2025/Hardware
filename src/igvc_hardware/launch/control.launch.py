@@ -34,10 +34,6 @@ def generate_launch_description():
                    "--controller-manager", "/controller_manager"],
     )
 
-    # TODO depthai (camera)
-
-    # TODO In the examples, the controller manager is not spawned until the joint state broadcaster is finished spawning. Implement if we have problems regarding that.
-
     nodes = [
         control_node,
         robot_controller_spawner
