@@ -29,5 +29,5 @@
     "runArgs": [
         "-e", "DISPLAY=host.docker.internal:0"
     ],
-    "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && (sudo chown -R $(whoami) /home/ros2_ws/ || true) && colcon build --packages-select adi_imu odrive_ros2_control hardware"
+    "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && (rm -r build/ || true) && colcon build --symlink-install"
 }
