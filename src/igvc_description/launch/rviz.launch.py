@@ -81,18 +81,18 @@ def generate_launch_description():
     arguments=['-d', rviz_config_file])
   
   # Create the launch description and populate
-  ld = LaunchDescription()
+  launch_description = LaunchDescription()
 
   # Declare the launch options
-  ld.add_action(declare_urdf_model_path_cmd)
-  ld.add_action(declare_rviz_config_file_cmd)
-  ld.add_action(declare_use_joint_state_publisher_cmd)
-  ld.add_action(declare_use_robot_state_pub_cmd)  
-  ld.add_action(declare_use_rviz_cmd) 
-  ld.add_action(declare_use_sim_time_cmd)
+  launch_description.add_action(declare_urdf_model_path_cmd)
+  launch_description.add_action(declare_rviz_config_file_cmd)
+  launch_description.add_action(declare_use_joint_state_publisher_cmd)
+  launch_description.add_action(declare_use_robot_state_pub_cmd)  
+  launch_description.add_action(declare_use_rviz_cmd) 
+  launch_description.add_action(declare_use_sim_time_cmd)
 
   # Add any actions
-  ld.add_action(start_publisher_cmd)
-  ld.add_action(start_rviz_cmd)
+  launch_description.add_action(start_publisher_cmd)
+  launch_description.add_action(start_rviz_cmd)
 
-  return ld
+  return launch_description
