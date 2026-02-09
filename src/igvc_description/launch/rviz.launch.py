@@ -10,16 +10,16 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
 
   # Set the path to this package.
-  pkg_share = FindPackageShare(package='igvc_description').find('igvc_description')
+  igvc_description_package = FindPackageShare(package='igvc_description').find('igvc_description')
 
   # Set the path to the RViz configuration settings
-  default_rviz_config_path = os.path.join(pkg_share, 'rviz/rviz_settings.rviz')
+  default_rviz_config_path = os.path.join(igvc_description_package, 'rviz/rviz_settings.rviz')
   
   # Set the path to the URDF file
-  default_urdf_model_path = os.path.join(pkg_share, 'urdf/robot.urdf.xacro')
+  default_urdf_model_path = os.path.join(igvc_description_package, 'urdf/robot.urdf.xacro')
 
   # Set the path to the Publisher launch file
-  publisher_launch_path = os.path.join(pkg_share, 'launch/publisher.launch.py')
+  publisher_launch_path = os.path.join(igvc_description_package, 'launch/publisher.launch.py')
 
   # Launch configuration variables specific to simulation
   gui = LaunchConfiguration('gui')
