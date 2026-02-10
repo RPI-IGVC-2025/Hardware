@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(hardware)
+project(igvc_hardware)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
@@ -7,7 +7,6 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-
 find_package(controller_manager REQUIRED)
 find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
@@ -46,12 +45,12 @@ install(
 )
 
 install(
-    FILES rrc_igvc_bot.xml
+    DIRECTORY launch
     DESTINATION share/${PROJECT_NAME}
 )
 
 install(
-    DIRECTORY launch
+    DIRECTORY description
     DESTINATION share/${PROJECT_NAME}
 )
 
@@ -61,9 +60,6 @@ install(TARGETS ${PROJECT_NAME}_library
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
-
-# Plugin Export
-pluginlib_export_plugin_description_file(hardware_interface rrc_igvc_bot.xml)
 
 ament_export_targets(export_${PROJECT_NAME}_library HAS_LIBRARY_TARGET)
 ament_export_dependencies(

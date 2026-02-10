@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-    <name>hardware</name>
+    <name>igvc_hardware</name>
     <version>0.0.0</version>
     <description>The hardware superstructure for the IGVC bot</description>
     <license>MIT</license>
@@ -17,7 +17,6 @@
     <depend>pluginlib</depend>
     <depend>rclcpp</depend>
     <depend>rclcpp_lifecycle</depend>
-    <depend>adi_imu</depend>
     <depend>depthai_ros_driver</depend>
 
     <depend>backward_ros</depend>
@@ -31,7 +30,6 @@
     <exec_depend>ros2controlcli</exec_depend>
     <exec_depend>ros2launch</exec_depend>
     <exec_depend>rviz2</exec_depend>
-    <exec_depend>odrive_ros2_control</exec_depend>
     <exec_depend>xacro</exec_depend>
 
 
