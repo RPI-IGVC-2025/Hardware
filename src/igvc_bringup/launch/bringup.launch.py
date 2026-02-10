@@ -34,50 +34,49 @@ def generate_launch_description():
         # Simulation
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_gazebo'), 
-                 '/launch',
-                 '/gazebo.launch.py']
+                [FindPackageShare('igvc_gazebo'),
+                 '/launch/',
+                 LaunchConfiguration('sim_scenario'),
+                 '.launch.py'
+                ]
             ),
             condition=IfCondition(use_sim),
-            launch_arguments={
-                'scenario': LaunchConfiguration('sim_scenario'), 
-            }.items(),
         ),
 
-        # ROS2_Control
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_hardware'),
-                 '/launch',
-                 '/control.launch.py']
-            ),
-        ),
+        # # ROS2_Control
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(
+        #         [FindPackageShare('igvc_hardware'),
+        #          '/launch',
+        #          '/control.launch.py']
+        #     ),
+        # ),
 
-        # Real hardware
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_hardware'),
-                 '/launch',
-                 '/hardware.launch.py']
-            ),
-            condition = UnlessCondition(use_sim)
-        ),
+        # # Real hardware
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(
+        #         [FindPackageShare('igvc_hardware'),
+        #          '/launch',
+        #          '/hardware.launch.py']
+        #     ),
+        #     condition = UnlessCondition(use_sim)
+        # ),
 
-        # SLAM
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_slam'),
-                 '/launch',
-                 '/rtabmap.launch.py']
-            ),
-        ),
+        # # SLAM
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(
+        #         [FindPackageShare('igvc_slam'),
+        #          '/launch',
+        #          '/rtabmap.launch.py']
+        #     ),
+        # ),
 
-        # Navigation
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_nav'),
-                 '/launch',
-                 '/igvc_nav.launch.py']
-            ),
-        ),
+        # # Navigation
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(
+        #         [FindPackageShare('igvc_nav'),
+        #          '/launch',
+        #          '/igvc_nav.launch.py']
+        #     ),
+        # ),
     ])
