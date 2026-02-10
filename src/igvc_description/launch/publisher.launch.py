@@ -63,11 +63,26 @@ def generate_launch_description():
     package='robot_state_publisher',
     executable='robot_state_publisher',
     parameters=[{'use_sim_time': use_sim_time, 
-    'robot_description': Command(['xacro ', urdf_model])}],
+    'robot_description': Command(
+      [
+        'xacro ', urdf_model,
+        ' use_mock_hardware:=', LaunchConfiguration('use_mock_hardware')
+       ]
+      ),
+    }],
     arguments=[default_urdf_model_path])
   
   # Create the launch description and populate
-  ld = LaunchDescription()
+  ld = LaunchDescription(
+    [
+        DeclareLaunchArgument(
+            'use_mock_hardware',
+            default_value='false',
+            description='Run in Simulation'
+        ),
+
+    ]
+  )
 
   # Declare the launch options
   ld.add_action(declare_urdf_model_path_cmd)

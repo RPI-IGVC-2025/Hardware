@@ -8,7 +8,8 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     use_sim = LaunchConfiguration('use_sim')
-        
+    use_mock_hardware = LaunchConfiguration('use_mock_hardware')
+
     return LaunchDescription([
         # Launch Arguments
         DeclareLaunchArgument(
@@ -21,6 +22,11 @@ def generate_launch_description():
             default_value='empty_world',
             description='The name of the scenario to open in Gazebo'
         ),
+        DeclareLaunchArgument(
+            'use_mock_hardware',
+            default_value=use_sim, # You are always mocking in simulation, but can specify if you need to bypass physical descriptors for testing
+            description='Mocks all hardware'
+        ),
 
         # Publishers & URDF
         IncludeLaunchDescription(
@@ -28,7 +34,10 @@ def generate_launch_description():
                 [FindPackageShare('igvc_description'),
                  '/launch',
                  '/publisher.launch.py']
-            )
+            ),
+            launch_arguments={
+                'use_mock_hardware': use_mock_hardware
+                }.items()
         ),
 
         # Simulation
@@ -43,14 +52,14 @@ def generate_launch_description():
             condition=IfCondition(use_sim),
         ),
 
-        # # ROS2_Control
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource(
-        #         [FindPackageShare('igvc_hardware'),
-        #          '/launch',
-        #          '/control.launch.py']
-        #     ),
-        # ),
+        # ROS2_Control
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare('igvc_hardware'),
+                 '/launch',
+                 '/control.launch.py']
+            ),
+        ),
 
         # # Real hardware
         # IncludeLaunchDescription(

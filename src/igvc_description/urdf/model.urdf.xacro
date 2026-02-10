@@ -163,7 +163,7 @@
     </collision>
   </link>
   <!-- Joint from part_1 to part_10 -->
-  <joint name="wheel_L" type="continuous">
+  <joint name="left_wheel_joint" type="continuous">
     <origin xyz="-0.2159 0 -0.01905" rpy="1.5708 -0 1.5708"/>
     <parent link="part_1"/>
     <child link="part_10"/>
@@ -195,7 +195,7 @@
     </collision>
   </link>
   <!-- Joint from part_1 to part_9 -->
-  <joint name="wheel_R" type="continuous">
+  <joint name="right_wheel_joint" type="continuous">
     <origin xyz="0.2159 0 -0.01905" rpy="-1.5708 -0 1.5708"/>
     <parent link="part_1"/>
     <child link="part_9"/>

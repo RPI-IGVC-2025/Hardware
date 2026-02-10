@@ -11,7 +11,7 @@ def generate_launch_description():
     # Get nodes
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("hardware"),
+            FindPackageShare("igvc_hardware"),
             "config",
             "bot_controllers.yaml",
         ]
@@ -30,7 +30,7 @@ def generate_launch_description():
     robot_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["bot_controller",
+        arguments=["bot_drive_controller",
                    "--controller-manager", "/controller_manager"],
     )
 
