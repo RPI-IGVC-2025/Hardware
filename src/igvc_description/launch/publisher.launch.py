@@ -56,18 +56,34 @@ def generate_launch_description():
     package='joint_state_publisher_gui',
     executable='joint_state_publisher_gui',
     name='joint_state_publisher_gui')
-
   # Subscribe to the joint states of the robot, and publish the 3D pose of each link.
   start_robot_state_publisher_cmd = Node(
     condition=IfCondition(use_robot_state_pub),
     package='robot_state_publisher',
     executable='robot_state_publisher',
     parameters=[{'use_sim_time': use_sim_time, 
-    'robot_description': Command(['xacro ', urdf_model])}],
+    'robot_description': Command(
+      [
+        'xacro ', urdf_model,
+        ' use_mock_hardware:=', LaunchConfiguration('use_mock_hardware')
+       ]
+      ),
+    }],
     arguments=[default_urdf_model_path])
   
   # Create the launch description and populate
-  launch_description = LaunchDescription()
+  # Create the launch description and populate
+  launch_description = LaunchDescription(
+    [
+        DeclareLaunchArgument(
+            'use_mock_hardware',
+            default_value='false',
+            description='Run in Simulation'
+        ),
+
+    ]
+  )
+
 
   # Declare the launch options
   launch_description.add_action(declare_urdf_model_path_cmd)
