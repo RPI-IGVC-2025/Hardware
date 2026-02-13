@@ -12,11 +12,7 @@
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
-  <depend>librealsense2</depend>
-  <depend>realsense2_camera</depend>
-  <depend>realsense2_camera_msgs</depend>
   <depend>rtabmap_ros</depend>
-  <depend>realsense2_description</depend> 
   <depend>imu_filter_madgwick</depend>
 
   <export>
