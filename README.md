@@ -20,3 +20,5 @@ Dourui Yao (yaod3@rpi.edu) \
 Vincent Borello (borelv@rpi.edu)
 Vincenzo Rapacciuolo (rapacv2@rpi.edu)
 Eehit Mukherjee mukhee@rpi.edu
+Titan Spellos (spellt@rpi.edu) \
+Zion Lastname (@rpi.edu)
