@@ -19,12 +19,13 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip
 
 
-# rqt, IMU/build deps (depthai-ros via rosdep in postCreateCommand)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-jazzy-rqt* \
-    libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev \
-    libusb-1.0-0-dev libserialport-dev libavahi-client-dev doxygen graphviz \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+# Missing ROS packages
+&& apt-get install -y ros-jazzy-rqt* \
+# Camera Lib
+ros-jazzy-depthai-ros \
+# IMU Lib dependencies
+libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
 
 # Gazebo Sim (Harmonic) + joint_state_publisher 
 RUN apt-get update && apt-get install -y --no-install-recommends \
