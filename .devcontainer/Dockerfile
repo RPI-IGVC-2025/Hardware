@@ -34,8 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-jazzy-joint-state-publisher-gui \
     && rm -rf /var/lib/apt/lists/*
 
-# Gazebo GUI on Mac: virtual display + VNC (see start-gazebo-vnc.sh and docs/MACOS_SETUP.md)
-# xvfb + x11vnc only; Mesa (libegl1-mesa etc.) not available on Noble arm64 in default repos, use headless or install in container if needed
+# Gazebo GUI on Mac: virtual display + VNC 
 RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc \
     && rm -rf /var/lib/apt/lists/*
 
