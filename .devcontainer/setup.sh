@@ -2,6 +2,7 @@ mkdir -p lib
 cd lib
 
 apt-get update --fix-missing
+apt-get upgrade
 
 . /opt/ros/jazzy/setup.sh
 

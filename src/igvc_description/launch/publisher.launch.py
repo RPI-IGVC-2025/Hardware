@@ -69,7 +69,7 @@ def generate_launch_description():
        ]
       ),
     }],
-    arguments=[default_urdf_model_path])
+    )
   
   # Create the launch description and populate
   # Create the launch description and populate
