@@ -1,4 +1,4 @@
-# RPI Robotics IGVC 2026 Hardware
+# RPI Robotics IGVC 2026 Code
 
 Associated with RPI Robotics Club
 
