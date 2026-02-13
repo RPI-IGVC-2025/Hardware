@@ -27,6 +27,13 @@ def generate_launch_description():
             default_value=use_sim, # You are always mocking in simulation, but can specify if you need to bypass physical descriptors for testing
             description='Mocks all hardware'
         ),
+        
+        DeclareLaunchArgument(
+            'auton',
+            default_value='true', 
+            description='Testing autonomy or not'
+        ),
+
 
         # Publishers & URDF
         IncludeLaunchDescription(
@@ -61,31 +68,25 @@ def generate_launch_description():
             ),
         ),
 
-        # # Real hardware
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource(
-        #         [FindPackageShare('igvc_hardware'),
-        #          '/launch',
-        #          '/hardware.launch.py']
-        #     ),
-        #     condition = UnlessCondition(use_sim)
-        # ),
+        # Real hardware
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare('igvc_hardware'),
+                 '/launch',
+                 '/hardware.launch.py']
+            ),
+            condition = UnlessCondition(use_mock_hardware)
+        ),
 
-        # # SLAM
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource(
-        #         [FindPackageShare('igvc_slam'),
-        #          '/launch',
-        #          '/rtabmap.launch.py']
-        #     ),
-        # ),
-
-        # # Navigation
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource(
-        #         [FindPackageShare('igvc_nav'),
-        #          '/launch',
-        #          '/igvc_nav.launch.py']
-        #     ),
-        # ),
+        # SLAM
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare('igvc_slam'),
+                 '/launch',
+                 '/rtabmap.launch.py']
+            ),
+            condition = IfCondition(LaunchConfiguration('auton'))
+        ),
+        
+        # TODO Nav
     ])
