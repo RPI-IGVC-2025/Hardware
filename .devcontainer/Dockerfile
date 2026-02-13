@@ -19,13 +19,24 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip
 
 
-RUN apt-get update \
-# Missing ROS packages
-&& apt-get install -y ros-jazzy-rqt* \
-# Camera Lib
-ros-jazzy-depthai-ros \
-# IMU Lib dependencies
-libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
+# rqt, IMU/build deps (depthai-ros via rosdep in postCreateCommand)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-jazzy-rqt* \
+    libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev \
+    libusb-1.0-0-dev libserialport-dev libavahi-client-dev doxygen graphviz \
+    && rm -rf /var/lib/apt/lists/*
+
+# Gazebo Sim (Harmonic) + joint_state_publisher 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-jazzy-ros-gz \
+    ros-jazzy-joint-state-publisher \
+    ros-jazzy-joint-state-publisher-gui \
+    && rm -rf /var/lib/apt/lists/*
+
+# Gazebo GUI on Mac: virtual display + VNC (see start-gazebo-vnc.sh and docs/MACOS_SETUP.md)
+# xvfb + x11vnc only; Mesa (libegl1-mesa etc.) not available on Noble arm64 in default repos, use headless or install in container if needed
+RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV SHELL /bin/bash
 
