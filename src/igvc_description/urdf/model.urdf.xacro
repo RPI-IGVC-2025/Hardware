@@ -1,17 +1,81 @@
 <?xml version="1.0" ?>
 <!-- Generated using onshape-to-robot -->
-<!-- Onshape https://cad.onshape.com/documents/bd8c1cbb3cbd66454183450f/w/dfd94c9f83ff0fc6c8761109/e/c765fc0d53504544c054bc0a -->
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<!-- Onshape https://cad.onshape.com/documents/4f27315f66a4121bf8434c1a/w/bce24b18b959f9c2227327f4/e/534f540c791514c4a2b9f32e -->
+<robot name="igvc_description">
   <!-- Link part_1 -->
   <link name="part_1">
     <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="1"/>
-      <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+      <origin xyz="-0.0368571 0.291615 0.214315" rpy="0 0 0"/>
+      <mass value="56.0674"/>
+      <inertia ixx="3.60749" ixy="0" ixz="0" iyy="1.28472" iyz="0.159952" izz="3.84124"/>
     </inertial>
+    <!-- Part part_9 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_9.stl"/>
+      </geometry>
+      <material name="part_9_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_9.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_33 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_33.stl"/>
+      </geometry>
+      <material name="part_33_material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_33.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_14 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_14.stl"/>
+      </geometry>
+      <material name="part_14_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_14.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_23 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_23.stl"/>
+      </geometry>
+      <material name="part_23_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_23.stl"/>
+      </geometry>
+    </collision>
     <!-- Part part_5 -->
     <visual>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
       <geometry>
         <mesh filename="file://$(find igvc_description)/assets/part_5.stl"/>
       </geometry>
@@ -20,110 +84,14 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
       <geometry>
         <mesh filename="file://$(find igvc_description)/assets/part_5.stl"/>
       </geometry>
     </collision>
-    <!-- Part part_4 -->
-    <visual>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_4.stl"/>
-      </geometry>
-      <material name="part_4_material">
-        <color rgba="0.647059 0.647059 0.647059 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_4.stl"/>
-      </geometry>
-    </collision>
-    <!-- Part part_8 -->
-    <visual>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_8.stl"/>
-      </geometry>
-      <material name="part_8_material">
-        <color rgba="0.647059 0.647059 0.647059 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_8.stl"/>
-      </geometry>
-    </collision>
-    <!-- Part part_2 -->
-    <visual>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_2.stl"/>
-      </geometry>
-      <material name="part_2_material">
-        <color rgba="0.647059 0.647059 0.647059 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_2.stl"/>
-      </geometry>
-    </collision>
-    <!-- Part part_6 -->
-    <visual>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_6.stl"/>
-      </geometry>
-      <material name="part_6_material">
-        <color rgba="0.231373 0.380392 0.705882 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_6.stl"/>
-      </geometry>
-    </collision>
-    <!-- Part part_3 -->
-    <visual>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_3.stl"/>
-      </geometry>
-      <material name="part_3_material">
-        <color rgba="0.647059 0.647059 0.647059 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_3.stl"/>
-      </geometry>
-    </collision>
-    <!-- Part part_7 -->
-    <visual>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_7.stl"/>
-      </geometry>
-      <material name="part_7_material">
-        <color rgba="0.498039 0.498039 0.498039 1"/>
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
-      <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_7.stl"/>
-      </geometry>
-    </collision>
     <!-- Part part_1 -->
     <visual>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
       <geometry>
         <mesh filename="file://$(find igvc_description)/assets/part_1.stl"/>
       </geometry>
@@ -132,74 +100,618 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -0.4572 -0.00635" rpy="0 -0 0"/>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
       <geometry>
         <mesh filename="file://$(find igvc_description)/assets/part_1.stl"/>
       </geometry>
     </collision>
-  </link>
-  <!-- Link part_10 -->
-  <link name="part_10">
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="1"/>
-      <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
-    </inertial>
+    <!-- Part part_28 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_28.stl"/>
+      </geometry>
+      <material name="part_28_material">
+        <color rgba="0.941176 0.87451 0.678431 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_28.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_12 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_12.stl"/>
+      </geometry>
+      <material name="part_12_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_12.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_30 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_30.stl"/>
+      </geometry>
+      <material name="part_30_material">
+        <color rgba="0.286275 0.266667 0.266667 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_30.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_39 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_39.stl"/>
+      </geometry>
+      <material name="part_39_material">
+        <color rgba="0.286275 0.266667 0.266667 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_39.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_19 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_19.stl"/>
+      </geometry>
+      <material name="part_19_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_19.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_3 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_3.stl"/>
+      </geometry>
+      <material name="part_3_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_3.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_32 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_32.stl"/>
+      </geometry>
+      <material name="part_32_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_32.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_27 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_27.stl"/>
+      </geometry>
+      <material name="part_27_material">
+        <color rgba="0.231373 0.380392 0.705882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_27.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_22 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_22.stl"/>
+      </geometry>
+      <material name="part_22_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_22.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_13 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_13.stl"/>
+      </geometry>
+      <material name="part_13_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_13.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_16 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_16.stl"/>
+      </geometry>
+      <material name="part_16_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_16.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_7 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_7.stl"/>
+      </geometry>
+      <material name="part_7_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_7.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_21 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_21.stl"/>
+      </geometry>
+      <material name="part_21_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_21.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_38 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_38.stl"/>
+      </geometry>
+      <material name="part_38_material">
+        <color rgba="0.917647 0.917647 0.917647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_38.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_4 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_4.stl"/>
+      </geometry>
+      <material name="part_4_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_18 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_18.stl"/>
+      </geometry>
+      <material name="part_18_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_18.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_24 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_24.stl"/>
+      </geometry>
+      <material name="part_24_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_24.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_6 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_6.stl"/>
+      </geometry>
+      <material name="part_6_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_6.stl"/>
+      </geometry>
+    </collision>
     <!-- Part part_10 -->
     <visual>
-      <origin xyz="-0.4572 -0 0.2159" rpy="-1.5708 -1.5708 0"/>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
       <geometry>
         <mesh filename="file://$(find igvc_description)/assets/part_10.stl"/>
       </geometry>
       <material name="part_10_material">
-        <color rgba="0.286275 0.266667 0.266667 1"/>
+        <color rgba="0.647059 0.647059 0.647059 1"/>
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.4572 -0 0.2159" rpy="-1.5708 -1.5708 0"/>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
       <geometry>
         <mesh filename="file://$(find igvc_description)/assets/part_10.stl"/>
       </geometry>
     </collision>
-  </link>
-  <!-- Joint from part_1 to part_10 -->
-  <joint name="left_wheel_joint" type="continuous">
-    <origin xyz="-0.2159 0 -0.01905" rpy="1.5708 -0 1.5708"/>
-    <parent link="part_1"/>
-    <child link="part_10"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="10" velocity="10"/>
-  </joint>
-  <!-- Link part_9 -->
-  <link name="part_9">
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="1"/>
-      <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
-    </inertial>
-    <!-- Part part_9 -->
+    <!-- Part part_15 -->
     <visual>
-      <origin xyz="-0.4572 0 0.2159" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
       <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_9.stl"/>
+        <mesh filename="file://$(find igvc_description)/assets/part_15.stl"/>
       </geometry>
-      <material name="part_9_material">
+      <material name="part_15_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_15.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_40 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_40.stl"/>
+      </geometry>
+      <material name="part_40_material">
+        <color rgba="0.498039 0.498039 0.498039 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_40.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_2 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_2.stl"/>
+      </geometry>
+      <material name="part_2_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_11 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_11.stl"/>
+      </geometry>
+      <material name="part_11_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_11.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_29 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_29.stl"/>
+      </geometry>
+      <material name="part_29_material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_29.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_25 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_25.stl"/>
+      </geometry>
+      <material name="part_25_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_25.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_20 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_20.stl"/>
+      </geometry>
+      <material name="part_20_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_20.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_8 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_8.stl"/>
+      </geometry>
+      <material name="part_8_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_8.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_17 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_17.stl"/>
+      </geometry>
+      <material name="part_17_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_17.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_31 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_31.stl"/>
+      </geometry>
+      <material name="part_31_material">
+        <color rgba="0.498039 0.498039 0.498039 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_31.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part part_26 -->
+    <visual>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_26.stl"/>
+      </geometry>
+      <material name="part_26_material">
+        <color rgba="0.647059 0.647059 0.647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0368571 -0.178453 0.142065" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_26.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link part_36 -->
+  <link name="part_36">
+    <inertial>
+      <origin xyz="-0 -0 -0.0254" rpy="0 0 0"/>
+      <mass value="0.237961"/>
+      <inertia ixx="0.000128037" ixy="0" ixz="0" iyy="0.000128037" iyz="0" izz="0.000163699"/>
+    </inertial>
+    <!-- Part part_36 -->
+    <visual>
+      <origin xyz="-0.1524 -0.0889 -0.0254" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_36.stl"/>
+      </geometry>
+      <material name="part_36_material">
         <color rgba="0.286275 0.266667 0.266667 1"/>
       </material>
     </visual>
     <collision>
-      <origin xyz="-0.4572 0 0.2159" rpy="1.5708 1.5708 0"/>
+      <origin xyz="-0.1524 -0.0889 -0.0254" rpy="1.5708 1.5708 0"/>
       <geometry>
-        <mesh filename="file://$(find igvc_description)/assets/part_9.stl"/>
+        <mesh filename="file://$(find igvc_description)/assets/part_36.stl"/>
       </geometry>
     </collision>
   </link>
-  <!-- Joint from part_1 to part_9 -->
-  <joint name="right_wheel_joint" type="continuous">
-    <origin xyz="0.2159 0 -0.01905" rpy="-1.5708 -0 1.5708"/>
+  <!-- Joint from part_1 to part_36 -->
+  <joint name="rearwheel" type="revolute">
+    <origin xyz="-0.0623407 -0.0348985 0.0485928" rpy="-1.5708 0.506098 1.5708"/>
     <parent link="part_1"/>
-    <child link="part_9"/>
+    <child link="part_36"/>
     <axis xyz="0 0 1"/>
-    <limit effort="10" velocity="10"/>
+    <limit effort="10" velocity="10" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Link part_35 -->
+  <link name="part_35">
+    <inertial>
+      <origin xyz="0 -0 -0.04445" rpy="0 0 0"/>
+      <mass value="4.72289"/>
+      <inertia ixx="0.0211743" ixy="0" ixz="0" iyy="0.0211743" iyz="0" izz="0.0365268"/>
+    </inertial>
+    <!-- Part part_35 -->
+    <visual>
+      <origin xyz="-0.4572 0 -0.3048" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_35.stl"/>
+      </geometry>
+      <material name="part_35_material">
+        <color rgba="0.286275 0.266667 0.266667 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.4572 0 -0.3048" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_35.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from part_1 to part_35 -->
+  <joint name="leftwheel" type="revolute">
+    <origin xyz="-0.245137 0.278747 0.14524" rpy="-1.5708 -0 -1.5708"/>
+    <parent link="part_1"/>
+    <child link="part_35"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Link part_34 -->
+  <link name="part_34">
+    <inertial>
+      <origin xyz="0 0 -0.04445" rpy="0 0 0"/>
+      <mass value="4.72289"/>
+      <inertia ixx="0.0211743" ixy="0" ixz="0" iyy="0.0211743" iyz="0" izz="0.0365268"/>
+    </inertial>
+    <!-- Part part_34 -->
+    <visual>
+      <origin xyz="-0.4572 0 -0.3048" rpy="-1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_34.stl"/>
+      </geometry>
+      <material name="part_34_material">
+        <color rgba="0.286275 0.266667 0.266667 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.4572 0 -0.3048" rpy="-1.5708 -1.5708 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_34.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from part_1 to part_34 -->
+  <joint name="rightwheel" type="revolute">
+    <origin xyz="0.171423 0.278747 0.14524" rpy="-1.5708 -0 1.5708"/>
+    <parent link="part_1"/>
+    <child link="part_34"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+  <!-- Link part_37 -->
+  <link name="part_37">
+    <inertial>
+      <origin xyz="0 0 -0.0254" rpy="0 0 0"/>
+      <mass value="0.237961"/>
+      <inertia ixx="0.000128037" ixy="0" ixz="0" iyy="0.000128037" iyz="0" izz="0.000163699"/>
+    </inertial>
+    <!-- Part part_37 -->
+    <visual>
+      <origin xyz="-0.8382 -0.1143 -0.0254" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_37.stl"/>
+      </geometry>
+      <material name="part_37_material">
+        <color rgba="0.286275 0.266667 0.266667 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.8382 -0.1143 -0.0254" rpy="1.5708 1.5708 0"/>
+      <geometry>
+        <mesh filename="file://$(find igvc_description)/assets/part_37.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from part_1 to part_37 -->
+  <joint name="frontwheel" type="revolute">
+    <origin xyz="-0.0622571 0.659747 0.0658648" rpy="-1.5708 -0 1.5708"/>
+    <parent link="part_1"/>
+    <child link="part_37"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
 </robot>
