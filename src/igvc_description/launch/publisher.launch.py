@@ -66,6 +66,12 @@ def generate_launch_description():
     'robot_description': Command(['xacro ', urdf_model])}],
     arguments=[default_urdf_model_path])
   
+  # Create foxglove bridge
+  start_foxglove_bridge_cmd = Node(
+    package='foxglove_bridge',
+    executable='foxglove_bridge'
+  )
+
   # Create the launch description and populate
   launch_description = LaunchDescription()
 
@@ -76,6 +82,7 @@ def generate_launch_description():
   launch_description.add_action(declare_use_sim_time_cmd)
 
   # Add any actions
+  launch_description.add_action(start_foxglove_bridge_cmd)
   launch_description.add_action(start_joint_state_publisher_cmd)
   launch_description.add_action(start_joint_state_publisher_gui_node)
   launch_description.add_action(start_robot_state_publisher_cmd)
