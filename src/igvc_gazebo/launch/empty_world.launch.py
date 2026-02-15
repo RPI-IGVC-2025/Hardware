@@ -11,10 +11,10 @@ from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    package_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+    ros_gz_sim_package = get_package_share_directory('ros_gz_sim')
     package_description = FindPackageShare(package='igvc_description').find('igvc_description')
 
-    gz_launch_path = os.path.join(package_ros_gz_sim, 'launch', 'gz_sim.launch.py')
+    gz_launch_path = os.path.join(ros_gz_sim_package, 'launch', 'gz_sim.launch.py')
     publisher_launch_path = os.path.join(package_description, 'launch/publisher.launch.py')
 
     world = LaunchConfiguration('world')
