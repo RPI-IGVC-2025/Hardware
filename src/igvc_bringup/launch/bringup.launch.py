@@ -83,7 +83,7 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_slam'),
                  '/launch',
-                 '/rtabmap.launch.py']
+                 '/sim_rtabmap.launch.py']
             ),
             condition = IfCondition(LaunchConfiguration('auton'))
         ),
