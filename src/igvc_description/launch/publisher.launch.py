@@ -9,10 +9,10 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
 
   # Set the path to this package.
-  igvc_description_package = FindPackageShare(package='igvc_description').find('igvc_description')
+  igvc_description_package  = FindPackageShare(package='igvc_description').find('igvc_description')
 
   # Set the path to the URDF file
-  default_urdf_model_path = os.path.join(igvc_description_package, 'urdf/robot.urdf.xacro')
+  default_urdf_model_path = os.path.join(igvc_description_package , 'urdf/robot.urdf.xacro')
 
   # Launch configuration variables specific to simulation
   gui = LaunchConfiguration('gui')
