@@ -15,8 +15,7 @@
       <!-- Generic mock hardware motors-->
       <xacro:if value="${use_mock_hardware}">
         <hardware>
-          <plugin>mock_components/GenericSystem</plugin>
-          <param name="calculate_dynamics">true</param>
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
         </hardware>
       </xacro:if>
 

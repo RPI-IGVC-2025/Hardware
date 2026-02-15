@@ -19,4 +19,10 @@
 
     <xacro:bot_ros2_control name="IGVC_Bot" prefix="$(arg prefix)" use_mock_hardware="$(arg use_mock_hardware)"/>
 
+    <gazebo>
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find igvc_hardware)/config/bot_controllers.yaml</parameters>
+        </plugin>
+    </gazebo>
+
 </robot>

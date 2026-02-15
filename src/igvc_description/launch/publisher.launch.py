@@ -92,8 +92,8 @@ def generate_launch_description():
   launch_description.add_action(declare_use_sim_time_cmd)
 
   # Add any actions
-  launch_description.add_action(start_joint_state_publisher_cmd)
-  launch_description.add_action(start_joint_state_publisher_gui_node)
+  # launch_description.add_action(start_joint_state_publisher_cmd)
+  # launch_description.add_action(start_joint_state_publisher_gui_node)
   launch_description.add_action(start_robot_state_publisher_cmd)
 
   return launch_description

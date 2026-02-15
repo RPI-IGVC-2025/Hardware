@@ -2,6 +2,10 @@ controller_manager:
   ros__parameters:
     update_rate: 10  # Hz
 
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+
     bot_drive_controller:
       type: diff_drive_controller/DiffDriveController
 bot_drive_controller:
