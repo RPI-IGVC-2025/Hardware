@@ -31,7 +31,7 @@ bot_drive_controller:
 
     publish_rate: 50.0 # Hz
     odom_frame_id: odom
-    base_frame_id: base_link
+    base_frame_id: base_footprint
 
     #TODO These need physical testing
     pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
@@ -56,8 +56,8 @@ bot_drive_controller:
     # TODO
     linear.x.has_acceleration_limits: true
     linear.x.max_acceleration: 1.0
-    linear.x.max_deceleration: 1.0
-    linear.x.max_acceleration_reverse: 1.0
+    linear.x.max_deceleration: -1.0
+    linear.x.max_acceleration_reverse: -1.0
     linear.x.max_deceleration_reverse: 1.0
 
     #TODO
