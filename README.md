@@ -26,13 +26,14 @@ Vincent Borello (borelv@rpi.edu) \
 Vincenzo Rapacciuolo (rapacv2@rpi.edu)
 
 # Hardware
-**Tag Ciccone (ciccot@rpi.edu, tagciccone@gmail.com)** \
-Ethan Reid \
+**Tag Ciccone (ciccot@rpi.edu)** \
+Ethan Reid (reide@rpi.edu) \
 Titan Spellos (spellt@rpi.edu)
 
 # Simulation
 **Bryce Haddock (haddob@rpi.edu)** \
 Matthew Davis (davism10@rpi.edu) 
+
 
 
 
