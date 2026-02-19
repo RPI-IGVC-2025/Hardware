@@ -27,6 +27,10 @@ ros-jazzy-depthai-ros \
 # IMU Lib dependencies
 libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
 
+# Gazebo GUI on Mac: virtual display + VNC 
+RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV SHELL /bin/bash
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.

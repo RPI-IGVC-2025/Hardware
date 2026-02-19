@@ -9,10 +9,10 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
 
   # Set the path to this package.
-  igvc_description_package = FindPackageShare(package='igvc_description').find('igvc_description')
+  igvc_description_package  = FindPackageShare(package='igvc_description').find('igvc_description')
 
   # Set the path to the URDF file
-  default_urdf_model_path = os.path.join(igvc_description_package, 'urdf/robot.urdf.xacro')
+  default_urdf_model_path = os.path.join(igvc_description_package , 'urdf/robot.urdf.xacro')
 
   # Launch configuration variables specific to simulation
   gui = LaunchConfiguration('gui')
@@ -71,6 +71,12 @@ def generate_launch_description():
     }],
     )
   
+  # Create foxglove bridge
+  start_foxglove_bridge_cmd = Node(
+    package='foxglove_bridge',
+    executable='foxglove_bridge'
+  )
+
   # Create the launch description and populate
   # Create the launch description and populate
   launch_description = LaunchDescription(
@@ -92,6 +98,7 @@ def generate_launch_description():
   launch_description.add_action(declare_use_sim_time_cmd)
 
   # Add any actions
+  launch_description.add_action(start_foxglove_bridge_cmd)
   launch_description.add_action(start_joint_state_publisher_cmd)
   launch_description.add_action(start_joint_state_publisher_gui_node)
   launch_description.add_action(start_robot_state_publisher_cmd)
