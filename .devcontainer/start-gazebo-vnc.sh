@@ -17,11 +17,17 @@ echo "Xvfb on :$DISPLAY_NUM"
 x11vnc -display ":$DISPLAY_NUM" -rfbport $VNC_PORT -forever -shared -bg -noxdamage -passwd vnc 2>/dev/null || true
 echo "VNC server on port $VNC_PORT — when prompted, password is: vnc"
 
+# Set DISPLAY and LIBGL for new terminals so user doesn't have to export every time (idempotent)
+MARKER="# Gazebo VNC display (start-gazebo-vnc.sh)"
+if ! grep -q "$MARKER" ~/.bashrc 2>/dev/null; then
+  echo "" >> ~/.bashrc
+  echo "$MARKER" >> ~/.bashrc
+  echo "export DISPLAY=:$DISPLAY_NUM LIBGL_ALWAYS_SOFTWARE=1" >> ~/.bashrc
+fi
+
 echo ""
 echo "1. On your Mac: connect to localhost:$VNC_PORT — password: vnc"
 echo "2. In a new terminal in the container, run:"
-echo "   export DISPLAY=:$DISPLAY_NUM LIBGL_ALWAYS_SOFTWARE=1"
 echo "   source /home/ros2_ws/install/setup.bash"
-echo "   ros2 launch igvc_gazebo empty_world.launch.py"
-echo "   (do not use headless:=true)"
+echo "   ros2 launch igvc_gazebo empty_world.launch.py (or any other launch file)"
 echo ""

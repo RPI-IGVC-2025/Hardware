@@ -30,8 +30,6 @@ You should see a gray/empty VNC window.
 In a **second** terminal in the devcontainer:
 
 ```bash
-export DISPLAY=:99
-export LIBGL_ALWAYS_SOFTWARE=1
 source /home/ros2_ws/install/setup.bash
 ros2 launch igvc_gazebo empty_world.launch.py
 ```
