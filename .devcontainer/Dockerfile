@@ -27,13 +27,6 @@ ros-jazzy-depthai-ros \
 # IMU Lib dependencies
 libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
 
-# Gazebo Sim (Harmonic) + joint_state_publisher 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-jazzy-ros-gz \
-    ros-jazzy-joint-state-publisher \
-    ros-jazzy-joint-state-publisher-gui \
-    && rm -rf /var/lib/apt/lists/*
-
 # Gazebo GUI on Mac: virtual display + VNC 
 RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc \
     && rm -rf /var/lib/apt/lists/*
