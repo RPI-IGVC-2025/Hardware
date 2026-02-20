@@ -8,7 +8,7 @@ RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m -d /home/ros2_ws $USERNAME \
     #
     # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
     && apt-get update \
@@ -32,6 +32,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SHELL /bin/bash
+
+USER $USERNAME
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 CMD ["/bin/bash"]

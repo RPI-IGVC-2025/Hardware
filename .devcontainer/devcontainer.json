@@ -1,6 +1,7 @@
 {
     "name": "ROS 2 Development Container",
     "privileged": true,
+    "remoteUser": "ros_user",
     "build": {
         "dockerfile": "Dockerfile",
         "args": {

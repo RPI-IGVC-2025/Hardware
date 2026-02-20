@@ -108,3 +108,10 @@ CATKIN_IGNORE
 # ROS stuff
 install
 log
+
+# VS Code Dev Container files
+.vscode-server/
+.devcontainer/*.CommandMarker
+.onCreateCommandMarker
+.postCreateCommandMarker
+.updateContentCommandMarker
