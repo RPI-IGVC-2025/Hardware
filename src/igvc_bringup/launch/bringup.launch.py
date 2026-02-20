@@ -18,7 +18,7 @@ def generate_launch_description():
             description='Run in Simulation'
         ),
         DeclareLaunchArgument(
-            'sim_scenario',
+            'sim_world',
             default_value='empty_world',
             description='The name of the scenario to open in Gazebo'
         ),
@@ -29,9 +29,9 @@ def generate_launch_description():
         ),
         
         DeclareLaunchArgument(
-            'auton',
+            'use_slam',
             default_value='true', 
-            description='Testing autonomy or not'
+            description='Launch rtabmap for SLAM'
         ),
 
 
@@ -52,7 +52,7 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_gazebo'),
                  '/launch/',
-                 LaunchConfiguration('sim_scenario'),
+                 LaunchConfiguration('sim_world'),
                  '.launch.py'
                 ]
             ),
@@ -85,7 +85,7 @@ def generate_launch_description():
                  '/launch',
                  '/sim_rtabmap.launch.py']
             ),
-            condition = IfCondition(LaunchConfiguration('auton'))
+            condition = IfCondition(LaunchConfiguration('use_slam'))
         ),
         
         # TODO Nav
