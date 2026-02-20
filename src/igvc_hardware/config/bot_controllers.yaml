@@ -15,8 +15,8 @@ bot_drive_controller:
     right_wheel_names: ["right_wheel_joint"]
 
     # TODO get from mechanical
-    wheel_separation: 1.0 # m
-    wheel_radius: 1.0 # m
+    wheel_separation: 0.4166 # m
+    wheel_radius: 0.127 # m
 
     wheels_per_side: 1 # TODO look into if we need to make it 2 because we have non-powered steers in the front
 
