@@ -6,7 +6,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
-# find_package(ament_cmake REQUIRED)
+find_package(ament_cmake REQUIRED)
 # find_package(controller_manager REQUIRED)
 # find_package(hardware_interface REQUIRED)
 # find_package(pluginlib REQUIRED)
