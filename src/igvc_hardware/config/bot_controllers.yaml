@@ -4,10 +4,9 @@ controller_manager:
 
     bot_drive_controller:
       type: diff_drive_controller/DiffDriveController
-
 bot_drive_controller:
   ros__parameters:
-
+    type: diff_drive_controller/DiffDriveController
     left_wheel_names: ["left_wheel_joint"]
     right_wheel_names: ["right_wheel_joint"]
 
@@ -46,33 +45,33 @@ bot_drive_controller:
     # TODO work w/ mech. & auton to find kinematic limits
 
     # TODO
-    linear.x.has_velocity_limits: true
-    linear.x.max_velocity: 1.0
-    linear.x.min_velocity: -1.0
+    # linear.x.has_velocity_limits: true
+    # linear.x.max_velocity: 1.0
+    # linear.x.min_velocity: -1.0
 
-    # TODO
-    linear.x.has_acceleration_limits: true
-    linear.x.max_acceleration: 1.0
-    linear.x.max_deceleration: 1.0
-    linear.x.max_acceleration_reverse: 1.0
-    linear.x.max_deceleration_reverse: 1.0
+    # # TODO
+    # linear.x.has_acceleration_limits: true
+    # linear.x.max_acceleration: 1.0
+    # linear.x.max_deceleration: 1.0
+    # linear.x.max_acceleration_reverse: 1.0
+    # linear.x.max_deceleration_reverse: 1.0
 
-    #TODO
-    linear.x.has_jerk_limits: false
-    linear.x.max_jerk: 0.0
-    linear.x.min_jerk: 0.0
+    # #TODO
+    # linear.x.has_jerk_limits: false
+    # linear.x.max_jerk: 0.0
+    # linear.x.min_jerk: 0.0
 
-    # TODO
-    angular.z.has_velocity_limits: true
-    angular.z.max_velocity: 1.0
-    angular.z.min_velocity: -1.0
+    # # TODO
+    # angular.z.has_velocity_limits: true
+    # angular.z.max_velocity: 1.0
+    # angular.z.min_velocity: -1.0
 
-    # TODO
-    angular.z.has_acceleration_limits: true
-    angular.z.max_acceleration: 1.0
-    angular.z.min_acceleration: -1.0
+    # # TODO
+    # angular.z.has_acceleration_limits: true
+    # angular.z.max_acceleration: 1.0
+    # angular.z.min_acceleration: -1.0
 
-    # TODO
-    angular.z.has_jerk_limits: false
-    angular.z.max_jerk: 0.0
-    angular.z.min_jerk: 0.0
+    # # TODO
+    # angular.z.has_jerk_limits: false
+    # angular.z.max_jerk: 0.0
+    # angular.z.min_jerk: 0.0

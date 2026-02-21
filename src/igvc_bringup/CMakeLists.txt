@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(igvc_description)
+project(igvc_bringup)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
@@ -10,27 +10,6 @@ find_package(ament_cmake REQUIRED)
 
 install(
   DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}
-)
-
-install(
-  DIRECTORY control
-  DESTINATION share/${PROJECT_NAME}
-)
-
-
-install(
-  DIRECTORY assets
-  DESTINATION share/${PROJECT_NAME}
-)
-
-install(
-  DIRECTORY urdf
-  DESTINATION share/${PROJECT_NAME}
-)
-
-install(
-  DIRECTORY rviz
   DESTINATION share/${PROJECT_NAME}
 )
 

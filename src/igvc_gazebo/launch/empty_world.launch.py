@@ -15,7 +15,6 @@ def generate_launch_description():
     package_description = FindPackageShare(package='igvc_description').find('igvc_description')
 
     gz_launch_path = os.path.join(ros_gz_sim_package, 'launch', 'gz_sim.launch.py')
-    publisher_launch_path = os.path.join(package_description, 'launch/publisher.launch.py')
 
     world = LaunchConfiguration('world')
 
@@ -36,10 +35,6 @@ def generate_launch_description():
             launch_arguments={'gz_args': ['-r -v4 ', world], 'on_exit_shutdown': 'true'}.items()
         )
 
-    start_publisher_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(publisher_launch_path)
-    )
-    
     spawn_entity = Node(package='ros_gz_sim', executable='create',
         arguments=['-topic', 'robot_description',
                     '-name', 'igvc_robot'],
@@ -61,7 +56,6 @@ def generate_launch_description():
     return LaunchDescription([
         world_arg,
         gazebo,
-        start_publisher_cmd,
         spawn_entity,
         ros_gz_bridge
     ])
