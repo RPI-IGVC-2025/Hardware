@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:arg name="camera_name"   default="oak" />
+    <xacro:arg name="camera_model"  default="OAK-D-POE" />
+    <xacro:arg name="base_frame"    default="oak_base" />
+    <xacro:arg name="parent_frame"  default="oak_parent" />
+    <xacro:arg name="cam_pos_x"     default="0.0" />
+    <xacro:arg name="cam_pos_y"     default="0.0" />
+    <xacro:arg name="cam_pos_z"     default="0.0" />
+    <xacro:arg name="cam_roll"      default="0.0" />
+    <xacro:arg name="cam_pitch"     default="0.0" />
+    <xacro:arg name="cam_yaw"       default="0.0" />
+    <xacro:arg name="rs_compat"     default="true" />
+    <xacro:include filename="$(find depthai_descriptions)/urdf/depthai_descr.urdf.xacro" />
+    
+    <joint name="camera_base_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="oak_parent"/>
+        <origin xyz="0 -0.4 0.95" rpy="0 0 ${pi/2}"/>
+    </joint>
+
+    <gazebo reference="oak_color_frame">
+        <sensor name="oak_depth" type="depth">
+            <pose> 0 0 0 0 0 0 </pose>
+            <topic>oak/depth</topic>
+            <update_rate>20</update_rate>
+            <always_on>1</always_on>
+            <gz_frame_id>oak_color_optical_frame</gz_frame_id>
+            <camera>
+                <horizontal_fov>1.51843645</horizontal_fov>
+                <image>
+                    <format>R_FLOAT32</format>
+                    <width>1280</width>
+                    <height>720</height>
+                </image>
+                <clip>
+                    <near>0.28</near>
+                    <far>10</far>
+                </clip>
+            </camera>
+            <plugin filename="libgz-sim8-sensors-system.so" name="gz::sim::v8::systems::Sensors"></plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="oak_color_frame">
+        <sensor name="camera" type="camera">
+            <camera>
+                <horizontal_fov>1.51843645</horizontal_fov>
+                <image>
+                    <width>1280</width>
+                    <height>720</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>20</far>
+                </clip>
+                <noise>
+                    <type>gaussian</type>
+                    <!-- Noise is sampled independently per pixel on each frame.
+                        That pixel's noise value is added to each of its color
+                        channels, which at that point lie in the range [0,1]. -->
+                    <mean>0.0</mean>
+                    <stddev>0.007</stddev>
+                </noise>
+                <optical_frame_id>camera_link_optical</optical_frame_id>
+                <camera_info_topic>camera/camera_info</camera_info_topic>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>20</update_rate>
+            <visualize>true</visualize>
+            <topic>oak/color</topic>
+        </sensor>
+    </gazebo>
+</robot>
