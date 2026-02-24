@@ -2,18 +2,21 @@ controller_manager:
   ros__parameters:
     update_rate: 10  # Hz
 
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+
     bot_drive_controller:
       type: diff_drive_controller/DiffDriveController
-
 bot_drive_controller:
   ros__parameters:
-
+    type: diff_drive_controller/DiffDriveController
     left_wheel_names: ["left_wheel_joint"]
     right_wheel_names: ["right_wheel_joint"]
 
     # TODO get from mechanical
-    wheel_separation: 1.0 # m
-    wheel_radius: 1.0 # m
+    wheel_separation: 0.4166 # m
+    wheel_radius: 0.127 # m
 
     wheels_per_side: 1 # TODO look into if we need to make it 2 because we have non-powered steers in the front
 
@@ -28,7 +31,7 @@ bot_drive_controller:
 
     publish_rate: 50.0 # Hz
     odom_frame_id: odom
-    base_frame_id: base_link
+    base_frame_id: base_footprint
 
     #TODO These need physical testing
     pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
@@ -47,14 +50,14 @@ bot_drive_controller:
 
     # TODO
     linear.x.has_velocity_limits: true
-    linear.x.max_velocity: 1.0
-    linear.x.min_velocity: -1.0
+    linear.x.max_velocity: 2.2352 # 5 mph in meters/second
+    linear.x.min_velocity: -2.2352
 
     # TODO
-    linear.x.has_acceleration_limits: true
+    linear.x.has_acceleration_limits: false 
     linear.x.max_acceleration: 1.0
-    linear.x.max_deceleration: 1.0
-    linear.x.max_acceleration_reverse: 1.0
+    linear.x.max_deceleration: -1.0
+    linear.x.max_acceleration_reverse: -1.0
     linear.x.max_deceleration_reverse: 1.0
 
     #TODO
@@ -63,12 +66,12 @@ bot_drive_controller:
     linear.x.min_jerk: 0.0
 
     # TODO
-    angular.z.has_velocity_limits: true
+    angular.z.has_velocity_limits: false
     angular.z.max_velocity: 1.0
     angular.z.min_velocity: -1.0
 
     # TODO
-    angular.z.has_acceleration_limits: true
+    angular.z.has_acceleration_limits: false
     angular.z.max_acceleration: 1.0
     angular.z.min_acceleration: -1.0
 

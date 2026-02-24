@@ -13,10 +13,10 @@
       </xacro:unless>
 
       <!-- Generic mock hardware motors-->
+      <!-- TODO Make it so that GazeboSimSystem is dependent on use_sim, and GenericSystem is dependent on !use_sim and use_mock_hardware-->
       <xacro:if value="${use_mock_hardware}">
         <hardware>
-          <plugin>mock_components/GenericSystem</plugin>
-          <param name="calculate_dynamics">true</param>
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
         </hardware>
       </xacro:if>
 
@@ -24,9 +24,15 @@
       <!-- Odrive node ID setups-->
       <joint name="${prefix}left_wheel_joint">
         <param name="node_id">0</param>
+         <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
       </joint>
       <joint name="${prefix}right_wheel_joint">
         <param name="node_id">1</param>
+         <command_interface name="velocity"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
       </joint>
 
       
