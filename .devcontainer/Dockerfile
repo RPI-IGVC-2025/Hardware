@@ -34,7 +34,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SHELL /bin/bash
-ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 CMD ["/bin/bash"]
