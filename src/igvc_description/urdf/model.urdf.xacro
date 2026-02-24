@@ -643,7 +643,7 @@
     </collision>
   </link>
   <!-- Joint from part_1 to part_35 -->
-  <joint name="leftwheel" type="revolute">
+  <joint name="left_wheel_joint" type="revolute">
     <origin xyz="-0.245137 0.278747 0.14524" rpy="-1.5708 -0 -1.5708"/>
     <parent link="part_1"/>
     <child link="part_35"/>
@@ -675,7 +675,7 @@
     </collision>
   </link>
   <!-- Joint from part_1 to part_34 -->
-  <joint name="rightwheel" type="revolute">
+  <joint name="right_wheel_joint" type="revolute">
     <origin xyz="0.171423 0.278747 0.14524" rpy="-1.5708 -0 1.5708"/>
     <parent link="part_1"/>
     <child link="part_34"/>

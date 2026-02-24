@@ -1,5 +1,5 @@
 {
-    "name": "ROS 2 Development Container",
+    "name": "ROS 2 Development Container (nvidia)", 
     "privileged": true,
     "build": {
         "dockerfile": "Dockerfile",
@@ -24,19 +24,33 @@
     "containerEnv": {
         "DISPLAY": "unix:0",
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
-        "ROS_DOMAIN_ID": "42",
-        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
+        "ROS_DOMAIN_ID": "42"
     },
     "runArgs": [
         "--net=host",
         "--pid=host",
         "--ipc=host",
-        "-e", "DISPLAY=${env:DISPLAY}"
+        "--gpus=all",
+        "--runtime=nvidia",
+        "--device=/dev/dxg",
+        "--privileged",
+        "-e", "NVIDIA_VISIBLE_DEVICES=all",
+        "-e", "NVIDIA_DRIVER_CAPABILITES=all",
+        "-e", "DISPLAY=${env:DISPLAY}",
+        "-e", "WAYLAND_DISPLAY=${env:WAYLAND_DISPLAY}",
+        "-e", "LD_LIBRARY_PATH=/usr/lib/wsl/lib",
+        "-e", "MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA",
+        "-e", "MESA_LOADER_DRIVER_OVERRIDE=d3d12",
+        "-e", "GALLIUM_DRIVER=d3d12",
+        "-e", "LIBGL_ALWAYS_INDIRECT=0"
+
     ],
     "mounts": [
-       
+       "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached",
        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
-       "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
+       "source=/usr/lib/wsl,target=/usr/lib/wsl,type=bind,consistency=cached",
+       "source=/usr/lib/x86_64-linux-gnu/dri,target=/usr/lib/x86_64-linux-gnu/dri,type=bind,consistency=cached",
+       "source=//usr/share/glvnd,target=/usr/share/glvnd,type=bind,consistency=cached"
     ],
     "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && (rm -r build/ || true) && colcon build --symlink-install"
 }
