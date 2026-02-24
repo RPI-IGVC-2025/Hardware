@@ -2,7 +2,8 @@
     "name": "ROS 2 Development Container (nvidia)", 
     "privileged": true,
     "build": {
-        "dockerfile": "Dockerfile",
+        "context": "..",
+        "dockerfile": "../Dockerfile",
         "args": {
             "USERNAME": "ros_user"
         }
