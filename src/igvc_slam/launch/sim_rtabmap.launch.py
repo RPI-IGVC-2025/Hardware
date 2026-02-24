@@ -17,14 +17,14 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(rtabmap_launch_path),
         launch_arguments={
             'args' : '--delete_db_on_start',
-            'depth_topic' : '/camera/camera/depth/image_rect_raw',
-            'rgb_topic' : '/camera/camera/color/image_raw',
-            'camera_info_topic' : '/camera/camera/depth/camera_info',
+            'depth_topic' : '/zed/zed_node/depth/depth_registered',
+            'rgb_topic' : '/zed/zed_node/rgb/image_rect_color',
+            'camera_info_topic' : '/zed/zed_node/rgb/camera_info',
             'approx_sync' : 'true',
             'frame_id' : 'base_footprint',
             'log_level' : 'debug', 
             'publish_tf_odom' : 'true',
-            'odom_topic' : '/odom',
+            'odom_topic' : '/zed/zed_node/odom',
             'odom_frame_id' : 'odom',
             'sync_queue_size' : '10', #TODO verify
             'topic_queue_size' : '10', #TODO verify
