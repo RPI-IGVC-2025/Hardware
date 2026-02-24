@@ -1,3 +1,5 @@
+# WORK FILE
+
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -38,11 +40,14 @@ def generate_launch_description():
             'rviz' : 'true',
             'use_sim_time' : 'true',
             'wait_for_transform' : '0.4',
-            'imu_topic' : '/rtabmap/imu',
+            'imu_topic' : '/rtabmap/imu', # Placeholder path
+            'gps_topic' : '/rtabmap/gps', # Placeholder path
             'wait_imu_to_init' : 'false',
             'map_topic' : '/map'
+            # More odometry arguments can be called
         }.items()
     )
+    
 
     return LaunchDescription([
         rtabmap
