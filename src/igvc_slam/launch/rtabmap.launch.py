@@ -11,10 +11,10 @@ import xacro
 
 def generate_launch_description():
     rtabmap_package = get_package_share_directory('rtabmap_launch')
-    realsense_package = get_package_share_directory('realsense2_camera')
+    zed_wrapper = get_package_share_directory('zed_wrapper')
 
     rtabmap_launch_path = os.path.join(rtabmap_package, 'launch', 'rtabmap.launch.py')
-    realsense_launch_path = os.path.join(realsense_package, 'launch', 'rs_launch.py')
+    zed_launch_path = os.path.join(zed_wrapper, 'launch', 'zed2i.launch.py')
 
     imu_filter = Node(
         package='imu_filter_madgwick', 
@@ -35,12 +35,12 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(rtabmap_launch_path),
         launch_arguments={
             'args' : '--delete_db_on_start',
-            'depth_topic' : '/camera/camera/aligned_depth_to_color/image_raw',
-            'rgb_topic' : '/camera/camera/color/image_raw',
-            'camera_info_topic' : '/camera/camera/color/camera_info',
+            'depth_topic' : '/zed/zed_node/depth/depth_registered',
+            'rgb_topic' : '/zed/zed_node/rgb/image_rect_color',
+            'camera_info_topic' : '/zed/zed_node/rgb/camera_info',
             'frame_id' : 'base_footprint',
             'publish_tf_odom' : 'true',
-            'odom_topic' : '/odom',
+            'odom_topic' : 'zed_node/odom',
             'odom_frame_id' : 'odom',
 	        'approx_sync' : 'true',
             'rgbd_sync' : 'true',
@@ -60,7 +60,7 @@ def generate_launch_description():
     )
 
     realsense = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(realsense_launch_path),
+        PythonLaunchDescriptionSource(zed_launch_path),
         launch_arguments={
             'enable_color' : 'true',
             'enable_depth' : 'true',
