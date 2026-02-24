@@ -3,13 +3,25 @@ from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
 
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch.event_handlers import OnProcessExit
 from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+
+from launch.conditions import UnlessCondition
 
 def generate_launch_description():
     # Declare args
     declared_arguments = []
+    
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            name="use_sim",
+            default_value="false",
+            description="Wether or not the robot is launching in simulation"
+        )
+    )
+    
+    use_sim = LaunchConfiguration("use_sim")
     
     # Get nodes
     robot_controllers = PathJoinSubstitution(
@@ -28,6 +40,7 @@ def generate_launch_description():
             robot_controllers
         ],
         output="both",
+        condition = UnlessCondition(use_sim)
     )
 
     robot_controller_spawner = Node(
@@ -57,7 +70,7 @@ def generate_launch_description():
 
 
     nodes = [
-        # control_node,
+        control_node,
         joint_state_broadcaster_spawner,
         robot_controller_spawner
     ]
