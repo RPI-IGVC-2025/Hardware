@@ -63,8 +63,8 @@
                     <mean>0.0</mean>
                     <stddev>0.007</stddev>
                 </noise>
-                <optical_frame_id>camera_link_optical</optical_frame_id>
-                <camera_info_topic>camera/camera_info</camera_info_topic>
+                <optical_frame_id>oak_color_optical_frame</optical_frame_id>
+                <camera_info_topic>oak/camera_info</camera_info_topic>
             </camera>
             <always_on>1</always_on>
             <update_rate>20</update_rate>

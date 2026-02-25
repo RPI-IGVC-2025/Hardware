@@ -39,8 +39,8 @@
                     </horizontal>
                 </scan>
                 <range>
-                    <min>0.3</min>
-                    <max>12</max>
+                    <min>0.05</min>
+                    <max>30</max>
                 </range>
             </lidar>
             <topic>scan</topic>
