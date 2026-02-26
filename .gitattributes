@@ -1,0 +1,2 @@
+# Keep shell scripts with LF line endings (avoids bash\r in container)
+*.sh text eol=lf

@@ -611,7 +611,7 @@
     </collision>
   </link>
   <!-- Joint from part_1 to part_36 -->
-  <joint name="rearwheel" type="revolute">
+  <joint name="rear_wheel_joint" type="continuous">
     <origin xyz="-0.0623407 -0.0348985 0.0485928" rpy="-1.5708 0.506098 1.5708"/>
     <parent link="part_1"/>
     <child link="part_36"/>
@@ -643,11 +643,11 @@
     </collision>
   </link>
   <!-- Joint from part_1 to part_35 -->
-  <joint name="leftwheel" type="revolute">
+  <joint name="left_wheel_joint" type="continuous">
     <origin xyz="-0.245137 0.278747 0.14524" rpy="-1.5708 -0 -1.5708"/>
     <parent link="part_1"/>
     <child link="part_35"/>
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 0 -1"/>
     <limit effort="10" velocity="10" lower="-3.141592653589793" upper="3.141592653589793"/>
   </joint>
   <!-- Link part_34 -->
@@ -675,7 +675,7 @@
     </collision>
   </link>
   <!-- Joint from part_1 to part_34 -->
-  <joint name="rightwheel" type="revolute">
+  <joint name="right_wheel_joint" type="continuous">
     <origin xyz="0.171423 0.278747 0.14524" rpy="-1.5708 -0 1.5708"/>
     <parent link="part_1"/>
     <child link="part_34"/>
@@ -707,7 +707,7 @@
     </collision>
   </link>
   <!-- Joint from part_1 to part_37 -->
-  <joint name="frontwheel" type="revolute">
+  <joint name="front_wheel_joint" type="continuous">
     <origin xyz="-0.0622571 0.659747 0.0658648" rpy="-1.5708 -0 1.5708"/>
     <parent link="part_1"/>
     <child link="part_37"/>
