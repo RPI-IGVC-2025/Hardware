@@ -13,10 +13,10 @@
       </xacro:unless>
 
       <!-- Generic mock hardware motors-->
+      <!-- TODO Make it so that GazeboSimSystem is dependent on use_sim, and GenericSystem is dependent on !use_sim and use_mock_hardware-->
       <xacro:if value="${use_mock_hardware}">
         <hardware>
-          <plugin>mock_components/GenericSystem</plugin>
-          <param name="calculate_dynamics">true</param>
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
         </hardware>
       </xacro:if>
 

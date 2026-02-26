@@ -2,7 +2,8 @@
     "name": "ROS 2 Development Container (nvidia)", 
     "privileged": true,
     "build": {
-        "dockerfile": "Dockerfile",
+        "context": "..",
+        "dockerfile": "../Dockerfile",
         "args": {
             "USERNAME": "ros_user"
         }
@@ -24,7 +25,8 @@
     "containerEnv": {
         "DISPLAY": "unix:0",
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
-        "ROS_DOMAIN_ID": "42"
+        "ROS_DOMAIN_ID": "42",
+        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
     },
     "runArgs": [
         "--net=host",
