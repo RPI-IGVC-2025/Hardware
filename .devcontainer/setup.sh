@@ -3,7 +3,6 @@ cd lib
 
 apt-get update --fix-missing
 apt-get upgrade
-apt-get install -y ros-jazzy-realsense2-camera ros-jazzy-foxglove-bridge
 
 . /opt/ros/jazzy/setup.sh
 
