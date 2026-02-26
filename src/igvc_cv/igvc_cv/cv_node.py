@@ -31,6 +31,12 @@ class CVNode(Node):
         self.declare_parameter("hough_threshold", 10)
         self.declare_parameter("hough_min_line_length", 4)
         self.declare_parameter("hough_max_line_gap", 5)
+
+	# Gaussian Pyramid Up-Sample
+	self.declare_parameter("layers", 4)
+	self.declare_parameter("pyrInput",[])
+	self.declare_parameter("pyrOutput",[])
+	self.declare_parameter("pyrSize".0)	
         
         self.declare_parameter("line_thickness", 10)
         
