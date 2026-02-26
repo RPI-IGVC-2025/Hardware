@@ -43,15 +43,10 @@ def process_image(self, msg):
     # Convert to grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    # Ensure kernel size is odd (GaussianBlur requires odd dimensions)
-    k = self.blur_kernel_size
-    if k % 2 == 0:
-        k += 1
-
     # Gaussian blur
     blur = cv2.GaussianBlur(
         gray,
-        (k, k),
+        (self.blur_kernel_size, self.blur_kernel_size),
         self.blur_sigma_x,
         self.blur_sigma_y
     )
