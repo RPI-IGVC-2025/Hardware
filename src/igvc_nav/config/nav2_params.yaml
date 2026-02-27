@@ -67,6 +67,7 @@ bt_navigator:
 
 controller_server:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     controller_frequency: 20.0
     costmap_update_timeout: 0.30
     min_x_velocity_threshold: 0.5
@@ -340,6 +341,7 @@ waypoint_follower:
 
 velocity_smoother:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     smoothing_frequency: 20.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
@@ -354,6 +356,7 @@ velocity_smoother:
 
 collision_monitor:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
@@ -438,6 +441,7 @@ docking_server:
 
 loopback_simulator:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
     map_frame_id: "map"
