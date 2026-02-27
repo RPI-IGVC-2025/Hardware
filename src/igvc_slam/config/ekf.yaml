@@ -1,4 +1,4 @@
-# Note, this is copied stragith from 
+# Note, this is copied straight from the robot_localization documentation
 
 ### ekf config file ###
 ekf_filter_node:

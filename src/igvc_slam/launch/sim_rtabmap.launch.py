@@ -57,8 +57,14 @@ def generate_launch_description():
         output='screen',
         parameters=[os.path.join(package_slam, 'config/ekf.yaml'), {'use_sim_time': 'true'}]
     )   
+    
 
     return LaunchDescription([
+        launch.actions.DeclareLaunchArgument(
+            name='use_sim_time',
+            default_value='True',
+            description='Flag to enable use_sim_time'
+        ),
         rtabmap,
         robot_localization_node
     ])

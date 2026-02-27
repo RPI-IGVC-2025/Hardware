@@ -14,6 +14,7 @@
 
   <depend>rtabmap_ros</depend>
   <depend>imu_filter_madgwick</depend>
+  <exec_depend>robot_localization</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
