@@ -7,11 +7,13 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.substitutions import FindPackageShare
 
 from launch_ros.actions import Node
 
 def generate_launch_description():
     rtabmap_package = get_package_share_directory('rtabmap_launch')
+    package_slam = FindPackageShare(package='igvc_slam').find('igvc_slam')
 
     rtabmap_launch_path = os.path.join(rtabmap_package, 'launch', 'rtabmap.launch.py')
 
@@ -48,7 +50,17 @@ def generate_launch_description():
         }.items()
     )
     
+    robot_localization_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[os.path.join(package_slam, 'config/ekf.yaml'), {'use_sim_time': 'true'}]
+    )   
 
     return LaunchDescription([
-        rtabmap
+        rtabmap,
+        robot_localization_node
     ])
+    
+    
