@@ -10,7 +10,6 @@ find_package(ament_cmake REQUIRED)
 
 install(
   DIRECTORY launch
-  # DIRECTORY src launch rviz config # From robot_localization setup guide, likely unecessary
   DESTINATION share/${PROJECT_NAME}
 )
 
