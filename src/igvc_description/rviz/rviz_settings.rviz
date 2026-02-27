@@ -64,11 +64,11 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
+        # base_link:
+        #   Alpha: 1
+        #   Show Axes: false
+        #   Show Trail: false
+        #   Value: true
         box_rotate:
           Alpha: 1
           Show Axes: false

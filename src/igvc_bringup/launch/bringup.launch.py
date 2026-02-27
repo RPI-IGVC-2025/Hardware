@@ -9,6 +9,7 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
     use_sim = LaunchConfiguration('use_sim')
     use_mock_hardware = LaunchConfiguration('use_mock_hardware')
+    use_sim_time = LaunchConfiguration('use_sim_time')
 
     return LaunchDescription([
         # Launch Arguments
@@ -33,6 +34,12 @@ def generate_launch_description():
             default_value='true', 
             description='Launch rtabmap for SLAM'
         ),
+        
+        DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='true',
+            description='Use simulation time'
+       ),
 
 
         # Publishers & URDF
@@ -43,7 +50,8 @@ def generate_launch_description():
                  '/publisher.launch.py']
             ),
             launch_arguments={
-                'use_mock_hardware': use_mock_hardware
+                'use_mock_hardware': use_mock_hardware, 
+                'use_sim_time' : use_sim_time, 
                 }.items()
         ),
 
@@ -57,6 +65,9 @@ def generate_launch_description():
                 ]
             ),
             condition=IfCondition(use_sim),
+            launch_arguments={
+                'use_sim_time' : use_sim_time, 
+            }.items(),
         ),
 
         # ROS2_Control
@@ -66,6 +77,9 @@ def generate_launch_description():
                  '/launch',
                  '/control.launch.py']
             ),
+            launch_arguments={
+                'use_sim_time' : use_sim_time, 
+            }.items(),
         ),
 
         # Real hardware
@@ -75,7 +89,10 @@ def generate_launch_description():
                  '/launch',
                  '/hardware.launch.py']
             ),
-            condition = UnlessCondition(use_mock_hardware)
+            condition = UnlessCondition(use_mock_hardware), 
+            launch_arguments={
+                'use_sim_time' : use_sim_time, 
+            }.items(),
         ),
 
         # SLAM
@@ -85,7 +102,10 @@ def generate_launch_description():
                  '/launch',
                  '/sim_rtabmap.launch.py']
             ),
-            condition = IfCondition(LaunchConfiguration('use_slam'))
+            condition = IfCondition(LaunchConfiguration('use_slam')),
+            launch_arguments={
+                'use_sim_time' : use_sim_time, 
+            }.items(),
         ),
         
         # TODO Nav
