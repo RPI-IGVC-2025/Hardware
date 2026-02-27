@@ -60,11 +60,6 @@ def generate_launch_description():
     
 
     return LaunchDescription([
-        launch.actions.DeclareLaunchArgument(
-            name='use_sim_time',
-            default_value='True',
-            description='Flag to enable use_sim_time'
-        ),
         rtabmap,
         robot_localization_node
     ])
