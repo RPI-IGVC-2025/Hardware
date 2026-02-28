@@ -1,5 +1,6 @@
 amcl:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     alpha1: 0.2
     alpha2: 0.2
     alpha3: 0.2
@@ -40,6 +41,7 @@ amcl:
 
 bt_navigator:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     global_frame: map
     robot_base_frame: base_footprint
     odom_topic: /odom
@@ -67,6 +69,7 @@ bt_navigator:
 
 controller_server:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     controller_frequency: 20.0
     costmap_update_timeout: 0.30
     min_x_velocity_threshold: 0.5
@@ -192,6 +195,7 @@ controller_server:
 local_costmap:
   local_costmap:
     ros__parameters:
+      enable_stamped_cmd_vel: true
       update_frequency: 5.0
       publish_frequency: 2.0
       global_frame: odom
@@ -234,6 +238,7 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
+      enable_stamped_cmd_vel: true
       update_frequency: 1.0
       publish_frequency: 1.0
       global_frame: map
@@ -245,13 +250,13 @@ global_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
-        observation_sources: scan
-        scan:
-          topic: /scan
+        observation_sources: rtabmap
+        rtabmap:
+          topic: /rtabmap/odom_local_scan_map
           max_obstacle_height: 2.0
           clearing: True
           marking: True
-          data_type: "LaserScan"
+          data_type: "PointCloud2"
           raytrace_max_range: 3.0
           raytrace_min_range: 0.0
           obstacle_max_range: 2.5
@@ -274,6 +279,7 @@ global_costmap:
 
 map_saver:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     save_map_timeout: 5.0
     free_thresh_default: 0.25
     occupied_thresh_default: 0.65
@@ -281,6 +287,7 @@ map_saver:
 
 planner_server:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     expected_planner_frequency: 20.0
     planner_plugins: ["GridBased"]
     costmap_update_timeout: 1.0
@@ -292,6 +299,7 @@ planner_server:
 
 smoother_server:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     smoother_plugins: ["simple_smoother"]
     simple_smoother:
       plugin: "nav2_smoother::SimpleSmoother"
@@ -329,6 +337,7 @@ behavior_server:
 
 waypoint_follower:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     loop_rate: 20
     stop_on_failure: false
     action_server_result_timeout: 900.0
@@ -340,6 +349,7 @@ waypoint_follower:
 
 velocity_smoother:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     smoothing_frequency: 20.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
@@ -354,6 +364,7 @@ velocity_smoother:
 
 collision_monitor:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
@@ -385,6 +396,7 @@ collision_monitor:
 
 docking_server:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     controller_frequency: 50.0
     initial_perception_timeout: 5.0
     wait_charge_timeout: 5.0
@@ -438,6 +450,7 @@ docking_server:
 
 loopback_simulator:
   ros__parameters:
+    enable_stamped_cmd_vel: true
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
     map_frame_id: "map"
