@@ -1,3 +1,6 @@
+# Adaptive Monte Carlo Localization
+# Handles robot localization, uses a particle filter to estimate where the robot is on the map
+# by comparing laser scan data against the known map.
 amcl:
   ros__parameters:
     alpha1: 0.2
@@ -38,6 +41,9 @@ amcl:
     z_short: 0.05
     scan_topic: scan
 
+# Behavior Tree Navigator
+# Executes behavior trees that coordinate all the other servers to complete navigation tasks.
+# Essentially the conductor of the whole Nav2 stack.
 bt_navigator:
   ros__parameters:
     global_frame: map
@@ -65,6 +71,10 @@ bt_navigator:
       - compute_path_error_code
       - follow_path_error_code
 
+# Controller Server
+# Handles local motion control; takes the global path and computes actual velocity commands to send to 
+# the robots motors. This config uses the MPPI controller, which samples thousands of possible trajectories
+# and picks the best one based on a set of weighted cost functions.
 controller_server:
   ros__parameters:
     controller_frequency: 20.0
@@ -189,6 +199,9 @@ controller_server:
       #   twirling_cost_power: 1
       #   twirling_cost_weight: 10.0
 
+# Local Costmap
+# A small rolling 2D grid centered on the robot that tracks nearby obstacles in real time.
+# Used by the controller server for local collision avoidance. 
 local_costmap:
   local_costmap:
     ros__parameters:
@@ -231,6 +244,9 @@ local_costmap:
         map_subscribe_transient_local: True
       always_send_full_costmap: True
 
+# Global Costmap
+# A full map-sized 2D grid representing the entire known environment with obstacles and inflation zones. 
+# Used by planner server to compute long-range paths, and uses lidar scan as its obstacle source. 
 global_costmap:
   global_costmap:
     ros__parameters:
@@ -272,6 +288,9 @@ global_costmap:
 #   ros__parameters:
 #     yaml_filename: ""
 
+# Map Saver
+# Utility server that listens to a map topic and saves it to disk as a .pgm/.yaml file pair when requested. 
+# Useful after a mapping session. 
 map_saver:
   ros__parameters:
     save_map_timeout: 5.0
@@ -279,6 +298,9 @@ map_saver:
     occupied_thresh_default: 0.65
     map_subscribe_transient_local: True
 
+# Planner Server
+# Computes a global path from the robot's current position to the goal. 
+# This config uses NavFn (dijkstra/A*) to find shortest traversable route through the global costmap. 
 planner_server:
   ros__parameters:
     expected_planner_frequency: 20.0
@@ -290,6 +312,9 @@ planner_server:
       use_astar: false
       allow_unknown: true
 
+# Smoother Server
+# Post-processes the raw global path from the planner to make it smoother and more drivable.
+# This config uses Simple Smoother, which iteratively adjusts waypoints to reduce sharp angles. 
 smoother_server:
   ros__parameters:
     smoother_plugins: ["simple_smoother"]
@@ -299,6 +324,8 @@ smoother_server:
       max_its: 1000
       do_refinement: True
 
+# Behavior Server
+# Provides recovery and utility behaviors that the BT Navigator can call when things go wrong. 
 behavior_server:
   ros__parameters:
     local_costmap_topic: local_costmap/costmap_raw
@@ -326,6 +353,9 @@ behavior_server:
     min_rotational_vel: 0.4
     rotational_acc_lim: 3.2
 
+# Waypoint Follower
+# Enables sequential navigation through a list of waypoints. 
+# It calls the BT Navigator repeatedly for each waypoint. 
 waypoint_follower:
   ros__parameters:
     loop_rate: 20
@@ -337,6 +367,9 @@ waypoint_follower:
       enabled: True
       waypoint_pause_duration: 200
 
+# Velocity Smoother
+# Sits between the controller output and robot hardware, smoothing velocity commands to respect
+# acceleration/deceleration limits and prevent jerky motion. 
 velocity_smoother:
   ros__parameters:
     smoothing_frequency: 20.0
@@ -351,6 +384,10 @@ velocity_smoother:
     deadband_velocity: [0.5, 0.0, 0.5]
     velocity_timeout: 1.0
 
+# Collision Monitor
+# A safety later that watches sensor data and can override velocity commands to slow down or stop the robot
+# if a collision is about to happen. This config uses a "footprint approach" zone that will trigger is an obstacle is 
+# within 1.2 seconds of collision. 
 collision_monitor:
   ros__parameters:
     base_frame_id: "base_footprint"
@@ -382,6 +419,9 @@ collision_monitor:
       max_height: 2.0
       enabled: True
 
+# Docking Server
+# Manages autonomous docking to a charging station. 
+# It handles the approach, alignment, and contact phases. 
 docking_server:
   ros__parameters:
     controller_frequency: 50.0
@@ -435,6 +475,9 @@ docking_server:
       simulation_step: 0.1
       dock_collision_threshold: 0.3
 
+# Loopback Simulator
+# A lightweight fake robot simulator used for testing Nav2 without real hardware or physics simulator (Gazebo). 
+# Simulates odometry and laser scan data based on the commanded velocities. 
 loopback_simulator:
   ros__parameters:
     base_frame_id: "base_footprint"
