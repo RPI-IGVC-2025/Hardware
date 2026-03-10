@@ -2,7 +2,6 @@ from launch import LaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
-
 from launch.substitutions import PathJoinSubstitution
 
 def generate_launch_description():
@@ -10,13 +9,7 @@ def generate_launch_description():
     declared_arguments = []
     
     # Get nodes
-    robot_controllers = PathJoinSubstitution(
-        [
-            FindPackageShare("igvc_hardware"),
-            "config",
-            "bot_controllers.yaml",
-        ]
-    )
+    robot_controllers = PathJoinSubstitution([FindPackageShare("igvc_hardware"),"config","bot_controllers.yaml",])
 
     control_node = Node(
         package="controller_manager",
