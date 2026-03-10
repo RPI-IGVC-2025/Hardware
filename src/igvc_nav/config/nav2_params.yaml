@@ -361,12 +361,16 @@ velocity_smoother:
     odom_duration: 0.1
     deadband_velocity: [0.5, 0.0, 0.5]
     velocity_timeout: 1.0
+    # TB4-style pipeline: Nav2 -> smoother -> collision monitor
+    cmd_vel_topic: "cmd_vel_nav"
+    smoothed_cmd_vel_topic: "cmd_vel_smoothed"
 
 collision_monitor:
   ros__parameters:
     enable_stamped_cmd_vel: true
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
+    # Take smoothed cmd_vel and send to the robot controller
     cmd_vel_in_topic: "cmd_vel_smoothed"
     cmd_vel_out_topic: "/bot_drive_controller/cmd_vel"
     state_topic: "collision_monitor_state"

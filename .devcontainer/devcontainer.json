@@ -26,6 +26,7 @@
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
         "ROS_DOMAIN_ID": "42",
         "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp",
+        "CYCLONEDDS_URI": "file:///home/ros2_ws/.devcontainer/cyclonedds.xml",
         "GNOME_TERMINAL_SCREEN": ""
     },
     "runArgs": [

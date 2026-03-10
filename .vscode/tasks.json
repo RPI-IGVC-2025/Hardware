@@ -2,10 +2,11 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "colcon",
+			"type": "shell",
+			"command": "bash",
 			"args": [
-				"build",
-				"--symlink-install"
+				"-lc",
+				"source /opt/ros/jazzy/setup.bash && colcon build --symlink-install"
 			],
 			"problemMatcher": [
 				"$colcon-gcc"
@@ -17,12 +18,11 @@
 			"label": "colcon: Colcon Build Release"
 		},
 		{
-			"type": "colcon",
+			"type": "shell",
+			"command": "bash",
 			"args": [
-				"build",
-				"--symlink-install",
-				"--cmake-args",
-				"-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+				"-lc",
+				"source /opt/ros/jazzy/setup.bash && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo"
 			],
 			"label": "colcon: Colcon Build Test",
 			"problemMatcher": [],
@@ -32,12 +32,11 @@
 			}
 		},
 		{
-			"type": "colcon",
+			"type": "shell",
+			"command": "bash",
 			"args": [
-				"build",
-				"--symlink-install",
-				"--cmake-args",
-				"-DCMAKE_BUILD_TYPE=Debug"
+				"-lc",
+				"source /opt/ros/jazzy/setup.bash && colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug"
 			],
 			"problemMatcher": [
 				"$colcon-gcc"

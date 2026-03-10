@@ -4,15 +4,19 @@ Short reference for running the Gazebo simulation **with the 3D view** in the de
 
 ---
 
-## 1. Start VNC (once per container session)
+## 1. Start VNC and run bringup (same terminal)
 
-In a terminal **in the devcontainer**:
+You must **source** the script (not run it) so `DISPLAY=:99` is set in your shell. Otherwise Gazebo and rtabmap run headless and the VNC window stays black.
+
+In a single terminal **in the devcontainer**:
 
 ```bash
-/home/ros2_ws/.devcontainer/start-gazebo-vnc.sh
+source /home/ros2_ws/.devcontainer/start-gazebo-vnc.sh
+source /home/ros2_ws/install/setup.bash
+ros2 launch igvc_bringup bringup.launch.py use_sim:=true use_slam:=true use_mock_hardware:=true use_sim_time:=true
 ```
 
-Password when prompted: **vnc**
+Password when connecting to VNC: **vnc**
 
 ---
 
@@ -21,20 +25,9 @@ Password when prompted: **vnc**
 - **Finder:** Cmd+K → `vnc://localhost:5900` → Connect → password: **vnc**
 - Or **Screen Sharing** app → connect to **localhost** → password: **vnc**
 
-You should see a gray/empty VNC window.
+You should see a gray/empty VNC window at first; after bringup starts, Gazebo and rtabmap windows appear there. Use the taskbar at the bottom or click a window to bring it to the front (fluxbox window manager).
 
----
-
-## 3. Run bringup in the container (Gazebo + rtabmap)
-
-In a **second** terminal in the devcontainer:
-
-```bash
-source /home/ros2_ws/install/setup.bash
-ros2 launch igvc_bringup bringup.launch.py use_sim:=true
-```
-
-Do **not** use `headless:=true`. Both the Gazebo and rtabmap windows appear in the VNC window. Use the taskbar at the bottom or click a window to bring it to the front (fluxbox window manager).
+Do **not** use `headless:=true`. Do **not** run bringup in a different terminal than the one where you sourced the script — that terminal would not have `DISPLAY=:99`.
 
 ---
 
