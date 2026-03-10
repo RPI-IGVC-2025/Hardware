@@ -55,16 +55,5 @@ def generate_launch_description():
     ]
     return LaunchDescription(declared_arguments + Node)  
                          
-"""
-    world_arg = DeclareLaunchArgument(
-        'world',
-        default_value=default_world,
-        description='World to load'
-    )
-    gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(gz_launch_path),
-        launch_arguments={'gz_args': ['-r -v4 ', world], 'on_exit_shutdown': 'true'}.items()
-    )
-    
-"""
+
     

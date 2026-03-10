@@ -25,16 +25,16 @@ You should see a gray/empty VNC window.
 
 ---
 
-## 3. Run Gazebo in the container
+## 3. Run bringup in the container (Gazebo + rtabmap)
 
 In a **second** terminal in the devcontainer:
 
 ```bash
 source /home/ros2_ws/install/setup.bash
-ros2 launch igvc_gazebo empty_world.launch.py
+ros2 launch igvc_bringup bringup.launch.py use_sim:=true
 ```
 
-Do **not** use `headless:=true`. The Gazebo window appears in the VNC window on your Mac.
+Do **not** use `headless:=true`. Both the Gazebo and rtabmap windows appear in the VNC window. Use the taskbar at the bottom or click a window to bring it to the front (fluxbox window manager).
 
 ---
 
@@ -42,7 +42,8 @@ Do **not** use `headless:=true`. The Gazebo window appears in the VNC window on 
 
 ```bash
 source /home/ros2_ws/install/setup.bash
-ros2 launch igvc_gazebo empty_world.launch.py headless:=true
+# ros2 launch igvc_gazebo empty_world.launch.py headless:=true
+ros2 launch igvc_bringup bringup.launch.py use_sim:=true
 ```
 
 ---
