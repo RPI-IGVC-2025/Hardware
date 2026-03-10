@@ -4,6 +4,8 @@
   gz_type_name: "gz.msgs.Clock"
   direction: GZ_TO_ROS
 
+#IMU
+
 - ros_topic_name: "imu_plugin/out"
   gz_topic_name: "imu"
   ros_type_name: "sensor_msgs/msg/Imu"
@@ -39,7 +41,7 @@
   gz_type_name: "gz.msgs.PointCloudPacked"
   direction: GZ_TO_ROS
 
-  #LIDAR
+#LIDAR
 - ros_topic_name: "scan"
   gz_topic_name: "scan"
   ros_type_name: "sensor_msgs/msg/LaserScan"
@@ -50,4 +52,11 @@
   gz_topic_name: "scan/points"
   ros_type_name: "sensor_msgs/msg/PointCloud2"
   gz_type_name: "gz.msgs.PointCloudPacked"
+  direction: GZ_TO_ROS
+
+#GPS
+- ros_topic_name: "/navsat"
+  gz_topic_name: "/navsat"
+  ros_type_name: "sensor_msgs/msg/NavSatFix"
+  gz_type_name: "gz.msgs.NavSat"
   direction: GZ_TO_ROS

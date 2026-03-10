@@ -44,7 +44,8 @@
         "-e", "MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA",
         "-e", "MESA_LOADER_DRIVER_OVERRIDE=d3d12",
         "-e", "GALLIUM_DRIVER=d3d12",
-        "-e", "LIBGL_ALWAYS_INDIRECT=0"
+        "-e", "LIBGL_ALWAYS_INDIRECT=0",
+        "-p", "8765:8765"
 
     ],
     "mounts": [
@@ -54,5 +55,6 @@
        "source=/usr/lib/x86_64-linux-gnu/dri,target=/usr/lib/x86_64-linux-gnu/dri,type=bind,consistency=cached",
        "source=//usr/share/glvnd,target=/usr/share/glvnd,type=bind,consistency=cached"
     ],
-    "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && (rm -r build/ || true) && colcon build --symlink-install"
+    "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && (rm -r build/ || true) && colcon build --symlink-install",
+    "forwardPorts": [8765]
 }

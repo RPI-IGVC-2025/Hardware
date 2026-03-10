@@ -22,12 +22,15 @@ RUN apt-get install -y python3-pip
 RUN apt-get update \
 # Missing ROS packages
 && apt-get install -y ros-jazzy-rqt* \
+ros-jazzy-teleop-twist-keyboard \
 # Camera Lib
 ros-jazzy-depthai-ros \
 # CycloneDDS package
 ros-jazzy-rmw-cyclonedds-cpp \
 # IMU Lib dependencies
-libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz
+libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz \
+# External terminal
+gnome-terminal dbus-x11
 
 # Gazebo GUI on Mac: virtual display + VNC + window manager (switch between Gazebo/rtabmap)
 RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc fluxbox \
