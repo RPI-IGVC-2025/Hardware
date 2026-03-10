@@ -15,8 +15,14 @@
     <xacro:include filename="$(find igvc_description)/urdf/model.urdf.xacro"/>
     <xacro:include filename="$(find igvc_description)/urdf/sensors.urdf.xacro"/>
 
-    <xacro:include filename="$(find igvc_hardware)/description/bot.ros2_control.xacro" />
+    <xacro:include filename="$(find igvc_description)/control/bot.ros2_control.xacro" />
 
     <xacro:bot_ros2_control name="IGVC_Bot" prefix="$(arg prefix)" use_mock_hardware="$(arg use_mock_hardware)"/>
+
+    <gazebo>
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find igvc_hardware)/config/bot_controllers.yaml</parameters>
+        </plugin>
+    </gazebo>
 
 </robot>

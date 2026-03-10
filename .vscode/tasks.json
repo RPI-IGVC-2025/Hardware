@@ -1,0 +1,85 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "colcon",
+			"args": [
+				"build",
+				"--symlink-install"
+			],
+			"problemMatcher": [
+				"$colcon-gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"label": "colcon: Colcon Build Release"
+		},
+		{
+			"type": "colcon",
+			"args": [
+				"build",
+				"--symlink-install",
+				"--cmake-args",
+				"-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+			],
+			"label": "colcon: Colcon Build Test",
+			"problemMatcher": [],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			}
+		},
+		{
+			"type": "colcon",
+			"args": [
+				"build",
+				"--symlink-install",
+				"--cmake-args",
+				"-DCMAKE_BUILD_TYPE=Debug"
+			],
+			"problemMatcher": [
+				"$colcon-gcc"
+			],
+			"label": "colcon: Colcon Build Debug"
+		},
+		{
+            "label": "IGVC: Open simulation scenario",
+            "type": "shell",
+			"command": "source install/setup.bash && ros2 launch igvc_bringup bringup.launch.py use_sim:=true",
+            "problemMatcher": [],
+			"hide": true
+		},
+		{
+            "label": "IGVC: Open non-SLAM simulation scenario",
+            "type": "shell",
+			"command": "source install/setup.bash && ros2 launch igvc_bringup bringup.launch.py use_sim:=true use_slam:=false",
+            "problemMatcher": [],
+			"hide": true
+		},
+		{
+			"label": "IGVC: Open input keyboard",
+			"type": "shell",
+			"command": "source install/setup.bash; gnome-terminal --title 'Teleop twist keyboard' -- sh -c 'ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/bot_drive_controller/cmd_vel -p use_sim_time:=true -p stamped:=true'",
+			"problemMatcher": []
+		},
+        {
+            "label": "IGVC: Run Simulation",
+            "dependsOn": [
+                "IGVC: Open simulation scenario",
+                "IGVC: Open input keyboard",
+            ],
+            "problemMatcher": []
+        },
+		{
+            "label": "IGVC: Run Barebones Simulation",
+            "dependsOn": [
+                "IGVC: Open non-SLAM simulation scenario",
+                "IGVC: Open input keyboard",
+            ],
+            "problemMatcher": []
+        }
+
+	]
+}

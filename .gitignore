@@ -102,8 +102,11 @@ CATKIN_IGNORE
 
 .idea
 
-# VS Code
-.vscode
+# .vscode
+
+*.db*
+c_cpp_properties.json
+settings.json
 
 # ROS stuff
 install
