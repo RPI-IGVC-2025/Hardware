@@ -1,4 +1,4 @@
-# Adaptive Monte Carlo Localization
+# Adaptive Monte Carlo Localization - NOT NEEDED
 # Handles robot localization, uses a particle filter to estimate where the robot is on the map
 # by comparing laser scan data against the known map.
 amcl:
