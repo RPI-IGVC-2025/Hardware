@@ -1,6 +1,12 @@
-# Adaptive Monte Carlo Localization - NOT NEEDED
+# REMOVE - NOT NEEDED
+# Adaptive Monte Carlo Localization
 # Handles robot localization, uses a particle filter to estimate where the robot is on the map
 # by comparing laser scan data against the known map.
+
+# RTABMap is a full SLAM system (it builds the map and localizes at the same time, and also publishes the map -> odom transform). 
+# Running RTABMap and AMCL at the same time causes a TF conflict, because the two nodes compete to 
+# publish the same transform. This causes one to overwrite the other unpredictably. 
+# For IGVC, we don't have a pre-built map to give to AMCL, so we need to use RTAB and DISABLE AMCL. 
 amcl:
   ros__parameters:
     alpha1: 0.2
@@ -41,9 +47,14 @@ amcl:
     z_short: 0.05
     scan_topic: scan
 
+# CORE
 # Behavior Tree Navigator
 # Executes behavior trees that coordinate all the other servers to complete navigation tasks.
-# Essentially the conductor of the whole Nav2 stack.
+# Without this server, nothing moves. Every navigation request flows through here. 
+# The configurable behavior tree is used to manage mission logic like allowing
+# the robot to handle path planning, obstacle avoidance, and recovery behaviors. By coordinating
+# various task servers, it allows the robot to execute sequences like "navigate to pose" 
+# while switching to recovery actions if failures occur. 
 bt_navigator:
   ros__parameters:
     global_frame: map
@@ -71,10 +82,16 @@ bt_navigator:
       - compute_path_error_code
       - follow_path_error_code
 
+# CORE
 # Controller Server
 # Handles local motion control; takes the global path and computes actual velocity commands to send to 
 # the robots motors. This config uses the MPPI controller, which samples thousands of possible trajectories
 # and picks the best one based on a set of weighted cost functions.
+# CostCritic - handles obstacle avoidance
+# PathAlignCritic - keeps the robot on path
+# PreferForwardCritic - prevents unnecessary reversing
+# VelocityDeadbandCritic - prevents motor chatter at low speeds
+# NOTE: vx_max is 3 m/s, might be a bit fast for IGVC and we may need to lower it depending on robots speed limits
 controller_server:
   ros__parameters:
     controller_frequency: 20.0
@@ -199,9 +216,14 @@ controller_server:
       #   twirling_cost_power: 1
       #   twirling_cost_weight: 10.0
 
+# CORE
 # Local Costmap
-# A small rolling 2D grid centered on the robot that tracks nearby obstacles in real time.
-# Used by the controller server for local collision avoidance. 
+# A small rolling 2D grid (ours is 3 x 3) centered on the robot that tracks nearby obstacles in real time.
+# Used by the controller server for local collision avoidance. Without this server, the controller has no 
+# obstacle awareness and would blindly follow the global path into obstacles on the map. 
+# Updates at a high frequency using live sensor data (LiDAR, depth camera) to detect and 
+# react to obstacles not present on the static global map. 
+# NOTE: obstacle_max_range is 2.5, but window is 3x3 - robot might get limited lookahead
 local_costmap:
   local_costmap:
     ros__parameters:
@@ -244,9 +266,15 @@ local_costmap:
         map_subscribe_transient_local: True
       always_send_full_costmap: True
 
+# CORE
 # Global Costmap
 # A full map-sized 2D grid representing the entire known environment with obstacles and inflation zones. 
 # Used by planner server to compute long-range paths, and uses lidar scan as its obstacle source. 
+# Basically the planner server uses this in order to compute an optimal, collision-free path
+# across the entire known environment. Our params uses our lidar scan directly via an ObstacleLayer, layered 
+# over a static map from RTABMap with an inflation radius of 0.7m around obstacles. 
+# NOTE: global costmap uses plain 2D LaserScan (/scan) while local costmap uses RTABMap's 3d point cloud. 
+# This is a reasonable split, because global planning doesn't need 3D, but local avoidance benefits from it. 
 global_costmap:
   global_costmap:
     ros__parameters:
@@ -288,9 +316,11 @@ global_costmap:
 #   ros__parameters:
 #     yaml_filename: ""
 
+# REMOVE - NOT NEEDED (during competition)
 # Map Saver
 # Utility server that listens to a map topic and saves it to disk as a .pgm/.yaml file pair when requested. 
-# Useful after a mapping session. 
+# Useful after a mapping session, used for just testing/development to capture RTABMap output. 
+# Should NOT be running during actual competition. 
 map_saver:
   ros__parameters:
     save_map_timeout: 5.0
@@ -298,6 +328,7 @@ map_saver:
     occupied_thresh_default: 0.65
     map_subscribe_transient_local: True
 
+# CORE
 # Planner Server
 # Computes a global path from the robot's current position to the goal. 
 # This config uses NavFn (dijkstra/A*) to find shortest traversable route through the global costmap. 
