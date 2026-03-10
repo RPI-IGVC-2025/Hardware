@@ -7,7 +7,6 @@ import sensor_msgs_py.point_cloud2 as pc2
 import cv2
 import numpy as np
 
-
 class CVNode(Node):
     def __init__(self):
         super().__init__('cv_node')
@@ -42,10 +41,8 @@ class CVNode(Node):
         self.sync.registerCallback(self.process)
         # ===== Publishers =====
         self.image_pub = self.create_publisher(Image, 'image_processed', 10)
-
-    # ── Main callback ─────────────────────────────────────────────────────
+        
     def process(self, rgb_msg: Image, pc_msg: PointCloud2):
-
         # Fetch parameters
         blur_k = self.get_parameter("blur_kernel_size").value
         blur_sx = self.get_parameter("blur_sigma_x").value
