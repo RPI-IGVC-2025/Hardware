@@ -11,7 +11,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
-    install_requires=['setuptools'],
+    install_requires=['setuptools', 'numpy', 'opencv-python', 'sensor-msgs-py'],
     zip_safe=True,
     maintainer='Camden Laursen-Carr',
     maintainer_email='laursc@rpi.edu',
