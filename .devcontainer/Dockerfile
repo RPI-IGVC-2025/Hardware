@@ -23,8 +23,6 @@ RUN apt-get update \
 # Missing ROS packages
 && apt-get install -y ros-jazzy-rqt* \
 ros-jazzy-teleop-twist-keyboard \
-# Camera Lib
-ros-jazzy-depthai-ros \
 # CycloneDDS package
 ros-jazzy-rmw-cyclonedds-cpp \
 # IMU Lib dependencies

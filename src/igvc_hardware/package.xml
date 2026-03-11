@@ -17,12 +17,10 @@
     <depend>pluginlib</depend>
     <depend>rclcpp</depend>
     <depend>rclcpp_lifecycle</depend>
-    <depend>depthai_ros_driver</depend>
     <depend>gz_ros2_control</depend>
     <depend>zed_wrapper</depend>
 
     <depend>backward_ros</depend>
-
 
     <exec_depend>controller_manager</exec_depend>
     <exec_depend>diff_drive_controller</exec_depend>

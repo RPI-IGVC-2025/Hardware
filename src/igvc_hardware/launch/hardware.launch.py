@@ -16,7 +16,7 @@ def generate_launch_description():
         ros_arguments=["-p", f"imu_device_name:=${IMU_NAME}"]
     )
 
-    # TODO depthai (camera)
+    # TODO zed (camera)
 
     # TODO In the examples, the controller manager is not spawned until the joint state broadcaster is finished spawning. Implement if we have problems regarding that.
     
