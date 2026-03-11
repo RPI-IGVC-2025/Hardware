@@ -3,6 +3,14 @@
 - **Terminal 1 – VNC + simulation (inside devcontainer)**
 
 ```bash
+
+cd /home/ros2_ws
+colcon build --packages-select igvc_nav igvc_hardware
+source install/setup.bash
+```
+
+
+```bash
 cd /home/ros2_ws
 source .devcontainer/start-gazebo-vnc.sh
 source install/setup.bash
