@@ -31,8 +31,8 @@ class CVNode(Node):
         self.declare_parameter("line_thickness", 10)
 
         # Synchronised RGB + PointCloud subscribers
-        self.rgb_sub = Subscriber(self, Image, 'image_raw')
-        self.pc_sub = Subscriber(self, PointCloud2, 'depth/points')
+        self.rgb_sub = Subscriber(self, Image, '/camera/camera/color/image_raw')
+        self.pc_sub = Subscriber(self, PointCloud2, '/camera/camera/depth/image_rect_raw')
         self.sync = ApproximateTimeSynchronizer(
             [self.rgb_sub, self.pc_sub],
             queue_size=10,
@@ -43,6 +43,7 @@ class CVNode(Node):
         self.image_pub = self.create_publisher(Image, 'image_processed', 10)
         
     def process(self, rgb_msg: Image, pc_msg: PointCloud2):
+        self.get_logger().info("Called Process()")
         # Fetch parameters
         blur_k = self.get_parameter("blur_kernel_size").value
         blur_sx = self.get_parameter("blur_sigma_x").value
@@ -110,6 +111,7 @@ class CVNode(Node):
         ros_image = self.bridge.cv2_to_imgmsg(result, 'bgr8')
         ros_image.header = rgb_msg.header
         self.image_pub.publish(ros_image)
+        self.get_logger().info("Published Image")
         
 def main(args=None):
     rclpy.init(args=args)
