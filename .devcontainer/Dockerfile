@@ -31,7 +31,8 @@ libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev lib
 gnome-terminal dbus-x11 
 
 # Camera stuff 
-RUN apt-get update \
+RUN if ["$DEPLOYABLE_BUILD == 1"]; then \
+apt-get update \
 && apt-get install -y \
 # Camera lib utilities
 zstd pciutils mesa-utils wget gnupg \
@@ -39,15 +40,20 @@ zstd pciutils mesa-utils wget gnupg \
 && wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
 && dpkg -i cuda-keyring_1.1-1_all.deb \
 && apt-get update \
-&& apt-get install -y cuda-toolkit-13-0
+&& apt-get install -y cuda-toolkit-13-0 \
+fi
 
 # ZED SDK
-RUN wget https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24 \
-&& ./ubuntu24 -- silent
+RUN if ["$DEPLOYABLE_BUILD == 1"]; then \
+wget https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24 \
+&& ./ubuntu24 -- silent \
+fi
 
 # Gazebo GUI on Mac: virtual display + VNC + window manager (switch between Gazebo/rtabmap)
-RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc fluxbox \
+RUN if ["$IS_MACOS == 1"]; then \
+apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc fluxbox \
     && rm -rf /var/lib/apt/lists/*
+fi
 
 ENV SHELL /bin/bash
 
