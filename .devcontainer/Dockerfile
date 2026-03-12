@@ -28,7 +28,22 @@ ros-jazzy-rmw-cyclonedds-cpp \
 # IMU Lib dependencies
 libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz \
 # External terminal
-gnome-terminal dbus-x11
+gnome-terminal dbus-x11 
+
+# Camera stuff 
+RUN apt-get update \
+&& apt-get install -y \
+# Camera lib utilities
+zstd pciutils mesa-utils wget gnupg \
+# CUDA repo
+&& wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
+&& dpkg -i cuda-keyring_1.1-1_all.deb \
+&& apt-get update \
+&& apt-get install -y cuda-toolkit-13-0
+
+# ZED SDK
+RUN wget https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24 \
+&& ./ubuntu24 -- silent
 
 # Gazebo GUI on Mac: virtual display + VNC + window manager (switch between Gazebo/rtabmap)
 RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc fluxbox \
