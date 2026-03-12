@@ -5,7 +5,8 @@
         "context": "..",
         "dockerfile": "../Dockerfile",
         "args": {
-            "USERNAME": "ros_user"
+            "USERNAME": "ros_user",
+            "IS_MACOS": "true"
         }
     },
     "workspaceFolder": "/home/ros2_ws",
@@ -26,7 +27,6 @@
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
         "ROS_DOMAIN_ID": "42",
         "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp",
-        "IS_MACOS": "1"
     },
     "runArgs": [
         "-p", "5900:5900",

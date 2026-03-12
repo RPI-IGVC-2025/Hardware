@@ -1,11 +1,12 @@
 {
-    "name": "ROS 2 Development Container (nvidia)", 
+    "name": "ROS 2 Development Container (nvidia-hardware)", 
     "privileged": true,
     "build": {
         "context": "..",
         "dockerfile": "../Dockerfile",
         "args": {
-            "USERNAME": "ros_user"
+            "USERNAME": "ros_user",
+            "DEPLOYABLE_BUILD": "true"
         }
     },
     "workspaceFolder": "/home/ros2_ws",
@@ -26,8 +27,7 @@
         "DISPLAY": "unix:0",
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
         "ROS_DOMAIN_ID": "42",
-        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp",
-        "DEPLOYABLE_BUILD": "1"
+        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
     },
     "runArgs": [
         "--net=host",
