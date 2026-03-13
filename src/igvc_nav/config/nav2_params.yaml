@@ -1,60 +1,3 @@
-# REMOVE - NOT NEEDED
-# Adaptive Monte Carlo Localization
-# Handles robot localization, uses a particle filter to estimate where the robot is on the map
-# by comparing laser scan data against the known map.
-
-# RTABMap is a full SLAM system (it builds the map and localizes at the same time, and also publishes the map -> odom transform). 
-# Running RTABMap and AMCL at the same time causes a TF conflict, because the two nodes compete to 
-# publish the same transform. This causes one to overwrite the other unpredictably. 
-# For IGVC, we don't have a pre-built map to give to AMCL, so we need to use RTAB and DISABLE AMCL. 
-amcl:
-  ros__parameters:
-    alpha1: 0.2
-    alpha2: 0.2
-    alpha3: 0.2
-    alpha4: 0.2
-    alpha5: 0.2
-    base_frame_id: "base_footprint"
-    beam_skip_distance: 0.5
-    beam_skip_error_threshold: 0.9
-    beam_skip_threshold: 0.3
-    do_beamskip: false
-    global_frame_id: "map"
-    lambda_short: 0.1
-    laser_likelihood_max_dist: 2.0
-    laser_max_range: 100.0
-    laser_min_range: -1.0
-    laser_model_type: "likelihood_field"
-    max_beams: 60
-    max_particles: 2000
-    min_particles: 500
-    odom_frame_id: "odom"
-    pf_err: 0.05
-    pf_z: 0.99
-    recovery_alpha_fast: 0.0
-    recovery_alpha_slow: 0.0
-    resample_interval: 1
-    robot_model_type: "nav2_amcl::DifferentialMotionModel"
-    save_pose_rate: 0.5
-    sigma_hit: 0.2
-    tf_broadcast: true
-    transform_tolerance: 1.0
-    update_min_a: 0.2
-    update_min_d: 0.25
-    z_hit: 0.5
-    z_max: 0.05
-    z_rand: 0.5
-    z_short: 0.05
-    scan_topic: scan
-
-# CORE
-# Behavior Tree Navigator
-# Executes behavior trees that coordinate all the other servers to complete navigation tasks.
-# Without this server, nothing moves. Every navigation request flows through here. 
-# The configurable behavior tree is used to manage mission logic like allowing
-# the robot to handle path planning, obstacle avoidance, and recovery behaviors. By coordinating
-# various task servers, it allows the robot to execute sequences like "navigate to pose" 
-# while switching to recovery actions if failures occur. 
 bt_navigator:
   ros__parameters:
     global_frame: map
@@ -82,16 +25,6 @@ bt_navigator:
       - compute_path_error_code
       - follow_path_error_code
 
-# CORE
-# Controller Server
-# Handles local motion control; takes the global path and computes actual velocity commands to send to 
-# the robots motors. This config uses the MPPI controller, which samples thousands of possible trajectories
-# and picks the best one based on a set of weighted cost functions.
-# CostCritic - handles obstacle avoidance
-# PathAlignCritic - keeps the robot on path
-# PreferForwardCritic - prevents unnecessary reversing
-# VelocityDeadbandCritic - prevents motor chatter at low speeds
-# NOTE: vx_max is 3 m/s, might be a bit fast for IGVC and we may need to lower it depending on robots speed limits
 controller_server:
   ros__parameters:
     controller_frequency: 20.0
@@ -216,14 +149,6 @@ controller_server:
       #   twirling_cost_power: 1
       #   twirling_cost_weight: 10.0
 
-# CORE
-# Local Costmap
-# A small rolling 2D grid (ours is 3 x 3) centered on the robot that tracks nearby obstacles in real time.
-# Used by the controller server for local collision avoidance. Without this server, the controller has no 
-# obstacle awareness and would blindly follow the global path into obstacles on the map. 
-# Updates at a high frequency using live sensor data (LiDAR, depth camera) to detect and 
-# react to obstacles not present on the static global map. 
-# NOTE: obstacle_max_range is 2.5, but window is 3x3 - robot might get limited lookahead
 local_costmap:
   local_costmap:
     ros__parameters:
@@ -266,15 +191,6 @@ local_costmap:
         map_subscribe_transient_local: True
       always_send_full_costmap: True
 
-# CORE
-# Global Costmap
-# A full map-sized 2D grid representing the entire known environment with obstacles and inflation zones. 
-# Used by planner server to compute long-range paths, and uses lidar scan as its obstacle source. 
-# Basically the planner server uses this in order to compute an optimal, collision-free path
-# across the entire known environment. Our params uses our lidar scan directly via an ObstacleLayer, layered 
-# over a static map from RTABMap with an inflation radius of 0.7m around obstacles. 
-# NOTE: global costmap uses plain 2D LaserScan (/scan) while local costmap uses RTABMap's 3d point cloud. 
-# This is a reasonable split, because global planning doesn't need 3D, but local avoidance benefits from it. 
 global_costmap:
   global_costmap:
     ros__parameters:
@@ -316,11 +232,6 @@ global_costmap:
 #   ros__parameters:
 #     yaml_filename: ""
 
-# REMOVE - NOT NEEDED (during competition)
-# Map Saver
-# Utility server that listens to a map topic and saves it to disk as a .pgm/.yaml file pair when requested. 
-# Useful after a mapping session, used for just testing/development to capture RTABMap output. 
-# Should NOT be running during actual competition. 
 map_saver:
   ros__parameters:
     save_map_timeout: 5.0
@@ -328,12 +239,6 @@ map_saver:
     occupied_thresh_default: 0.65
     map_subscribe_transient_local: True
 
-# CORE
-# Planner Server
-# Computes a global path from the robot's current position to the goal. 
-# This config uses NavFn to find shortest traversable route through the global costmap. 
-# NOTE: NavFn struggles with narrow gaps, so if our inflation radius is too large, NavFn may fail 
-# to find paths through tight spaces. May want to experiment with Smac Planner as an alternative if we run into issues. 
 planner_server:
   ros__parameters:
     expected_planner_frequency: 20.0
@@ -345,12 +250,6 @@ planner_server:
       use_astar: false
       allow_unknown: true
 
-# AUXILIARY
-# Smoother Server
-# Post-processes the raw global path (NavFn) from the planner to make it smoother and more drivable.
-# This config uses Simple Smoother, which iteratively adjusts waypoints to reduce sharp angles. 
-# Not strictly required since MPPI handles some of this dynamically, but it reduces controller workload
-# and produces a cleaner motion. Low overhead to keep in as well. 
 smoother_server:
   ros__parameters:
     smoother_plugins: ["simple_smoother"]
@@ -360,10 +259,6 @@ smoother_server:
       max_its: 1000
       do_refinement: True
 
-# AUXILIARY
-# Behavior Server
-# Provides recovery and utility behaviors that the BT Navigator can call when things go wrong. 
-# technically not required to "make a path" but definitely important for avoiding obstacles. 
 behavior_server:
   ros__parameters:
     local_costmap_topic: local_costmap/costmap_raw
@@ -391,14 +286,6 @@ behavior_server:
     min_rotational_vel: 0.4
     rotational_acc_lim: 3.2
 
-# AUXILIARY
-# Waypoint Follower
-# Enables sequential navigation through a list of waypoints. 
-# It calls the BT Navigator repeatedly for each waypoint. 
-# Note: If our mission node sends a list of GPS-derived waypoints all at once and expects Nav2 
-# to execute them sequentially, this is necessary. If we are managing waypoint sequences ourselves, 
-# (sending one NavigateToPose goal at a time from your own mission node), then this server is redundant. 
-# Low cost to keep running either way. 
 waypoint_follower:
   ros__parameters:
     loop_rate: 20
@@ -410,11 +297,6 @@ waypoint_follower:
       enabled: True
       waypoint_pause_duration: 200
 
-# CORE
-# Velocity Smoother
-# Sits between the controller output and robot hardware, smoothing velocity commands to respect
-# acceleration/deceleration limits and prevent jerky motion. Without this, the MPPI controller 
-# can issue step change velocity commands which can cause wheel slip or instability. 
 velocity_smoother:
   ros__parameters:
     smoothing_frequency: 20.0
@@ -429,11 +311,6 @@ velocity_smoother:
     deadband_velocity: [0.5, 0.0, 0.5]
     velocity_timeout: 1.0
 
-# CORE
-# Collision Monitor
-# A safety later that watches sensor data and can override velocity commands to slow down or stop the robot
-# if a collision is about to happen, regardless of what the controller says. This config uses a 
-# "footprint approach" zone that will trigger is an obstacle is within 1.2 seconds of collision. 
 collision_monitor:
   ros__parameters:
     base_frame_id: "base_footprint"
@@ -464,80 +341,3 @@ collision_monitor:
       min_height: 0.15
       max_height: 2.0
       enabled: True
-
-# REMOVE - NOT NEEDED
-# Docking Server
-# Manages autonomous docking to a charging station. 
-# It handles the approach, alignment, and contact phases. 
-docking_server:
-  ros__parameters:
-    controller_frequency: 50.0
-    initial_perception_timeout: 5.0
-    wait_charge_timeout: 5.0
-    dock_approach_timeout: 30.0
-    undock_linear_tolerance: 0.05
-    undock_angular_tolerance: 0.1
-    max_retries: 3
-    base_frame: "base_link"
-    fixed_frame: "odom"
-    dock_backwards: false
-    dock_prestaging_tolerance: 0.5
-
-    # Types of docks
-    dock_plugins: ['simple_charging_dock']
-    simple_charging_dock:
-      plugin: 'opennav_docking::SimpleChargingDock'
-      docking_threshold: 0.05
-      staging_x_offset: -0.7
-      use_external_detection_pose: true
-      use_battery_status: false # true
-      use_stall_detection: false # true
-
-      external_detection_timeout: 1.0
-      external_detection_translation_x: -0.18
-      external_detection_translation_y: 0.0
-      external_detection_rotation_roll: -1.57
-      external_detection_rotation_pitch: -1.57
-      external_detection_rotation_yaw: 0.0
-      filter_coef: 0.1
-
-    # Dock instances
-    # The following example illustrates configuring dock instances.
-    # docks: ['home_dock']  # Input your docks here
-    # home_dock:
-    #   type: 'simple_charging_dock'
-    #   frame: map
-    #   pose: [0.0, 0.0, 0.0]
-
-    controller:
-      k_phi: 3.0
-      k_delta: 2.0
-      v_linear_min: 0.15
-      v_linear_max: 0.15
-      use_collision_detection: true
-      costmap_topic: "local_costmap/costmap_raw"
-      footprint_topic: "local_costmap/published_footprint"
-      transform_tolerance: 0.1
-      projection_time: 5.0
-      simulation_step: 0.1
-      dock_collision_threshold: 0.3
-
-# REMOVE - NOT NEEDED (during competition)
-# Loopback Simulator
-# A lightweight fake robot simulator used for testing Nav2 without real hardware or physics simulator (Gazebo). 
-# Simulates odometry and laser scan data based on the commanded velocities. 
-# NOTE: Running this alongside our real hardware will conflict with our actual sensor data and odometry. 
-# DO NOT include in real robot launch file. 
-loopback_simulator:
-  ros__parameters:
-    base_frame_id: "base_footprint"
-    odom_frame_id: "odom"
-    map_frame_id: "map"
-    scan_frame_id: "base_scan"  # tb4_loopback_simulator.launch.py remaps to 'rplidar_link'
-    update_duration: 0.02
-    scan_range_min: 0.05
-    scan_range_max: 30.0
-    scan_angle_min: -3.1415
-    scan_angle_max: 3.1415
-    scan_angle_increment: 0.02617
-    scan_use_inf: true
