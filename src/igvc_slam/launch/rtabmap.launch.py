@@ -40,7 +40,7 @@ def generate_launch_description():
             'camera_info_topic' : '/zed/zed_node/rgb/camera_info',
             'frame_id' : 'base_footprint',
             'publish_tf_odom' : 'true',
-            'odom_topic' : 'zed_node/odom',
+            'odom_topic' : 'odom',
             'odom_frame_id' : 'odom',
 	        'approx_sync' : 'true',
             'rgbd_sync' : 'true',
