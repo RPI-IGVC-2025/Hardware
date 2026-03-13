@@ -1,23 +1,14 @@
 FROM ros:jazzy
-ARG USERNAME=$USERNAME
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
 
-# Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
-RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
-
-# Create the user
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m -d /home/ros2_ws $USERNAME \
-    #
-    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
+# Modify existing ubuntu user to use /home/ros2_ws as home
+RUN usermod -d /home/ros2_ws -m ubuntu \
     && apt-get update \
     && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+    && echo ubuntu ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/ubuntu \
+    && chmod 0440 /etc/sudoers.d/ubuntu
+
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip
-
 
 RUN apt-get update \
 # Missing ROS packages
@@ -33,7 +24,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc \
 
 ENV SHELL /bin/bash
 
-USER $USERNAME
+# USER $USERNAME
+USER ubuntu
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 CMD ["/bin/bash"]

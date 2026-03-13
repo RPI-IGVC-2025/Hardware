@@ -1,12 +1,10 @@
 {
     "name": "ROS 2 Development Container",
     "privileged": true,
-    "remoteUser": "ros_user",
+    "remoteUser": "ubuntu",
     "build": {
         "dockerfile": "Dockerfile",
-        "args": {
-            "USERNAME": "ros_user"
-        }
+        "args": {}
     },
     "workspaceFolder": "/home/ros2_ws",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/ros2_ws,type=bind",

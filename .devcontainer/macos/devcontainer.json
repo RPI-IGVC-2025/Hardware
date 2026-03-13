@@ -1,13 +1,11 @@
 {
     "name": "ROS 2 Development Container (macOS)",
     "privileged": true,
-    "remoteUser": "ros_user",
+    "remoteUser": "ubuntu",
     "build": {
         "context": "..",
         "dockerfile": "../Dockerfile",
-        "args": {
-            "USERNAME": "ros_user"
-        }
+        "args": {}
     },
     "workspaceFolder": "/home/ros2_ws",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/ros2_ws,type=bind",
