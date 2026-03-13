@@ -31,7 +31,9 @@ ros-jazzy-rmw-cyclonedds-cpp \
 # IMU Lib dependencies
 libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz \
 # External terminal
-gnome-terminal dbus-x11 
+gnome-terminal dbus-x11 \
+# Camera description package
+ros-jazzy-zed-description
 
 # Camera stuff 
 RUN if $DEPLOYABLE_BUILD ; then \
@@ -50,7 +52,7 @@ fi
 RUN if $DEPLOYABLE_BUILD ; then \
 wget https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24 \
 && chmod +x ubuntu24 \
-&& ./ubuntu24 -- silent ; \
+&& ./ubuntu24 -- silent --skip_python --skip_cuda; \
 fi
 
 # Gazebo GUI on Mac: virtual display + VNC + window manager (switch between Gazebo/rtabmap)

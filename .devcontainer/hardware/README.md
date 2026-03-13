@@ -11,3 +11,8 @@
         - WSL may be used if you're not actually connecting to a webcam  
 - Latest NVIDIA drivers on the host
 - [Nivida container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) on the 
+
+
+# Instructions
+
+Once you've built the container using the typical process, you'll have to run a ``colcon build --symlink-install`` for any zed packages (except for zed_description), as they take a LOT of memory to build, and that can brick lower-memory machines.
