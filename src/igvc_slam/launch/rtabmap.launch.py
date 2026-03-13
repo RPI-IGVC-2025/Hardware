@@ -11,10 +11,8 @@ import xacro
 
 def generate_launch_description():
     rtabmap_package = get_package_share_directory('rtabmap_launch')
-    zed_wrapper = get_package_share_directory('zed_wrapper')
 
     rtabmap_launch_path = os.path.join(rtabmap_package, 'launch', 'rtabmap.launch.py')
-    zed_launch_path = os.path.join(zed_wrapper, 'launch', 'zed2i.launch.py')
 
     imu_filter = Node(
         package='imu_filter_madgwick', 
@@ -40,8 +38,8 @@ def generate_launch_description():
             'camera_info_topic' : '/zed/zed_node/rgb/camera_info',
             'frame_id' : 'base_footprint',
             'publish_tf_odom' : 'true',
-            'odom_topic' : 'odom',
-            'odom_frame_id' : 'odom',
+            'odom_topic' : '/odom',
+            'odom_frame_id' : '/odom',
 	        'approx_sync' : 'true',
             'rgbd_sync' : 'true',
 	        'approx_rgbd_sync' : 'true',
@@ -56,25 +54,6 @@ def generate_launch_description():
             'wait_imu_to_init' : 'true',
 	        'rtabmap_viz' : 'true',
             'map_topic' : '/map'
-        }.items()
-    )
-
-    realsense = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(zed_launch_path),
-        launch_arguments={
-            'enable_color' : 'true',
-            'enable_depth' : 'true',
-            'align_depth.enable' : 'true', 
-            'pointcloud.enable' : 'false',
-            'enable_sync' : 'false',
-            'unite_imu_method' : '2',
-            'enable_gyro' : 'true',
-            'enable_accel' : 'true',
-            'color_fps' : '60',
-            'depth_fps' : '60', 
-            'gyro_fps' : '200',
-            'accel_fps' : '63',
-            'publish_tf' : 'true'
         }.items()
     )
 
