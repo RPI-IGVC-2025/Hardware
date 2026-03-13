@@ -2,7 +2,8 @@
     "name": "ROS 2 Development Container (nvidia)", 
     "privileged": true,
     "build": {
-        "dockerfile": "Dockerfile",
+        "context": "..",
+        "dockerfile": "../Dockerfile",
         "args": {
             "USERNAME": "ros_user"
         }
@@ -33,6 +34,7 @@
         "MESA_LOADER_DRIVER_OVERRIDE": "d3d12",
         "GALLIUM_DRIVER": "d3d12",
         "LIBGL_ALWAYS_INDIRECT": "0"
+        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
     },
     "runArgs": [
         "--net=host",
@@ -42,6 +44,7 @@
         "--runtime=nvidia",
         "--device=/dev/dxg",
         "--privileged"
+        "-p", "8765:8765"
     ],
     "mounts": [
        "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached",
@@ -50,5 +53,6 @@
        "source=/usr/lib/x86_64-linux-gnu/dri,target=/usr/lib/x86_64-linux-gnu/dri,type=bind,consistency=cached",
        "source=//usr/share/glvnd,target=/usr/share/glvnd,type=bind,consistency=cached"
     ],
-    "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && (rm -r build/ || true) && colcon build --symlink-install"
+    "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && (rm -r build/ || true) && colcon build --symlink-install",
+    "forwardPorts": [8765]
 }
