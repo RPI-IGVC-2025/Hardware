@@ -27,8 +27,9 @@ def generate_launch_description():
             'camera_info_topic' : '/camera/camera/depth/camera_info',
             'imu_topic' : '/rtabmap/imu', # Placeholder path
             'gps_topic' : '/rtabmap/gps', # Placeholder path
-            'odom_topic' : '/odom',
+            'odom_topic' : '/odom', # Filtered odometry from robot_localization
             'scan_topic' : '/scan', # LiDAR placeholder
+            'map_topic' : '/map',
             
             # Camera Arguments
             'frame_id' : 'base_footprint',
@@ -41,15 +42,13 @@ def generate_launch_description():
             # Odometry Arguments
             'odom_frame_id' : 'odom',
             'publish_tf_odom' : 'true',
-            'icp_odometry' : 'true', # Lidar Odom
-            'visual_odometry' : 'true', # Visual Odom
+            'icp_odometry' : 'false', # Lidar Odom
+            'visual_odometry' : 'false', # Visual Odom
             'imu_topic' : '/rtabmap/imu',
             'wait_imu_to_init' : 'false',
             
             # LiDAR Arguments
-            'subscribe_scan' : 'true',
-            
-            
+            'subscribe_scan' : 'true',            
             
             # Misc.
             'log_level' : 'debug', 
@@ -59,7 +58,6 @@ def generate_launch_description():
 	        'topic_queue_size' : '50',  
             'wait_for_transform' : '0.4',
 	        'rtabmap_viz' : 'true',
-            'map_topic' : '/map',
         }.items()
     )
     
@@ -69,10 +67,86 @@ def generate_launch_description():
         name='ekf_filter_node',
         output='screen',
         parameters=[os.path.join(package_slam, 'config/ekf.yaml'), {'use_sim_time': 'true'}]
-    )   
+    )    
     
 
+    # Stereo odometry
+    
+    stereo_odom_node = Node(
+        package='rtabmap_odom', executable='stereo_odometry', name="stereo_odometry", output="screen",
+        emulate_tty=True,
+        condition=IfCondition(PythonExpression(["'", LaunchConfiguration('icp_odometry'), "' != 'true' and '", LaunchConfiguration('visual_odometry'), "' == 'true' and '", LaunchConfiguration('stereo'), "' == 'true'"])),
+        parameters=[{
+            "frame_id": LaunchConfiguration('frame_id'),
+            "odom_frame_id": LaunchConfiguration('vo_frame_id'),
+            "publish_tf": LaunchConfiguration('publish_tf_odom'),
+            "ground_truth_frame_id": LaunchConfiguration('ground_truth_frame_id').perform(context),
+            "ground_truth_base_frame_id": LaunchConfiguration('ground_truth_base_frame_id').perform(context),
+            "wait_for_transform": LaunchConfiguration('wait_for_transform'),
+            "wait_imu_to_init": LaunchConfiguration('wait_imu_to_init'),
+            "always_check_imu_tf": LaunchConfiguration('always_check_imu_tf'),
+            "approx_sync": LaunchConfiguration('approx_sync'),
+            "approx_sync_max_interval": LaunchConfiguration('approx_sync_max_interval'),
+            "config_path": LaunchConfiguration('cfg').perform(context),
+            "topic_queue_size": LaunchConfiguration('topic_queue_size'),
+            "sync_queue_size": LaunchConfiguration('sync_queue_size'),
+            "qos": LaunchConfiguration('qos_image'),
+            "qos_camera_info": LaunchConfiguration('qos_camera_info'),
+            "qos_imu": LaunchConfiguration('qos_imu'),
+            "subscribe_rgbd": LaunchConfiguration('subscribe_rgbd'),
+            "guess_frame_id": LaunchConfiguration('odom_guess_frame_id').perform(context),
+            "guess_min_translation": LaunchConfiguration('odom_guess_min_translation'),
+            "guess_min_rotation": LaunchConfiguration('odom_guess_min_rotation')}],
+        remappings=[
+            ("left/image_rect", LaunchConfiguration('left_image_topic_relay')),
+            ("right/image_rect", LaunchConfiguration('right_image_topic_relay')),
+            ("left/camera_info", LaunchConfiguration('left_camera_info_topic')),
+            ("right/camera_info", LaunchConfiguration('right_camera_info_topic')),
+            ("rgbd_image", LaunchConfiguration('rgbd_topic_relay')),
+            ("odom", LaunchConfiguration('odom_topic')),
+            ("imu", LaunchConfiguration('imu_topic'))],
+        arguments=[LaunchConfiguration("args"), LaunchConfiguration("odom_args"), "--ros-args", "--log-level", [LaunchConfiguration('namespace'), '.stereo_odometry:=', LaunchConfiguration('odom_log_level')], "--log-level", ['stereo_odometry:=', LaunchConfiguration('odom_log_level')]],
+        prefix=LaunchConfiguration('launch_prefix'),
+        namespace=LaunchConfiguration('namespace')
+    ),
+
+
+    # ICP odometry
+    icp_odom_node = Node(
+        package='rtabmap_odom', executable='icp_odometry', name="icp_odometry", output="screen",
+        emulate_tty=True,
+        condition=IfCondition(LaunchConfiguration('icp_odometry')),
+        parameters=[{
+            "frame_id": LaunchConfiguration('frame_id'),
+            "odom_frame_id": LaunchConfiguration('vo_frame_id'),
+            "publish_tf": LaunchConfiguration('publish_tf_odom'),
+            "ground_truth_frame_id": LaunchConfiguration('ground_truth_frame_id').perform(context),
+            "ground_truth_base_frame_id": LaunchConfiguration('ground_truth_base_frame_id').perform(context),
+            "wait_for_transform": LaunchConfiguration('wait_for_transform'),
+            "wait_imu_to_init": LaunchConfiguration('wait_imu_to_init'),
+            "always_check_imu_tf": LaunchConfiguration('always_check_imu_tf'),
+            "approx_sync": LaunchConfiguration('approx_sync'),
+            "config_path": LaunchConfiguration('cfg').perform(context),
+            "topic_queue_size": LaunchConfiguration('topic_queue_size'),
+            "sync_queue_size": LaunchConfiguration('sync_queue_size'),
+            "qos": LaunchConfiguration('qos_image'),
+            "qos_imu": LaunchConfiguration('qos_imu'),
+            "guess_frame_id": LaunchConfiguration('odom_guess_frame_id').perform(context),
+            "guess_min_translation": LaunchConfiguration('odom_guess_min_translation'),
+            "guess_min_rotation": LaunchConfiguration('odom_guess_min_rotation')}],
+        remappings=[
+            ("scan", LaunchConfiguration('scan_topic')),
+            ("scan_cloud", LaunchConfiguration('scan_cloud_topic')),
+            ("odom", LaunchConfiguration('odom_topic')),
+            ("imu", LaunchConfiguration('imu_topic'))],
+        arguments=[LaunchConfiguration("args"), LaunchConfiguration("odom_args"), "--ros-args", "--log-level", [LaunchConfiguration('namespace'), '.icp_odometry:=', LaunchConfiguration('odom_log_level')], "--log-level", ['icp_odometry:=', LaunchConfiguration('odom_log_level')]],
+        prefix=LaunchConfiguration('launch_prefix'),
+        namespace=LaunchConfiguration('namespace')
+    ),   
+
     return LaunchDescription([
+        #stereo_odom_node,
+        #icp_odom_node,
         rtabmap,
         robot_localization_node
     ])

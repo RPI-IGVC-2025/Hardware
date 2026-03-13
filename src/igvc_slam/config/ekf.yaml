@@ -1,4 +1,5 @@
 # Note, this is copied straight from the robot_localization documentation
+# This is a more detailed example of a ekf.yaml setup: https://github.com/cra-ros-pkg/robot_localization/blob/rolling-devel/params/ekf.yaml
 
 ### ekf config file ###
 ekf_filter_node:
@@ -34,14 +35,24 @@ ekf_filter_node:
         base_link_frame: base_link  # Defaults to "base_link" if unspecified
         world_frame: odom           # Defaults to the value of odom_frame if unspecified
 
-        odom0: demo/odom
+        # Assumes icp_odometry is not publishing to odom
+        odom0: rtabmap/odom_icp
         odom0_config: [false, false, false,
                       false, false, false,
                       true, true, false,
                       false, false, true,
                       false, false, false]
 
-        imu0: demo/imu
+        # Assumes icp_odometry is not publishing to odom
+        odom1: rtabmap/odom_stereo
+        odom01_config: [false, false, false,
+                      false, false, false,
+                      true, true, false,
+                      false, false, true,
+                      false, false, false]
+        
+        # Note I'm not sure what topic our imu is 
+        imu0: /imu
         imu0_config: [false, false, false,
                       false, false, false,
                       false, false, false,
