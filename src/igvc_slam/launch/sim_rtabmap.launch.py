@@ -24,7 +24,7 @@ def generate_launch_description():
             'frame_id' : 'base_footprint',
             'log_level' : 'debug', 
             'publish_tf_odom' : 'true',
-            'odom_topic' : '/zed/zed_node/odom',
+            'odom_topic' : '/odom',
             'odom_frame_id' : 'odom',
             'sync_queue_size' : '10', #TODO verify
             'topic_queue_size' : '10', #TODO verify
