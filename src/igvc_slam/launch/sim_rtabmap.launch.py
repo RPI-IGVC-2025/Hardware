@@ -42,13 +42,12 @@ def generate_launch_description():
             'wait_imu_to_init' : 'false',
             'map_topic' : '/map',
             
-            
-            'odom_tf_linear_variance': '0.001',
-            'odom_tf_angular_variance': '0.001',
             'subscribe_rgbd': 'true',
             'subscribe_scan' : 'true',
             'RGBD/ProximityBySpace' : 'true',
             'RGBD/NeighborLinkRefining' : 'true',
+            'Reg/Strategy' : '1',
+            'Reg/Force3DoF' : 'true',
             'Grid/FromDepth' : 'false'
 
         }.items()
