@@ -40,18 +40,17 @@ def generate_launch_description():
             'wait_for_transform' : '0.4',
             'imu_topic' : '/rtabmap/imu',
             'wait_imu_to_init' : 'false',
-            'map_topic' : '/map'
+            'map_topic' : '/map',
             
-
+            
             'odom_tf_linear_variance': '0.001',
             'odom_tf_angular_variance': '0.001',
             'subscribe_rgbd': 'true',
             'subscribe_scan' : 'true',
-            'scan_topic' : '/scan',  
-            'scan_normal_k' : '0',   
-            'scan_range_min' : '0.05',
-            'scan_range_max' : '30.0',
-            'scan_cloud_max_points' : '2000',
+            'RGBD/ProximityBySpace' : 'true',
+            'RGBD/NeighborLinkRefining' : 'true',
+            'Grid/FromDepth' : 'false'
+
         }.items()
     )
 
