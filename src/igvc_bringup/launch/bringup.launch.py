@@ -19,7 +19,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             'sim_world',
-            default_value='empty_world',
+            default_value='track_v1',
             description='The name of the scenario to open in Gazebo'
         ),
         DeclareLaunchArgument(
@@ -83,7 +83,7 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_slam'),
                  '/launch',
-                 '/rtabmap.launch.py']
+                 '/sim_rtabmap.launch.py']
             ),
             condition = IfCondition(LaunchConfiguration('use_slam'))
         ),
