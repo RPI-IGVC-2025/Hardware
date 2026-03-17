@@ -32,8 +32,6 @@ ros-jazzy-rmw-cyclonedds-cpp \
 libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz \
 # External terminal
 gnome-terminal dbus-x11 \
-# Camera description package
-ros-jazzy-zed-description
 
 # Camera stuff 
 RUN if $DEPLOYABLE_BUILD ; then \
