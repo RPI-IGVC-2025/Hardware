@@ -1,7 +1,6 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
-
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -92,13 +91,13 @@ def generate_launch_description():
             'guess_min_translation' : 'odom_guess_min_translation',
             'guess_min_rotation' : 'odom_guess_min_rotation'}],
         remappings=[{            
-            'left/image_rect' : 'left_image_topic_relay',
-            'right/image_rect' : 'right_image_topic_relay',
-            'left/camera_info' : 'left_camera_info_topic',
-            'right/camera_info' : 'right_camera_info_topic',
-            'rgbd_image' : 'rgbd_topic_relay',
-            'odom' : 'odom_stereo',
-            'imu' : 'imu_topic'}],
+            'left_image_topic_relay' : '/left/image_rect',
+            'right_image_topic_relay' : '/right/image_rect',
+            'left_camera_info_topic' : '/left/camera_info',
+            'right_camera_info_topic' : '/right/camera_info',
+            'rgbd_topic_relay' : '/rgbd_image',
+            'odom_topic' : '/odom_stereo',
+            'imu_topic' : '/imu'}],
         arguments=['args', 'odom_args', "--ros-args", "--log-level", 'namespace', '.stereo_odometry:=', 'odom_log_level', "--log-level", 'stereo_odometry:=', 'odom_log_level'],
         prefix= 'launch_prefix',
         namespace= 'namespace'
