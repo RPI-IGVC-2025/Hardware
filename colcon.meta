@@ -1,0 +1,4 @@
+names:
+  odrive_ros2_control:
+    cmake-args:
+        - "-DCMAKE_CXX_FLAGS=-w"
