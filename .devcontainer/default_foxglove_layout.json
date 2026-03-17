@@ -3,13 +3,13 @@
     "3D!176gasr": {
       "cameraState": {
         "perspective": true,
-        "distance": 19.999999999999922,
-        "phi": 60.000000000000085,
-        "thetaOffset": 60.00000000000029,
+        "distance": 19.999999999999883,
+        "phi": 60.000000000000135,
+        "thetaOffset": 60.00000000000052,
         "targetOffset": [
-          1.086940572289083,
-          -3.5012328097263814,
-          -2.924214163285709e-16
+          0.5488292821440887,
+          0.05513627025435337,
+          -1.2391132342990392e-16
         ],
         "target": [
           0,
@@ -156,11 +156,20 @@
     "map!eao35e": {
       "zoomLevel": 19
     },
+    "RawMessages!293aqe": {
+      "topicPath": "/diagnostics"
+    },
+    "RawMessages!1wb9sda": {
+      "topicPath": "/parameter_events"
+    },
+    "RawMessages!44i2mde": {
+      "topicPath": "/navsat"
+    },
+    "RawMessages!26z4oxi": {
+      "topicPath": "/odom"
+    },
     "Tab!1u1usje": {
       "tabs": [
-        {
-          "title": ""
-        },
         {
           "title": "Perception",
           "layout": {
@@ -172,6 +181,22 @@
                 "direction": "row"
               },
               "second": "map!eao35e",
+              "direction": "column"
+            },
+            "direction": "row"
+          }
+        },
+        {
+          "title": "Messages",
+          "layout": {
+            "first": {
+              "first": "RawMessages!293aqe",
+              "second": "RawMessages!1wb9sda",
+              "direction": "column"
+            },
+            "second": {
+              "first": "RawMessages!44i2mde",
+              "second": "RawMessages!26z4oxi",
               "direction": "column"
             },
             "direction": "row"
