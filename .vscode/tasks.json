@@ -6,7 +6,7 @@
 			"args": [
 				"build",
 				"--symlink-install",
-				"-packages-skip-regex zed_*"
+				"--packages-skip-regex zed_*"
 			],
 			"problemMatcher": [
 				"$colcon-gcc"
@@ -22,7 +22,7 @@
 			"args": [
 				"build",
 				"--symlink-install",
-				"-packages-skip-regex zed_*",
+				"--packages-skip-regex zed_*",
 				"--cmake-args",
 				"-DCMAKE_BUILD_TYPE=RelWithDebInfo"
 			],
@@ -38,7 +38,7 @@
 			"args": [
 				"build",
 				"--symlink-install",
-				"-packages-skip-regex zed_*",
+				"--packages-skip-regex zed_*",
 				"--cmake-args",
 				"-DCMAKE_BUILD_TYPE=Debug"
 			],
