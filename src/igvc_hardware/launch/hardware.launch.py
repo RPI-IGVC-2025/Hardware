@@ -16,7 +16,7 @@ def generate_launch_description():
              'camera.launch.py']
         ),
         launch_arguments={
-            'camera_model:=zed2i' #TODO make sure this name is correct
+            'camera_model:=zed2i'
         }
     )
     # Check here for published topics: https://www.stereolabs.com/docs/ros2/zed-node
