@@ -1,9 +1,8 @@
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import Image, PointCloud2
+from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 from message_filters import ApproximateTimeSynchronizer, Subscriber
-import sensor_msgs_py.point_cloud2 as pc2
 import cv2
 import numpy as np
 
@@ -32,7 +31,7 @@ class CVNode(Node):
 
         # Synchronised RGB + PointCloud subscribers
         self.rgb_sub = Subscriber(self, Image, '/camera/camera/color/image_raw')
-        self.pc_sub = Subscriber(self, PointCloud2, '/camera/camera/depth/image_rect_raw')
+        self.pc_sub = Subscriber(self, Image, '/camera/camera/depth/image_rect_raw')
         self.sync = ApproximateTimeSynchronizer(
             [self.rgb_sub, self.pc_sub],
             queue_size=10,
@@ -42,7 +41,7 @@ class CVNode(Node):
         # ===== Publishers =====
         self.image_pub = self.create_publisher(Image, 'image_processed', 10)
         
-    def process(self, rgb_msg: Image, pc_msg: PointCloud2):
+    def process(self, rgb_msg: Image, depth_msg: Image):
         self.get_logger().info("Called Process()")
         # Fetch parameters
         blur_k = self.get_parameter("blur_kernel_size").value
@@ -59,6 +58,7 @@ class CVNode(Node):
 
         # Convert ROS image to OpenCV
         frame = self.bridge.imgmsg_to_cv2(rgb_msg, 'bgr8')
+        depth_frame = self.bridge.imgmsg_to_cv2(depth_msg, desired_encoding='passthrough')
         h, w  = frame.shape[:2]
 
         # Convert to grayscale
@@ -88,23 +88,14 @@ class CVNode(Node):
                 cv2.line(line_image, (x1, y1), (x2, y2), (0, 255, 255), thickness)
                 cv2.line(line_mask, (x1, y1), (x2, y2), 255, thickness)
 
-        # Read 3D points directly from point cloud 
+        # Look up depth for each white pixel directly
         white_v, white_u = np.where(line_mask > 0)
-
-        # Read the full cloud
-        cloud_array = pc2.read_points_numpy(
-            pc_msg,
-            field_names=("x", "y", "z"),
-            skip_nans=False,
-            reshape_organized_cloud=True # shape (HxWx3)
-        )
+        distances = depth_frame[white_v, white_u]
         
-        # Look up 3D coords for each white pixel directly
-        white_points = cloud_array[white_v, white_u] # Nx3
-
-        # No depth return)
-        valid = np.isfinite(white_points).all(axis=1)
-        white_points = white_points[valid]
+        valid = distances > 0
+        white_u = white_u[valid]
+        white_v = white_v[valid]
+        distances = distances[valid]
 
         # Publish image 
         result = cv2.addWeighted(frame, 0.8, line_image, 1.0, 1)
