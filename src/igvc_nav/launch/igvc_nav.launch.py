@@ -10,7 +10,13 @@ def generate_launch_description():
     igvc_nav_package = get_package_share_directory('igvc_nav')
     nav2_launch_path = os.path.join(nav2_bringup_package , 'launch', 'navigation_launch.py')
     config_path = os.path.join(igvc_nav_package, 'config', 'nav2_params.yaml')
-
+    
+    nav2 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(nav2_launch_path),
+        launch_arguments={
+            'params_file' : config_path
+        }.items()
+    )
     declared_arguments.append(
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(nav2_launch_path),
@@ -19,15 +25,8 @@ def generate_launch_description():
             }.items()
         )
     )
-    Node = [
+    Nodes = [
     ]
 
-    return LaunchDescription(declared_arguments + Node)
-    """
-    nav2 = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(nav2_launch_path),
-        launch_arguments={
-            'params_file' : config_path
-        }.items()
-    )
-    """
+    return LaunchDescription(declared_arguments + Nodes)
+   
