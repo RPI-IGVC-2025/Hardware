@@ -17,7 +17,8 @@
     <depend>pluginlib</depend>
     <depend>rclcpp</depend>
     <depend>rclcpp_lifecycle</depend>
-    <depend>gz_ros2_control</depend>
+    <!-- TODO: Can probably remove? -->
+    <depend>gz_ros2_control</depend> 
     <exec_depend condition="$HAS_ZED_DEPS == true">zed_wrapper</exec_depend>
 
     <depend>backward_ros</depend>
@@ -25,12 +26,18 @@
     <exec_depend>controller_manager</exec_depend>
     <exec_depend>diff_drive_controller</exec_depend>
     <exec_depend>joint_state_broadcaster</exec_depend>
-    <exec_depend>joint_state_publisher_gui</exec_depend>
+
+    <!-- TODO: Condition on DEPLOYABLE_BUILD -->
+    <exec_depend>joint_state_publisher_gui</exec_depend> 
+
     <exec_depend>robot_state_publisher</exec_depend>
     <exec_depend>ros2_controllers_test_nodes</exec_depend>
     <exec_depend>ros2controlcli</exec_depend>
     <exec_depend>ros2launch</exec_depend>
+
+    <!-- TODO: Condition on DEPLOYABLE_BUILD -->
     <exec_depend>rviz2</exec_depend>
+    
     <exec_depend>xacro</exec_depend>
 
 
