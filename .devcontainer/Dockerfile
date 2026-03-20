@@ -3,6 +3,9 @@ ARG USERNAME=$USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
+ARG DEPLOYABLE_BUILD=false
+ARG IS_MACOS=false
+
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 
@@ -23,18 +26,38 @@ RUN apt-get update \
 # Missing ROS packages
 && apt-get install -y ros-jazzy-rqt* \
 ros-jazzy-teleop-twist-keyboard \
-# Camera Lib
-ros-jazzy-depthai-ros \
 # CycloneDDS package
 ros-jazzy-rmw-cyclonedds-cpp \
 # IMU Lib dependencies
 libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz \
 # External terminal
-gnome-terminal dbus-x11
+gnome-terminal dbus-x11 \
+
+# Camera stuff 
+RUN if $DEPLOYABLE_BUILD ; then \
+apt-get update \
+&& apt-get install -y \
+# Camera lib utilities
+zstd pciutils mesa-utils wget gnupg \
+# CUDA repo
+&& wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
+&& dpkg -i cuda-keyring_1.1-1_all.deb \
+&& apt-get update \
+&& apt-get install -y cuda-toolkit-13-0 ; \
+fi
+
+# ZED SDK
+RUN if $DEPLOYABLE_BUILD ; then \
+wget https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24 \
+&& chmod +x ubuntu24 \
+&& ./ubuntu24 -- silent --skip_python --skip_cuda; \
+fi
 
 # Gazebo GUI on Mac: virtual display + VNC + window manager (switch between Gazebo/rtabmap)
-RUN apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc fluxbox \
-    && rm -rf /var/lib/apt/lists/*
+RUN if $IS_MACOS ; then \
+apt-get update && apt-get install -y --no-install-recommends xvfb x11vnc fluxbox \
+    && rm -rf /var/lib/apt/lists/* ; \
+fi
 
 ENV SHELL /bin/bash
 

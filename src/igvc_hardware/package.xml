@@ -17,8 +17,8 @@
     <depend>pluginlib</depend>
     <depend>rclcpp</depend>
     <depend>rclcpp_lifecycle</depend>
-    <depend>depthai_ros_driver</depend>
     <depend>gz_ros2_control</depend>
+    <exec_depend condition="$HAS_ZED_DEPS == true">zed_wrapper</exec_depend>
 
     <depend>backward_ros</depend>
 

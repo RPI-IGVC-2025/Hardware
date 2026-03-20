@@ -11,12 +11,11 @@
     <xacro:arg name="cam_pitch"     default="0.0" />
     <xacro:arg name="cam_yaw"       default="0.0" />
     <xacro:arg name="rs_compat"     default="true" />
-    <xacro:include filename="$(find depthai_descriptions)/urdf/depthai_descr.urdf.xacro" />
     
     <joint name="camera_base_joint" type="fixed">
         <parent link="base_footprint"/>
         <child link="oak_parent"/>
-        <origin xyz="0 -0.4 0.95" rpy="0 0 ${pi/2}"/>
+        <origin xyz="-0.05 -0.05 0.95" rpy="0 0 ${pi/2}"/>
     </joint>
 
     <gazebo reference="oak_color_frame">
