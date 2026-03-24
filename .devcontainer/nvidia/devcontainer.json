@@ -54,7 +54,7 @@
        "source=/usr/lib/wsl,target=/usr/lib/wsl,type=bind,consistency=cached",
        "source=/usr/lib/x86_64-linux-gnu/dri,target=/usr/lib/x86_64-linux-gnu/dri,type=bind,consistency=cached",
        "source=//usr/share/glvnd,target=/usr/share/glvnd,type=bind,consistency=cached",
-       "source=${localWorkspaceFolder}/.devcontainer/default_foxglove_layout.json,target=/tmp/default_foxglove_layout.json,type=bind"
+       "source=${localWorkspaceFolder}/foxglove/layout_perception_msgs_transformtree.json,target=/tmp/layout_perception_msgs_transformtree.json,type=bind"
     ],
     "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && (rm -r build/ || true) && colcon build --symlink-install",
     "forwardPorts": [8765]
