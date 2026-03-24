@@ -41,6 +41,7 @@ def generate_launch_description():
             'imu_topic' : '/rtabmap/imu',
             'wait_imu_to_init' : 'false',
             'map_topic' : '/map',
+<<<<<<< HEAD
             'odom_tf_linear_variance': '0.001',
             'odom_tf_angular_variance': '0.001',
             'subscribe_rgbd': 'true',
@@ -51,3 +52,20 @@ def generate_launch_description():
             'scan_range_max' : '30.0',
             'scan_cloud_max_points' : '2000'
         }.items()
+=======
+            
+            'subscribe_rgbd': 'true',
+            'subscribe_scan' : 'true',
+            'RGBD/ProximityBySpace' : 'true',
+            'RGBD/NeighborLinkRefining' : 'true',
+            'Reg/Strategy' : '1',
+            'Reg/Force3DoF' : 'true',
+            'Grid/FromDepth' : 'false'
+
+        }.items()
+    )
+
+    return LaunchDescription([
+        rtabmap
+    ])
+>>>>>>> 98269058bf56c62be93ea0f2c218e9acf670ded9
