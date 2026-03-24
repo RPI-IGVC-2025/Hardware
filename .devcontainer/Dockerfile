@@ -27,20 +27,14 @@ RUN apt-get update \
 
 # TODOs:
 #   Trim down to only the rqt packages we're using
-#   Add to bringups exec depend
 #   Condition: SIM_TOOLS_ENABLED defaults to SIM_ENABLED
-&& apt-get install -y ros-jazzy-rqt* \
+&& apt-get install -y ros-jazzy-rqt-tf-tree ros-jazzy-rqt-graph ros-jazzy-rqt-image-view \
 
 # TODOS:
-#   Add to bringups exec depend
 #   Condition: SIM_ENABLED
 ros-jazzy-teleop-twist-keyboard \
 
 # CycloneDDS package
-# TODOS:
-#   Figure out what this is used for
-#   Figure out bringup
-#   Figure out condition
 ros-jazzy-rmw-cyclonedds-cpp \
 
 # IMU Lib dependencies
