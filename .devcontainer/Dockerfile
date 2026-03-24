@@ -42,7 +42,7 @@ RUN if $SIM_ENABLED ; then \
 ## MacOS host only
 # Gazebo GUI on Mac: virtual display + VNC + window manager (switch between Gazebo/rtabmap)
 # TODO: Figure out if there isn't a better way to do this
-RUN if $PLATFORM == "MAC" ; then \
+RUN if [[ "$PLATFORM" == "MAC" ]] ; then \
         apt-get install -y --no-install-recommends \
             xvfb x11vnc fluxbox \
         && rm -rf /var/lib/apt/lists/* ; \
