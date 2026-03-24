@@ -335,7 +335,7 @@ collision_monitor:
     source_timeout: 5.0
     base_shift_correction: True
     stop_pub_timeout: 2.0
-    enable_stamped_cmd_vel: True  # False for Jazzy or older
+    enable_stamped_cmd_vel: True 
     use_realtime_priority: false
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
     PolygonStop:
