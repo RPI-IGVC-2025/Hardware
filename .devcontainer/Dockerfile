@@ -3,8 +3,14 @@ ARG USERNAME=$USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
+ARG PLATFORM="UBUNTU"
+ARG SIM_ENABLED=true
+
 ARG DEPLOYABLE_BUILD=false
-ARG PLATFORM=UBUNTU
+ARG IMU_ENABLED=DEPLOYABLE_BUILD
+ARG ZED_DEV_PLATFORM=DEPLOYABLE_BUILD
+
+ARG MOUNT_CUDA=false
 
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
@@ -39,7 +45,7 @@ RUN if $SIM_ENABLED ; then \
     fi
 
 
-## MacOS host only
+## MacOS 
 # Gazebo GUI on Mac: virtual display + VNC + window manager (switch between Gazebo/rtabmap)
 # TODO: Figure out if there isn't a better way to do this
 RUN if [[ "$PLATFORM" == "MAC" ]] ; then \
