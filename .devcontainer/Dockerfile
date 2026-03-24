@@ -9,8 +9,14 @@ ARG SIM_ENABLED=true
 ARG DEPLOYABLE_BUILD=false
 ARG IMU_ENABLED=DEPLOYABLE_BUILD
 ARG ZED_DEV_PLATFORM=DEPLOYABLE_BUILD
+ARG ODRIVE_ENABLED=DEPLOYABLE_BUILD
 
 ARG MOUNT_CUDA=false
+
+ARG IMU_BACKEND="LOCAL"
+
+ENV IMU_ENABLED=$IMU_ENABLED
+ENV ODRIVE_ENABLED=$ODRIVE_ENABLED
 
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
@@ -27,7 +33,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
 RUN apt-get update && apt-get upgrade -y
 
 # Unconditional installs
-RUN apt-get install -y 
+RUN apt-get install -y \
     python3-pip \
     # CycloneDDS package
     ros-jazzy-rmw-cyclonedds-cpp 
@@ -56,17 +62,25 @@ fi
 
 ## IMU Lib
 RUN if $IMU_ENABLED ; then \
-        apt-get install -y \
-            limxml2 libxml2-dev libzstd-dev bison flex libcdk5-dev cmake \
+        case $IMU_BACKEND in \
+            LOCAL) \
             ## local backend
-            libaio-dev \
-            ### Uncomment to use backend other than local
-            # ## USB Backend
-            # libusb-1.0-0-dev
-            # ## Serial backend
-            # libserialport-dev
-            # ## Network backend
-            # libavahi-client-dev
+                export IMU_BACKEND_PKG=libaio-dev \
+                ;; \
+            USB) \
+            ## USB backend
+                export IMU_BACKEND_PKG=libusb-1.0-0-dev \
+                ;; \
+            ## Serial backend
+                export IMU_BACKEND_PKG=libserialport-dev \
+                ;; \
+            ## Network backend
+                export IMU_BACKEND_PKG=libavahi-client-dev \
+                ;; \
+            ; \
+        && apt-get install -y \
+            libxml2 libxml2-dev libzstd-dev bison flex libcdk5-dev cmake \
+            $IMU_BACKEND_PKG \
     fi
 
 ## CUDA 
@@ -92,11 +106,9 @@ RUN if $ZED_DEV_PLATFORM ; then \
             LINUX) \
                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24" \
                 ;; \
-
             JETSON_ORIN) \
                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons" \
                 ;; \
-
             JETSON_THOR) \
                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t38.4/jetsons" \
                 ;; \

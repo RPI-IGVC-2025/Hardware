@@ -6,15 +6,15 @@ apt-get upgrade -y
 
 . /opt/ros/jazzy/setup.sh
 
-if [ ! -d "ros_odrive" ]; then
+if [ ! -d "ros_odrive" && $ODRIVE_ENABLED]; then
     git clone https://github.com/odriverobotics/ros_odrive.git
 fi
 
-if [ ! -d "imu_ros2" ]; then
+if [ ! -d "imu_ros2" && $IMU_ENABLED]; then
     git clone https://github.com/analogdevicesinc/imu_ros2.git
 fi
 
-if [ ! -d "libiio" ]; then
+if [ ! -d "libiio" && $IMU_ENABLED]; then
     git clone https://github.com/analogdevicesinc/libiio.git --branch v0.26
     cd libiio
 
