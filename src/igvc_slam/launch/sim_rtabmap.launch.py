@@ -39,9 +39,9 @@ def generate_launch_description():
             'rviz' : 'true',
             'use_sim_time' : 'true',
             'wait_for_transform' : '0.4',
-            'imu_topic' : '/rtabmap/imu',
-            'wait_imu_to_init' : 'false',
-            'map_topic' : '/map'
+            'imu_topic' : '/imu_plugin/out',
+            'wait_imu_to_init' : 'true',
+            'map_topic' : 'map'
         }.items()
     )
 
