@@ -6,6 +6,8 @@
         "dockerfile": "../Dockerfile",
         "args": {
             "USERNAME": "ros_user",
+            "PLATFORM": "JETSON_THOR",
+            "SIM_ENABLED": "false",
             "DEPLOYABLE_BUILD": "true"
         }
     },
