@@ -52,8 +52,8 @@ libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev lib
 
 # External terminal
 # TODO: Condition: SIM_ENABLED
-gnome-terminal \ dbus-x11 
 # TODO: Figure out how to do on mac
+gnome-terminal dbus-x11 
 
 # Camera stuff 
 # TODOs:
