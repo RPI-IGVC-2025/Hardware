@@ -424,12 +424,6 @@ collision_monitor:
       max_height: 0.5
       min_range: 0.2
       enabled: True
-    # costmap:
-    #   type: "costmap"   # relative, respects namespaces
-    #   topic: "local_costmap/costmap"
-    #   cost_threshold: 254
-    #   enabled: True
-    #   treat_unknown_as_obstacle: True
 
 docking_server:
   ros__parameters:
