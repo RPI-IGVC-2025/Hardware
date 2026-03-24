@@ -4,7 +4,23 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 ARG DEPLOYABLE_BUILD=false
-ARG IS_MACOS=false
+ARG PLATFORM=UBUNTU
+
+## Determine Zed link based on platform
+RUN case $PLATFORM in \
+  UBUNTU) \
+    export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24" \
+    ;; \
+
+  JETSON_ORIN) \
+    export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons" \
+    ;; \
+
+ JETSON_THOR) \
+    export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t38.4/jetsons" \
+    ;; \
+esac
+
 
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
@@ -19,80 +35,69 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python3-pip
+
+# Unconditional installs
+RUN apt-get install -y 
+    python3-pip \
+    # CycloneDDS package
+    ros-jazzy-rmw-cyclonedds-cpp 
+
+## Simulation only
+RUN if $SIM_ENABLED ; then \
+        apt-get install -y \
+            # RQT packages
+            ros-jazzy-rqt-tf-tree ros-jazzy-rqt-graph ros-jazzy-rqt-image-view \
+            # Teleop control keyboard
+            ros-jazzy-teleop-twist-keyboard \
+            # External terminal
+            # TODO: Figure out how to do on mac
+            gnome-terminal dbus-x11 ; \
+    fi
 
 
-RUN apt-get update \
-# Missing ROS packages
-
-# TODOs:
-#   Trim down to only the rqt packages we're using
-#   Condition: SIM_TOOLS_ENABLED defaults to SIM_ENABLED
-&& apt-get install -y ros-jazzy-rqt-tf-tree ros-jazzy-rqt-graph ros-jazzy-rqt-image-view \
-
-# TODOS:
-#   Condition: SIM_ENABLED
-ros-jazzy-teleop-twist-keyboard \
-
-# CycloneDDS package
-ros-jazzy-rmw-cyclonedds-cpp \
-
-# IMU Lib dependencies
-# TODOS:
-#   Condition: IMU_ENABLED defaults to DEPLOYABLE_BUILD
-limxml2 libxml2-dev libzstd-dev bison flex libcdk5-dev cmake \
-## local backend
-libaio-dev \
-### Uncomment to use backend other than local
-# ## USB Backend
-# libusb-1.0-0-dev
-# ## Serial backend
-# libserialport-dev
-# ## Network backend
-# libavahi-client-dev
-
-
-# External terminal
-# TODO: Condition: SIM_ENABLED
-# TODO: Figure out how to do on mac
-gnome-terminal dbus-x11 
-
-# Camera stuff 
-# TODOs:
-#   Change condition to ZED_DEV_PLATFORM
-RUN if $DEPLOYABLE_BUILD ; then \
-    apt-get update \
-    && apt-get install -y \
-    # Camera lib utilities
-    zstd pciutils mesa-utils wget gnupg \
-    # CUDA repo
-    # TODOs:
-    #   Figure out mounting CUDA from host
-    #   Condition: MOUNT_CUDA
-    && wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
-    && dpkg -i cuda-keyring_1.1-1_all.deb \
-    && apt-get update \
-    && apt-get install -y cuda-toolkit-13-0 ; \
-fi
-
-# ZED SDK
-# TODOs:
-#   Change condition to ZED_DEV_PLATFORM
-RUN if $DEPLOYABLE_BUILD ; then \
-    # TODOs:
-    #   Link conditional on: PLATFORM == JETSON 
-    wget https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24 \
-    && chmod +x ubuntu24 \
-    && ./ubuntu24 -- silent --skip_python --skip_cuda; \
-fi
-
+## MacOS host only
 # Gazebo GUI on Mac: virtual display + VNC + window manager (switch between Gazebo/rtabmap)
 # TODO: Figure out if there isn't a better way to do this
-RUN if $IS_MACOS ; then \
-    apt-get update \
-    && apt-get install -y --no-install-recommends \
-    xvfb x11vnc fluxbox \
-    && rm -rf /var/lib/apt/lists/* ; \
+RUN if $PLATFORM == "MAC" ; then \
+        apt-get install -y --no-install-recommends \
+            xvfb x11vnc fluxbox \
+        && rm -rf /var/lib/apt/lists/* ; \
+fi
+
+## IMU Lib
+RUN if $IMU_ENABLED ; then \
+        apt-get install -y \
+            limxml2 libxml2-dev libzstd-dev bison flex libcdk5-dev cmake \
+            ## local backend
+            libaio-dev \
+            ### Uncomment to use backend other than local
+            # ## USB Backend
+            # libusb-1.0-0-dev
+            # ## Serial backend
+            # libserialport-dev
+            # ## Network backend
+            # libavahi-client-dev
+    fi
+
+## CUDA 
+RUN if $ZED_DEV_PLATFORM ; then \
+        apt-get install -y \
+            zstd pciutils mesa-utils wget gnupg \
+        # TODOs:
+        #   Figure out mounting CUDA from host
+        && if ! $MOUNT_CUDA ; then \
+            wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
+            && dpkg -i cuda-keyring_1.1-1_all.deb \
+            && apt-get update \
+            && apt-get install -y cuda-toolkit-13-0 ; \
+        fi ; \
+    fi
+
+# ZED SDK
+RUN if $ZED_DEV_PLATFORM ; then \
+    && wget -O zed_installer.run $ZED_LINK \
+    && chmod +x zed_installer.run \
+    && ./zed_installer.run -- silent --skip_python --skip_cuda; \
 fi
 
 ENV SHELL /bin/bash
