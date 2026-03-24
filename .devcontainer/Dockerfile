@@ -6,22 +6,6 @@ ARG USER_GID=$USER_UID
 ARG DEPLOYABLE_BUILD=false
 ARG PLATFORM=UBUNTU
 
-## Determine Zed link based on platform
-RUN case $PLATFORM in \
-  UBUNTU) \
-    export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24" \
-    ;; \
-
-  JETSON_ORIN) \
-    export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons" \
-    ;; \
-
- JETSON_THOR) \
-    export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t38.4/jetsons" \
-    ;; \
-esac
-
-
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 
@@ -93,11 +77,28 @@ RUN if $ZED_DEV_PLATFORM ; then \
         fi ; \
     fi
 
-# ZED SDK
+RUN 
+
+## ZED SDK
 RUN if $ZED_DEV_PLATFORM ; then \
-    && wget -O zed_installer.run $ZED_LINK \
-    && chmod +x zed_installer.run \
-    && ./zed_installer.run -- silent --skip_python --skip_cuda; \
+        # Determine Zed link based on platform
+        case $PLATFORM in \
+            UBUNTU) \
+                export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24" \
+                ;; \
+
+            JETSON_ORIN) \
+                export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons" \
+                ;; \
+
+            JETSON_THOR) \
+                export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t38.4/jetsons" \
+                ;; \
+        esac \
+        # Install SDK
+        && wget -O zed_installer.run $ZED_LINK \
+        && chmod +x zed_installer.run \
+        && ./zed_installer.run -- silent --skip_python --skip_cuda; \
 fi
 
 ENV SHELL /bin/bash
