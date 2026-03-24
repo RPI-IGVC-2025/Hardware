@@ -157,13 +157,13 @@ global_costmap:
       footprint_padding: 0.03
       update_frequency: 1.0
       publish_frequency: 1.0
-      transform_tolerance: 0.1
+      transform_tolerance: 10.0 #TODO excessive
       global_frame: map
       robot_base_frame: base_footprint
       robot_radius: 0.22 # radius set and used, so no footprint points
       resolution: 0.05
       use_sim_time: true
-      plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]
+      plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -178,11 +178,50 @@ global_costmap:
           raytrace_max_range: 3.0
           raytrace_min_range: 0.0
           max_obstacle_height: 2.0
-          min_obstacle_height: 0.0
           clearing: True
           marking: True
           data_type: "LaserScan"
-          inf_is_valid: false
+          inf_is_valid: true #TODO change for real
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        enabled: true
+        inflation_radius: 0.55
+        cost_scaling_factor: 1.0
+        inflate_unknown: false
+        inflate_around_unknown: true
+      always_send_full_costmap: True
+      introspection_mode: "disabled"
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      global_frame: odom
+      robot_base_frame: base_footprint
+      rolling_window: true
+      width: 3
+      height: 3
+      resolution: 0.05
+      footprint_padding: 0.03
+      transform_tolerance: 10.0
+      robot_radius: 0.22 # radius set and used, so no footprint points
+      use_sim_time: true
+      plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: scan
+        footprint_clearing_enabled: true
+        max_obstacle_height: 2.0
+        combination_method: 1
+        scan:
+          topic: /scan
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+          inf_is_valid: true
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -216,20 +255,6 @@ global_costmap:
         inflate_unknown: false
         inflate_around_unknown: true
       always_send_full_costmap: True
-      introspection_mode: "disabled"
-
-
-local_costmap:
-  local_costmap:
-    ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
-      global_frame: odom
-      robot_base_frame: base_footprint
-      rolling_window: true
-      width: 3
-      height: 3
-      resolution: 0.05
       introspection_mode: "disabled"
 
 # The yaml_filename does not need to be specified since it going to be set by defaults in launch.
