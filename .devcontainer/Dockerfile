@@ -39,10 +39,18 @@ ros-jazzy-rmw-cyclonedds-cpp \
 
 # IMU Lib dependencies
 # TODOS:
-#   Trim down to those needed for local backend
-#   Remove duplicates
 #   Condition: IMU_ENABLED defaults to DEPLOYABLE_BUILD
-libxml2 libxml2-dev bison flex libcdk5-dev cmake libaio-dev libusb-1.0-0-dev libserialport-dev libxml2-dev libavahi-client-dev doxygen graphviz \
+limxml2 libxml2-dev libzstd-dev bison flex libcdk5-dev cmake \
+## local backend
+libaio-dev \
+### Uncomment to use backend other than local
+# ## USB Backend
+# libusb-1.0-0-dev
+# ## Serial backend
+# libserialport-dev
+# ## Network backend
+# libavahi-client-dev
+
 
 # External terminal
 # TODO: Condition: SIM_ENABLED
