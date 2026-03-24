@@ -25,7 +25,7 @@ def generate_launch_description():
             'log_level' : 'debug', 
             'publish_tf_odom' : 'true',
             'publish_tf_map' : 'true',
-            'odom_topic' : '/odom',
+            'odom_topic' : 'odom',
             'odom_frame_id' : 'odom',
             'sync_queue_size' : '10', #TODO verify
             'topic_queue_size' : '10', #TODO verify
