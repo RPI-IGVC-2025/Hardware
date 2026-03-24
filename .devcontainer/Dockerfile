@@ -3,7 +3,7 @@ ARG USERNAME=$USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-ARG PLATFORM="UBUNTU"
+ARG PLATFORM="LINUX"
 ARG SIM_ENABLED=true
 
 ARG DEPLOYABLE_BUILD=false
@@ -89,7 +89,7 @@ RUN
 RUN if $ZED_DEV_PLATFORM ; then \
         # Determine Zed link based on platform
         case $PLATFORM in \
-            UBUNTU) \
+            LINUX) \
                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24" \
                 ;; \
 
