@@ -16,7 +16,7 @@ fi
 
 # if [[ ! -d "libiio" && "$IMU_ENABLED" ]]; then
 if [[ "$ENABLE_IMU" ]]; then
-    # git clone https://github.com/analogdevicesinc/libiio.git --branch v0.26
+    git clone https://github.com/analogdevicesinc/libiio.git --branch v0.26
     cd libiio
 
     mkdir -p build && cd build 
@@ -24,16 +24,19 @@ if [[ "$ENABLE_IMU" ]]; then
     cmake_options=""
     if [ "$IMU_BACKEND" == "LOCAL" ]; then
         cmake_options+="-DWITH_USB_BACKEND=OFF"
-        cmake_options+=" -DHAVE_DNS_SD=OFF"
         cmake_options+=" -DWITH_XML_BACKEND=OFF"
         cmake_options+=" -DWITH_NETWORK_BACKEND=OFF"
     fi
 
-    if ["$IMU_BACKEND" == ""]
+    if [ "$IMU_BACKEND" == "USB" ]; then 
+        cmake_options+="-DWITH_NETWORK_BACKEND=OFF"
+        cmake_options+=" -DWITH_LOCAL_BACKEND=OFF"
+        cmake_options+=" -DWITH_IIOD=OFF"
+    fi
 
     echo "$cmake_options"
 
-    cmake $cmake_options ../ 
+    cmake --fresh $cmake_options ../ 
      
     make && sudo make install
 
