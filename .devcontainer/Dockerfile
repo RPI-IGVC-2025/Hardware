@@ -100,8 +100,6 @@ RUN if $ZED_DEV_PLATFORM ; then \
         fi ; \
     fi
 
-RUN 
-
 ## ZED SDK
 RUN if $ZED_DEV_PLATFORM ; then \
         # Determine Zed link based on platform
