@@ -1,5 +1,3 @@
-#!/bin/bash
-
 mkdir -p lib
 cd lib
 
@@ -8,17 +6,19 @@ apt-get upgrade -y
 
 . /opt/ros/jazzy/setup.sh
 
-if [[ ! -d "ros_odrive" && "$ENABLE_ODRIVE" ]]; then
+if [ ! -d "ros_odrive" ] && [ $ENABLE_ODRIVE ]; then
     git clone https://github.com/odriverobotics/ros_odrive.git
 fi
 
-if [[ ! -d "imu_ros2" && "$ENABLE_IMU" ]]; then
-    git clone https://github.com/analogdevicesinc/imu_ros2.git
-fi
+if $ENABLE_IMU; then 
+    if [ ! -d "imu_ros2" ]; then
+        git clone https://github.com/analogdevicesinc/imu_ros2.git
+    fi
 
-# if [[ ! -d "libiio" && "$IMU_ENABLED" ]]; then
-if [[ "$ENABLE_IMU" ]]; then
-    git clone https://github.com/analogdevicesinc/libiio.git --branch v0.26
+    if [ ! -d "libiio" && "$IMU_ENABLED" ]; then
+        git clone https://github.com/analogdevicesinc/libiio.git --branch v0.26
+    fi
+    
     cd libiio
 
     mkdir -p build && cd build 
@@ -56,8 +56,6 @@ if [[ "$ENABLE_IMU" ]]; then
         cmake_options+=" -DWITH_NETWORK_BACKEND=OFF"
         cmake_options+=" -DWITH_LOCAL_BACKEND=OFF -DWITH_IIOD=OFF"
     fi
-
-    echo "$cmake_options"
 
     cmake --fresh $cmake_options ../ 
      

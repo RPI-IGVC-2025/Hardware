@@ -17,7 +17,6 @@
   <depend>zed_description</depend>
   <exec_depend>joint_state_publisher</exec_depend>
   
-  <!-- TODO: Condition: DEPLOYABLE_BUILD -->
   <exec_depend>joint_state_publisher_gui</exec_depend> 
 
   <export>
