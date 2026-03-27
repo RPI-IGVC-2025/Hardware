@@ -51,17 +51,11 @@ if [[ "$ENABLE_IMU" ]]; then
 
     if [ "$IMU_BACKEND" == "SERIAL" ]; then 
         cmake_options+=" -DWITH_SERIAL_BACKEND=ON"
-        
+
         cmake_options+=" -DWITH_USB_BACKEND=OFF"
         cmake_options+=" -DWITH_NETWORK_BACKEND=OFF"
         cmake_options+=" -DWITH_LOCAL_BACKEND=OFF -DWITH_IIOD=OFF"
     fi
-
-
-
-    
-
-
 
     echo "$cmake_options"
 

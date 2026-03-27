@@ -92,7 +92,7 @@ RUN if $ZED_DEV_PLATFORM ; then \
             zstd pciutils mesa-utils wget gnupg \
         # TODOs:
         #   Figure out mounting CUDA from host
-        && if ! $MOUNT_CUDA ; then \
+        && if [ ! $MOUNT_CUDA ] ; then \
             wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
             && dpkg -i cuda-keyring_1.1-1_all.deb \
             && apt-get update \
