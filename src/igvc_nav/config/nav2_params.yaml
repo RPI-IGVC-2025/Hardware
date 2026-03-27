@@ -438,20 +438,15 @@ collision_monitor:
         linear_max: 1.0
         theta_min: -1.0
         theta_max: 1.0
-    observation_sources: ["scan", "pointcloud"]
+    observation_sources: ["scan"]
     scan:
       source_timeout: 1.5
-      type: "scan"
-      topic: "/scan"
-      enabled: True
-    pointcloud:
-      type: "pointcloud"
-      topic: "/camera/camera/depth/points"
-      transport_type: "raw"  # raw or/ with compression (zlib, draco, zstd)
-      min_height: 0.1
-      max_height: 0.5
-      min_range: 0.2
-      enabled: True
+      topic: /scan
+      max_obstacle_height: 2.0
+      clearing: True
+      marking: True
+      data_type: "LaserScan"
+      inf_is_valid: true
 
 docking_server:
   ros__parameters:
