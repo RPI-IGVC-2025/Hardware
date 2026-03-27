@@ -7,16 +7,17 @@ ARG PLATFORM="LINUX"
 ARG SIM_ENABLED=true
 
 ARG DEPLOYABLE_BUILD=false
-ARG IMU_ENABLED=DEPLOYABLE_BUILD
-ARG ZED_DEV_PLATFORM=DEPLOYABLE_BUILD
-ARG ODRIVE_ENABLED=DEPLOYABLE_BUILD
+ARG IMU_ENABLED=$DEPLOYABLE_BUILD
+ARG ZED_DEV_PLATFORM=$DEPLOYABLE_BUILD
+ARG ODRIVE_ENABLED=$DEPLOYABLE_BUILD
 
 ARG MOUNT_CUDA=false
 
-ARG IMU_BACKEND="LOCAL"
+ARG IIO_BACKEND="LOCAL"
+ENV IMU_BACKEND=$IIO_BACKEND
 
-ENV IMU_ENABLED=$IMU_ENABLED
-ENV ODRIVE_ENABLED=$ODRIVE_ENABLED
+ENV ENABLE_IMU=$IMU_ENABLED
+ENV ENABLE_ODRIVE=$ODRIVE_ENABLED
 
 # Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
@@ -71,16 +72,18 @@ RUN if $IMU_ENABLED ; then \
             ## USB backend
                 export IMU_BACKEND_PKG=libusb-1.0-0-dev \
                 ;; \
+            SERIAL) \
             ## Serial backend
                 export IMU_BACKEND_PKG=libserialport-dev \
                 ;; \
+            NETWORK) \
             ## Network backend
                 export IMU_BACKEND_PKG=libavahi-client-dev \
                 ;; \
-            ; \
+        esac \
         && apt-get install -y \
             libxml2 libxml2-dev libzstd-dev bison flex libcdk5-dev cmake \
-            $IMU_BACKEND_PKG \
+            $IMU_BACKEND_PKG ; \
     fi
 
 ## CUDA 
