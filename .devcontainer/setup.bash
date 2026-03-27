@@ -44,6 +44,15 @@ if [[ "$ENABLE_IMU" ]]; then
         cmake_options+=" -DWITH_IIOD=OFF"
     fi
 
+    if [ "$IMU_BACKEND" == "XML" ]; then 
+        cmake_options+="-DWITH_NETWORK_BACKEND=OFF"
+        cmake_options+=" -DWITH_LOCAL_BACKEND=OFF"
+        cmake_options+=" -DWITH_USB_BACKEND=OFF"
+        cmake_options+=" -DWITH_IIOD=OFF"
+
+    fi
+
+
     echo "$cmake_options"
 
     cmake --fresh $cmake_options ../ 
