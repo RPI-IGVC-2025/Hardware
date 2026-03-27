@@ -325,16 +325,41 @@ velocity_smoother:
   
 collision_monitor:
   ros__parameters:
+    # Essential: Master on/off switch for the entire collision monitor.
     enabled: True
-    base_frame_id: "base_footprint"
-    odom_frame_id: "odom"
-    cmd_vel_in_topic: "cmd_vel_smoothed"
+
+    # Essential: Robot's base frame use for all polygon definitions and sensor transformation lookups. Must match base_frame_id used everywhere else. 
+    base_frame_id: "base_footprint" 
+
+    # Essential: Odometry frame, used for base_shift_correction. Must match odom_frame_id in the rest of Nav2. RTAB-MAP publishes it odometry to /odom, so any RTAB odometry delay directly affects how accurately base_shift_correction works. 
+    odom_frame_id: "odom" 
+
+    # TODO: confirm that velocity_smoother does not explicitly name its output topic the params
+    # Essential: Topic the monitor reads velocity commands from. This MUST be the output of velocity_smoother, NOT raw controller output. 
+    cmd_vel_in_topic: "cmd_vel_smoothed" 
+
+    # Essential: Topic the monitor writes the potentially modified velocity command to. This must match what hardware driver / ros2_control_bot_driver_controller subscribes to. 
+    # A mismatch here means the minitor runs but its output is ignored by the robot, effectively disabling all collision stopping. 
     cmd_vel_out_topic: "/bot_drive_controller/cmd_vel"
+
+    # Not Essential (informational output): Publishes the current active polygon action state (STOP/SLOWDOWN, etc.) for debugging and visualization. Keep it to diagnose why robot is stopping. 
     state_topic: "collision_monitor_state"
+
+    # TODO: pretty high, default is 0.1. Check if we need to change this back after testing
+    # Essential: How long to wait for a TF transform before giving up. 
     transform_tolerance: 0.5
+
+    # TODO: pretty high, consider lowering to default of 2.0 or maybe even loser, around 0.5-1.0s
+    # Essential: maximum age of any observation source data before it is considered stale. If a source goes stale, the monitor treats it as if it has no data
     source_timeout: 5.0
+
+    # Recommended: Compensates for robot movement between when sensor data was captured and when it is processed. Uses the odometry frame to project where the robot was at sensor capture time vs now and adjusts obstacle positions accordingly. 
     base_shift_correction: True
+
+    # Not Essential: how long to continue publishing a STOP command after cmd_vel_in_topic stops publishing. prevents robot from moving if the upstream pipeline dies. 
     stop_pub_timeout: 2.0
+
+    
     enable_stamped_cmd_vel: True  # False for Jazzy or older
     use_realtime_priority: false
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
