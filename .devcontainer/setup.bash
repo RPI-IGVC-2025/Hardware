@@ -1,3 +1,5 @@
+#!/bin/bash
+
 mkdir -p lib
 cd lib
 
@@ -30,6 +32,14 @@ if [[ "$ENABLE_IMU" ]]; then
 
     if [ "$IMU_BACKEND" == "USB" ]; then 
         cmake_options+="-DWITH_NETWORK_BACKEND=OFF"
+        cmake_options+=" -DWITH_LOCAL_BACKEND=OFF"
+        cmake_options+=" -DWITH_IIOD=OFF"
+    fi
+
+    if [ "$IMU_BACKEND" == "SERIAL" ]; then 
+        cmake_options+="-DWITH_SERIAL_BACKEND=ON"
+        cmake_options+=" -DWITH_USB_BACKEND=OFF"
+        cmake_options+=" -DWITH_NETWORK_BACKEND=OFF"
         cmake_options+=" -DWITH_LOCAL_BACKEND=OFF"
         cmake_options+=" -DWITH_IIOD=OFF"
     fi
