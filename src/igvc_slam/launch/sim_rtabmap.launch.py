@@ -41,11 +41,10 @@ def generate_launch_description():
             'imu_topic' : '/rtabmap/imu',
             'wait_imu_to_init' : 'false',
             'map_topic' : '/map',
-            
-            'subscribe_scan' : 'true',
             'scan_topic' : '/scan',
-            'Reg/Force3DoF' : 'true',
+            'subscribe_scan' : 'true',
             'Grid/FromDepth' : 'false'
+            'Reg/Force3DoF' : 'true'
         }.items()
     )
 
