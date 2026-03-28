@@ -42,14 +42,10 @@ def generate_launch_description():
             'wait_imu_to_init' : 'false',
             'map_topic' : '/map',
             
-            'subscribe_rgbd': 'true',
             'subscribe_scan' : 'true',
-            'RGBD/ProximityBySpace' : 'true',
-            'RGBD/NeighborLinkRefining' : 'true',
-            'Reg/Strategy' : '1',
+            'scan_topic' : '/scan',
             'Reg/Force3DoF' : 'true',
             'Grid/FromDepth' : 'false'
-
         }.items()
     )
 
