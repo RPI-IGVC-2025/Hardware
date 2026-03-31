@@ -368,8 +368,8 @@ collision_monitor:
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
     # Robot overall dimensions from CAD: L=1.013 m, W=0.646 m, max Z=0.974 m (z doesn't matter for polygons).
     # Half extents are (0.5065m, 0.323m).
-    # PolygonStop uses +0.075m margin.
-    # PolygonSlow goes 0.25m further than PolygonStop.
+    # I'm using PolygonStop +0.075m margin.
+    # and PolygonSlow goes 0.25m further than PolygonStop.
     PolygonStop:
       type: "polygon"
       points: "[[0.58, 0.40], [0.58, -0.40], [-0.58, -0.40], [-0.58, 0.40]]"
