@@ -74,7 +74,7 @@ controller_server:
       wz_max: 1.9
       iteration_count: 1
       prune_distance: 1.7
-      transform_tolerance: 1.5 #TODO Change, Excessive
+      transform_tolerance: 5.0 #TODO Change, Excessive
       temperature: 0.3
       gamma: 0.015
       motion_model: "DiffDrive"
@@ -280,7 +280,7 @@ planner_server:
     costmap_update_timeout: 1.0
     GridBased:
       plugin: "nav2_navfn_planner::NavfnPlanner"
-      tolerance: 0.5
+      tolerance: 2.5 #TODO Change, Excessive 
       use_astar: false
       allow_unknown: true
 
@@ -316,7 +316,7 @@ behavior_server:
     local_frame: odom
     global_frame: map
     robot_base_frame: base_footprint
-    transform_tolerance: 1.5 #TODO Change, Excessive
+    transform_tolerance: 5.0 #TODO Change, Excessive
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
     min_rotational_vel: 0.4
@@ -353,13 +353,13 @@ velocity_smoother:
   
 collision_monitor:
   ros__parameters:
-    enabled: True
+    enabled: false
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
     cmd_vel_out_topic: "/bot_drive_controller/cmd_vel"
     state_topic: "collision_monitor_state"
-    transform_tolerance: 1.5 #TODO Change, Excessive
+    transform_tolerance: 5.0 #TODO Change, Excessive
     source_timeout: 5.0
     base_shift_correction: True
     stop_pub_timeout: 2.0
@@ -447,6 +447,7 @@ collision_monitor:
       marking: True
       data_type: "LaserScan"
       inf_is_valid: true
+      min_range: 0.3
 
 docking_server:
   ros__parameters:
@@ -497,7 +498,7 @@ docking_server:
       use_collision_detection: true
       costmap_topic: "local_costmap/costmap_raw"
       footprint_topic: "local_costmap/published_footprint"
-      transform_tolerance: 1.5 #TODO Change, Excessive
+      transform_tolerance: 5.0 #TODO Change, Excessive
       projection_time: 5.0
       simulation_step: 0.1
       dock_collision_threshold: 0.3
