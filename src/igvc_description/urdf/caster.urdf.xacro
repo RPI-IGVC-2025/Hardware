@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<robot name="igvc_description" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Import all Gazebo related items from .gazebo file -->
+<xacro:include filename="$(find igvc_gazebo)/urdf/(gazebo stuff)" />
+
+<!-- Constants --!>
+<xacro:property name="pi" value="3.1415926535897931" />
+
+  <!--base link values-->
+  <xacro:property name="base_link_length_width_height" value="0.650 0.381 0.132" />
+  <xacro:property name="base_link_length" value="0.650" />
+  <xacro:property name="base_link_width" value="0.381" />
+  <xacro:property name="base_link_height" value="0.132" />
+  <xacro:property name="base_link_mass" value="20"/> <!--25 kg-->
+  
+  <!--left and right drive wheel values (both are same size)-->
+  <xacro:property name="drive_wheel_length" value="0.049" />
+  <xacro:property name="drive_wheel_radius" value="0.181" />
+  <xacro:property name="drive_wheel_mass" value="2"/> <!--2 kg-->
+
+  <!--left and right castor mount plate size (both are same size)-->
+  <xacro:property name="castor_mount_link_length_width_height" value="0.1145 0.10 0.0057" />
+  <xacro:property name="castor_mount_link_length" value="0.1145" />
+  <xacro:property name="castor_mount_link_width" value="0.10" />
+  <xacro:property name="castor_mount_link_height" value="0.0057" />
+  <xacro:property name="castor_mount_link_mass" value="0.25"/> <!--0.25 kg-->
+
+  <!--dummy link to give castors rotation about the Z axis-->
+  <xacro:property name="castor_mount_dummy_link_length" value="0.02" />
+  <xacro:property name="castor_mount_dummy_link_width" value="0.02" />
+  <xacro:property name="castor_mount_dummy_link_height" value="0.02" />
+  <xacro:property name="castor_mount_dummy_link_mass" value="1.5"/> <!--0.25 kg-->
+
+  <!-- left and right castor wheels (both are same size) -->
+  <xacro:property name="castor_wheel_length" value="0.049" />
+  <xacro:property name="castor_wheel_radius" value="0.07925" />
+  <xacro:property name="castor_wheel_mass" value="2"/> <!--2 kg-->
+
+  <!--dimensions of shaft which is tuned by A.M.P. servo motor               -->
+  <xacro:property name="lms_rotating_shaft_length" value="0.235" />
+  <xacro:property name="lms_rotating_shaft_radius" value="0.006" />
+  <xacro:property name="lms_rotating_shaft_mass" value="1.5"/> <!--1.5 kg-->
+
+  <!--dimensions of plate on which the LMS sits                              -->
+  <xacro:property name="lms_plate_link_length_width_height" value="0.18415 0.1651 0.00635" />
+  <xacro:property name="lms_plate_link_length" value="0.18415" />
+  <xacro:property name="lms_plate_link_width" value="0.1651" />
+  <xacro:property name="lms_plate_link_height" value="0.00635" />
+  <xacro:property name="lms_plate_link_mass" value="0.5"/> <!--0.5 kg-->
+
+  <!--Box representing a collision space for the actual LMS. according to    -->
+  <!--docs, using meshes for collisions is very computationally intensive, so-->
+  <!--it is much better to define collision space as a regular box.          -->
+  <xacro:property name="lms_collision_space_length_width_height" value="0.20 0.20 0.20" />
+
+  <!--The dimensions of the aluminum extrusion holding the entire lms system -->
+  <xacro:property name="lms_structural_extrusion_link_length_width_height" value="0.03 0.03 0.425" />
+  <xacro:property name="lms_structural_extrusion_link_length" value="0.03" />
+  <xacro:property name="lms_structural_extrusion_link_width" value="0.03" />
+  <xacro:property name="lms_structural_extrusion_link_height" value="0.425" />
+  <xacro:property name="lms_structural_extrusion_link_mass" value="3"/> <!--3 kg-->
+
+  <!--Friction for joints-->
+  <xacro:property name="friction_val" value="0.15"/>
