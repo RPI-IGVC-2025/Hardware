@@ -6,17 +6,45 @@
     <link name="base_footprint"/>
     <link name="base_link"/>
 
+    <joint name="base_joint" type="fixed">
+        <parent link="base_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0.01"/>
+        <child link="part_1"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
     <joint name="footprint_joint" type="fixed">
         <parent link="base_link"/>
         <origin rpy="0 0 0" xyz="0 0 0.01"/>
         <child link="base_footprint"/>
         <axis xyz="0 0 1"/>
     </joint>
-
-    <joint name="base_joint" type="fixed">
+	
+    <joint name="oak_joint" type="fixed">
         <parent link="base_link"/>
         <origin rpy="0 0 0" xyz="0 0 0.01"/>
-        <child link="part_1"/>
+        <child link="oak_parent"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+    <joint name="imu_joint_link" type="fixed">
+        <parent link="base_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0.01"/>
+        <child link="imu_link"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+    <joint name="laser_joint_link" type="fixed">
+        <parent link="base_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0.01"/>
+        <child link="laser_frame"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
+    <joint name="navsat_joint_link" type="fixed">
+        <parent link="base_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0.01"/>
+        <child link="navsat_link"/>
         <axis xyz="0 0 1"/>
     </joint>
 

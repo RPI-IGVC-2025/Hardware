@@ -43,7 +43,7 @@ def generate_launch_description():
             'map_topic' : '/map',
             'scan_topic' : '/scan',
             'subscribe_scan' : 'true',
-            'Grid/FromDepth' : 'false'
+            'Grid/FromDepth' : 'false',
             'Reg/Force3DoF' : 'true'
         }.items()
     )
