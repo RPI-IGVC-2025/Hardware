@@ -339,7 +339,7 @@ collision_monitor:
     cmd_vel_in_topic: "cmd_vel_smoothed" 
 
     # Essential: Topic the monitor writes the potentially modified velocity command to. This must match what hardware driver / ros2_control_bot_driver_controller subscribes to. 
-    # A mismatch here means the minitor runs but its output is ignored by the robot, effectively disabling all collision stopping. 
+    # A mismatch here means the monitor runs but its output is ignored by the robot, effectively disabling all collision stopping. 
     cmd_vel_out_topic: "/bot_drive_controller/cmd_vel"
 
     # Not Essential (informational output): Publishes the current active polygon action state (STOP/SLOWDOWN, etc.) for debugging and visualization. Keep it to diagnose why robot is stopping. 
@@ -359,46 +359,89 @@ collision_monitor:
     # Not Essential: how long to continue publishing a STOP command after cmd_vel_in_topic stops publishing. prevents robot from moving if the upstream pipeline dies. 
     stop_pub_timeout: 2.0
 
-    
+    # Essential: Must be true for ROS2 Jazzy and newer, and must match enable_stamped_cmd_vel in ALL other Nav2 servers
     enable_stamped_cmd_vel: True  # False for Jazzy or older
+
+    # Not Essential: Enables real-time OS scheduling priority for the monitor thread. 
+    # Leave False unless our system supports it and we are seeeing timing-related misses.
     use_realtime_priority: false
+
+    # TODO: PolygonLimit and VelocityPolygonStop are defined but not listed or used
+    # Essential: defines which polygon configurations are active
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
+    
+    # Essential: A circular zone centered on the robot. If any obstacle point falls inside it, robot receives a STOP command immediately. 
     PolygonStop:
-      type: "circle"
-      radius: 0.3
+      # Essential: shape of polygon, circle used the radius parameter
+      type: "circle" 
+
+      # TODO: robot_radius is 0.22m, so this radius gives a clearance of about 0.08, and may cause collision monitor issues. Might have to increase it.
+      # TODO: Costmap uses robot_radius 0.22m + inflation_radius 0.7m, so the planner avoids obstacles beyond 0.92m. Stop circle is inside inflation zone, and planner should never route the robot close enough to trigger it, but sensor noise can still do so. 
+      # Essential: radius of circle
+      radius: 0.3 
+
+      # Essential: What action to take when triggered
       action_type: "stop"
+
+      # Essential: minimum number of obstacle points required inside the polygon to trigger an action
       min_points: 4  # max_points: 3 for Humble
+
+      # Not Essential: Publish polygon boundary as a visualization marker for RVIZ debugging. 
       visualize: True
       polygon_pub_topic: "polygon_stop"
       enabled: True
+
+    # Essential: A rectangular zone in front of and slightly behind the robot. Obstacles inside this zone trigger a slowdown, scaling all velocities down by slowdown_ratio. 
     PolygonSlow:
+
+      # Essential: arbitrary polygon defined by corner points in the robot's base frame. 
       type: "polygon"
       points: "[[1.0, 1.0], [1.0, -1.0], [-0.5, -1.0], [-0.5, 1.0]]"
       action_type: "slowdown"
       min_points: 4  # max_points: 3 for Humble
+
+      # Essential: slowdown at 30% of commanded velocity. Combined with velocity_smoother max_velocity of 0.5 m/s, this caps robot at 0.15 m/s in a slow zone.
       slowdown_ratio: 0.3
       visualize: True
       polygon_pub_topic: "polygon_slowdown"
       enabled: True
+
+    # TODO: Add to active polygons if we want to use it
+    # Defines a velocity cap rather than a proportional scale. 
     PolygonLimit:
       type: "polygon"
       points: "[[0.5, 0.5], [0.5, -0.5], [-0.5, -0.5], [-0.5, 0.5]]"
+
+      # Essential: forces maximum velocity rather than scaling proportionally
       action_type: "limit"
       min_points: 4  # max_points: 3 for Humble
+
+      # Essential: hard cap on linear velocity
       linear_limit: 0.4
+
+      # Essential: hard cap on angular velocity
       angular_limit: 0.5
       visualize: True
       polygon_pub_topic: "polygon_limit"
       enabled: True
+
+    # Projects the robot's actual footprint forward in time and triggers if a collision is predicted within time_before_collision seconds. 
     FootprintApproach:
       type: "polygon"
       action_type: "approach"
+
+      # Essential: where this polygon is published
       footprint_topic: "/local_costmap/published_footprint"
       time_before_collision: 2.0
+
+      # Essential: Simulation step size for projecting robot's path forward.
       simulation_time_step: 0.02
       min_points: 6  # max_points: 5 for Humble
       visualize: False
       enabled: True
+
+    # TODO: Add to active polygons if we want to use it
+    # The active safety zone changes depending on robot's current linear and angular velocity. 
     VelocityPolygonStop:
       type: "velocity_polygon"
       action_type: "stop"
@@ -407,25 +450,35 @@ collision_monitor:
       enabled: True
       polygon_pub_topic: "velocity_polygon_stop"
       velocity_polygons: ["rotation", "translation_forward", "translation_backward", "stopped"]
+      
+      # TODO: check if we have differential drive or holonomic robot 
+      # Essential: false for differential drive, true for holonomic robots
       holonomic: false
+
+      # Sub-polygon: active durning in-place rotation (low linear, high angular)
       rotation:
         points: "[[0.3, 0.3], [0.3, -0.3], [-0.3, -0.3], [-0.3, 0.3]]"
         linear_min: 0.0
         linear_max: 0.05
         theta_min: -1.0
         theta_max: 1.0
+
+      # Sub-polygon: active during forward translation
       translation_forward:
         points: "[[0.35, 0.3], [0.35, -0.3], [-0.2, -0.3], [-0.2, 0.3]]"
         linear_min: 0.0
         linear_max: 1.0
         theta_min: -1.0
         theta_max: 1.0
+
+      # # Sub-polygon: active during backward translation
       translation_backward:
         points: "[[0.2, 0.3], [0.2, -0.3], [-0.35, -0.3], [-0.35, 0.3]]"
         linear_min: -1.0
         linear_max: 0.0
         theta_min: -1.0
         theta_max: 1.0
+
       # This is the last polygon to be checked, it should cover the entire range of robot's velocities
       # It is used as the stopped polygon when the robot is not moving and as a fallback if the velocity
       # is not covered by any of the other sub-polygons
@@ -435,7 +488,11 @@ collision_monitor:
         linear_max: 1.0
         theta_min: -1.0
         theta_max: 1.0
+
+    # Essential: defines the raw sensor inputs the collision monitor uses. Reads raw sensor data direct;y
     observation_sources: ["scan", "pointcloud"]
+
+    # Essential: per-source override of the global source_timeout. 0.2 may be a little tight. 
     scan:
       source_timeout: 0.2
       type: "scan"
@@ -443,10 +500,17 @@ collision_monitor:
       enabled: True
     pointcloud:
       type: "pointcloud"
+
+      # TODO: might need to change this to "/camera/camera/depth/points"
       topic: "/intel_realsense_r200_depth/points"
       transport_type: "raw"  # raw or/ with compression (zlib, draco, zstd)
+
+      # Essential: filters point cloud to only consider points within this height range. 
+      # Points below min_height are ground returns, points above max height are ceiling/overhead features. 
       min_height: 0.1
       max_height: 0.5
+
+      # Essential: Ignore points closer than this. Points inside this range are unreliable depth returns. 
       min_range: 0.2
       enabled: True
     # costmap:
