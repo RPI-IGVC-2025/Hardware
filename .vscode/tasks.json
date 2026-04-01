@@ -64,7 +64,7 @@
 		{
 			"label": "IGVC: Open input keyboard",
 			"type": "shell",
-			"command": "source install/setup.bash; gnome-terminal --title 'Teleop twist keyboard' -- sh -c 'ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/bot_drive_controller/cmd_vel -p use_sim_time:=true -p stamped:=true'",
+			"command": "source install/setup.bash; gnome-terminal --title 'Teleop twist keyboard' -- sh -c 'ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/bot_drive_controller/cmd_vel -p use_sim_time:=true -p stamped:=true' -norc",
 			"problemMatcher": []
 		},
         {
