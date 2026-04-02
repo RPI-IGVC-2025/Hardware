@@ -353,7 +353,7 @@ velocity_smoother:
   
 collision_monitor:
   ros__parameters:
-    enabled: false
+    enabled: true
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
@@ -365,6 +365,7 @@ collision_monitor:
     stop_pub_timeout: 2.0
     enable_stamped_cmd_vel: True 
     use_realtime_priority: false
+    robot_radius: 0.22
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
     PolygonStop:
       type: "circle"
@@ -438,16 +439,16 @@ collision_monitor:
         linear_max: 1.0
         theta_min: -1.0
         theta_max: 1.0
-    observation_sources: ["scan"]
-    scan:
-      source_timeout: 1.5
-      topic: /scan
-      max_obstacle_height: 2.0
+    observation_sources: ["pointcloud"]
+    pointcloud:
+      type: pointcloud
+      source_timeout: 3.0
+      topic: /scan/points
+      min_range: 0.3
       clearing: True
       marking: True
-      data_type: "LaserScan"
-      inf_is_valid: true
-      min_range: 0.3
+      data_type: "PointCloud2"
+      transport_type: "raw"  # raw or/ with compression (zlib, draco, zstd)
 
 docking_server:
   ros__parameters:
