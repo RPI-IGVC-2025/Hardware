@@ -374,16 +374,14 @@ collision_monitor:
       type: "polygon"
       points: "[[0.58, 0.40], [0.58, -0.40], [-0.58, -0.40], [-0.58, 0.40]]"
       action_type: "stop"
-      min_points: 2
-      visualize: True
+      min_points: 4  # max_points: 3 for Humble      visualize: True
       polygon_pub_topic: "polygon_stop"
       enabled: True
     PolygonSlow:
       type: "polygon"
       points: "[[0.83, 0.65], [0.83, -0.65], [-0.83, -0.65], [-0.83, 0.65]]"
       action_type: "slowdown"
-      min_points: 2
-      slowdown_ratio: 0.3
+      min_points: 4  # max_points: 3 for Humble      slowdown_ratio: 0.3
       visualize: True
       polygon_pub_topic: "polygon_slowdown"
       enabled: True
