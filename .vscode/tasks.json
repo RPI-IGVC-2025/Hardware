@@ -74,11 +74,17 @@
 			"problemMatcher": []
 		},
 		{
+			"label": "IGVC: Open Nav2",
+			"type": "shell",
+			"command": "source install/setup.bash; ros2 launch igvc_nav igvc_nav.launch.py",
+			"problemMatcher": []
+		},
+		{
 			"label": "IGVC: Run Simulation",
 			"dependsOn": [
 				"IGVC: Open non-SLAM simulation scenario",
 				"IGVC: Open RTAB",
-				"IGVC: Open input keyboard"
+				"IGVC: Open input keyboard",
 			],
 			"problemMatcher": []
 		},
