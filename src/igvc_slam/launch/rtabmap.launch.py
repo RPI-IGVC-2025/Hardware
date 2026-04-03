@@ -59,27 +59,7 @@ def generate_launch_description():
         }.items()
     )
 
-    realsense = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(realsense_launch_path),
-        launch_arguments={
-            'enable_color' : 'true',
-            'enable_depth' : 'true',
-            'align_depth.enable' : 'true', 
-            'pointcloud.enable' : 'false',
-            'enable_sync' : 'false',
-            'unite_imu_method' : '2',
-            'enable_gyro' : 'true',
-            'enable_accel' : 'true',
-            'color_fps' : '60',
-            'depth_fps' : '60', 
-            'gyro_fps' : '200',
-            'accel_fps' : '63',
-            'publish_tf' : 'true'
-        }.items()
-    )
 
     return LaunchDescription([
-        imu_filter,
-        rtabmap,
-        realsense
+        rtabmap
     ])
