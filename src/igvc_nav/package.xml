@@ -14,6 +14,7 @@
 
   <depend>nav2_bringup</depend>
   <depend>navigation2</depend>
+  <exec_depend>robot_self_filter</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

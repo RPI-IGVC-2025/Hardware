@@ -1,0 +1,31 @@
+# robot_self_filter — IGVC CAD envelope (m):
+#   length (x) 1.013, width (y) 0.646, max height (z) 0.974
+# Half-extents (m): ~0.5065, 0.323, 0.487 — same numbers as Nav2 footprint notes.
+#
+# Body links use mesh collision from URDF/STL; in this fork mesh bodies do not consume
+# default_box_* / default_cylinder_* (see self_mask MESH case). Those defaults still apply
+# to primitive collision (e.g. laser_frame cylinder). Keep URDF meshes aligned with CAD.
+
+self_filter:
+  ros__parameters:
+    sensor_frame: "laser_frame"
+    default_sphere_scale: 1.0
+    default_sphere_padding: 0.02
+    default_box_scale: [1.0, 1.0, 1.0]
+    # Padding per axis (m), ~2% of L / W / Z envelope for box primitives
+    default_box_padding: [0.020, 0.013, 0.019]
+    default_cylinder_scale: [1.0, 1.0]
+    # Radial / length padding (m) for cylinder primitives (lidar housing)
+    default_cylinder_padding: [0.02, 0.02]
+    keep_organized: false
+    zero_for_removed_points: false
+    invert: false
+    min_sensor_dist: 0.05
+    self_see_links:
+      names:
+        - part_1
+        - part_34
+        - part_35
+        - part_36
+        - part_37
+        - laser_frame
