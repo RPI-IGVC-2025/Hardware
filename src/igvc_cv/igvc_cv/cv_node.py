@@ -6,6 +6,10 @@ from message_filters import ApproximateTimeSynchronizer, Subscriber
 import cv2
 import numpy as np
 
+from sensor_msgs.msg import PointCloud2
+from std_msgs.msg import Header
+import sensor_msgs_py.point_cloud2 as pc2
+
 class CVNode(Node):
     def __init__(self):
         super().__init__('cv_node')
@@ -92,17 +96,41 @@ class CVNode(Node):
         white_v, white_u = np.where(line_mask > 0)
         distances = depth_frame[white_v, white_u]
         
-        valid = distances > 0
+        valid = np.isfinite(distances) & distances > 0
         white_u = white_u[valid]
         white_v = white_v[valid]
         distances = distances[valid]
 
+        #CAMERA PARAMETERS (replace with actual information through zed.get_camera_information())
+        #also could be written as parameters in __init__
+        fx = 700.0
+        fy = 700.0
+        cx = 640.0
+        cy = 360.0
+
+        #points to 3D
+        Z = distances
+        X = (white_u - cx) * Z / fx
+        Y = (white_v - cy) * Z / fy
+
+        #create pointcloud
+        points = np.vstack((X, Y, Z)).T
+
+        header = Header()
+        header.stamp = self.get_clock().now().to_msg()
+        header.frame_id = ""
+
+        cloud_msg = pc2.create_cloud_xyz32(header, points.tolist())
+        self.pub.publish(cloud_msg)
+        
+        """
         # Publish image 
         result = cv2.addWeighted(frame, 0.8, line_image, 1.0, 1)
         ros_image = self.bridge.cv2_to_imgmsg(result, 'bgr8')
         ros_image.header = rgb_msg.header
         self.image_pub.publish(ros_image)
         self.get_logger().info("Published Image")
+        """
         
 def main(args=None):
     rclpy.init(args=args)
