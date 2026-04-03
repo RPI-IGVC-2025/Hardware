@@ -85,8 +85,6 @@ def generate_launch_description():
             condition = UnlessCondition(use_mock_hardware)
         ),
         
-        #----------------------------------------------------
-        
         # SLAM
         IncludeLaunchDescription(
             FrontendLaunchDescriptionSource(igvc_slam_path)
