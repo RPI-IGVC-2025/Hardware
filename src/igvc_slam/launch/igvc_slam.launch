@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </include>    
   
         <!-- RTAB-Map -->
-        <arg name="custom_rtabmap_launch_file" default="$(find zed_rtabmap_example)/launch/include/sl_rtabmap.launch.xml"/>
+        <arg name="custom_rtabmap_launch_file" default="$(find zed_rtabmap_example)/launch/include/rtabmap.launch.xml"/>
         <include file="$(arg custom_rtabmap_launch_file)">
             <arg name="odom_topic"              default="$(arg zed_node_name)/odom" />
             <arg name="rgb_topic"               default="$(arg zed_node_name)/rgb/image_rect_color" />
