@@ -6,7 +6,8 @@
 			"args": [
 				"build",
 				"--symlink-install",
-				"--packages-skip-regex zed_*"
+				"--packages-skip-regex",
+				"zed_*"
 			],
 			"problemMatcher": [
 				"$colcon-gcc"
@@ -17,12 +18,14 @@
 			},
 			"label": "colcon: Colcon Build Release"
 		},
+
 		{
 			"type": "colcon",
 			"args": [
 				"build",
 				"--symlink-install",
-				"--packages-skip-regex zed_*",
+				"--packages-skip-regex",
+				"zed_*",
 				"--cmake-args",
 				"-DCMAKE_BUILD_TYPE=RelWithDebInfo"
 			],
@@ -38,7 +41,8 @@
 			"args": [
 				"build",
 				"--symlink-install",
-				"--packages-skip-regex zed_*",
+				"--packages-skip-regex",
+				"zed_*",
 				"--cmake-args",
 				"-DCMAKE_BUILD_TYPE=Debug"
 			],
