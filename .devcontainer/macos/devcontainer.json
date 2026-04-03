@@ -5,7 +5,8 @@
         "context": "..",
         "dockerfile": "../Dockerfile",
         "args": {
-            "USERNAME": "ros_user"
+            "USERNAME": "ros_user",
+            "PLATFORM": "MAC"
         }
     },
     "workspaceFolder": "/home/ros2_ws",
@@ -31,6 +32,6 @@
         "-p", "5900:5900",
         "-e", "DISPLAY=host.docker.internal:0"
     ],
-    "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && (rm -r build/ install/ || true) && colcon build --symlink-install",
+    "postCreateCommand": ". .devcontainer/setup.bash && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ install/ || true) && colcon build --symlink-install --packages-skip-regex zed_*",
     "forwardPorts": [5900]
 }
