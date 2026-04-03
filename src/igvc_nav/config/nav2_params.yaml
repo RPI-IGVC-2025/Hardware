@@ -367,9 +367,13 @@ collision_monitor:
     use_realtime_priority: false
     robot_radius: 0.22
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
+    # Robot overall dimensions from CAD: L=1.013 m, W=0.646 m, max Z=0.974 m (z doesn't matter for polygons).
+    # Half extents are (0.5065m, 0.323m).
+    # I'm using PolygonStop +0.075m margin.
+    # and PolygonSlow goes 0.25m further than PolygonStop.
     PolygonStop:
-      type: "circle"
-      radius: 0.3
+      type: "polygon"
+      points: "[[0.58, 0.40], [0.58, -0.40], [-0.58, -0.40], [-0.58, 0.40]]"
       action_type: "stop"
       min_points: 4  # max_points: 3 for Humble
       visualize: True
@@ -377,7 +381,7 @@ collision_monitor:
       enabled: True
     PolygonSlow:
       type: "polygon"
-      points: "[[1.0, 1.0], [1.0, -1.0], [-0.5, -1.0], [-0.5, 1.0]]"
+      points: "[[0.83, 0.65], [0.83, -0.65], [-0.83, -0.65], [-0.83, 0.65]]"
       action_type: "slowdown"
       min_points: 4  # max_points: 3 for Humble
       slowdown_ratio: 0.3
