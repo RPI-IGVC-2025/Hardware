@@ -67,3 +67,8 @@ fi
 cd ..
 
 echo '. /opt/ros/jazzy/setup.sh' >> ~/.bashrc
+
+echo ' if [ -d '/home/ros2_ws/install' ]; then 
+    . /home/ros2_ws/install/setup.bash
+fi ' >> ~/.bashrc
+
