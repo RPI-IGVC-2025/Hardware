@@ -1,3 +1,5 @@
+cd /home/ros2_ws
+
 mkdir -p lib
 cd lib
 
@@ -62,6 +64,8 @@ if $ENABLE_IMU; then
     make && sudo make install
 
     cd ../..
+else 
+    rm -rfv adi_imu libiio
 fi
 
 cd ..
