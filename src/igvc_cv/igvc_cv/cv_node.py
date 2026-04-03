@@ -44,6 +44,12 @@ class CVNode(Node):
         self.sync.registerCallback(self.process)
         # ===== Publishers =====
         self.image_pub = self.create_publisher(Image, 'image_processed', 10)
+
+        # Camera parameters based on factor calibration file
+        self.fx = 1401.07
+        self.fy = 1401.07
+        self.cx = 1062.32
+        self.cy = 634.124
         
     def process(self, rgb_msg: Image, depth_msg: Image):
         self.get_logger().info("Called Process()")
@@ -101,17 +107,10 @@ class CVNode(Node):
         white_v = white_v[valid]
         distances = distances[valid]
 
-        #CAMERA PARAMETERS (replace with actual information through zed.get_camera_information())
-        #also could be written as parameters in __init__
-        fx = 700.0
-        fy = 700.0
-        cx = 640.0
-        cy = 360.0
-
         #points to 3D
         Z = distances
-        X = (white_u - cx) * Z / fx
-        Y = (white_v - cy) * Z / fy
+        X = (white_u - self.cx) * Z / self.fx
+        Y = (white_v - self.cy) * Z / self.fy
 
         #create pointcloud
         points = np.vstack((X, Y, Z)).T
