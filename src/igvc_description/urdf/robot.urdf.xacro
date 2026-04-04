@@ -28,34 +28,6 @@
         <axis xyz="0 0 1"/>
     </joint>
 	
-    <joint name="oak_joint" type="fixed">
-        <parent link="base_link"/>
-        <origin rpy="0 0 0" xyz="0 0 0.01"/>
-        <child link="oak_parent"/>
-        <axis xyz="0 0 1"/>
-    </joint>
-
-    <joint name="imu_joint_link" type="fixed">
-        <parent link="base_link"/>
-        <origin rpy="0 0 0" xyz="0 0 0.01"/>
-        <child link="imu_link"/>
-        <axis xyz="0 0 1"/>
-    </joint>
-
-    <joint name="laser_joint_link" type="fixed">
-        <parent link="base_link"/>
-        <origin rpy="0 0 0" xyz="0 0 0.01"/>
-        <child link="laser_frame"/>
-        <axis xyz="0 0 1"/>
-    </joint>
-
-    <joint name="navsat_joint_link" type="fixed">
-        <parent link="base_link"/>
-        <origin rpy="0 0 0" xyz="0 0 0.01"/>
-        <child link="navsat_link"/>
-        <axis xyz="0 0 1"/>
-    </joint>
-
     <xacro:include filename="$(find igvc_description)/urdf/model.urdf.xacro"/>
     <xacro:include filename="$(find igvc_description)/urdf/sensors.urdf.xacro"/>
 
