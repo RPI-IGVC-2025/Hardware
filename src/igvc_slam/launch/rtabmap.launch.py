@@ -38,7 +38,7 @@ def generate_launch_description():
             'depth_topic' : '/camera/camera/aligned_depth_to_color/image_raw',
             'rgb_topic' : '/camera/camera/color/image_raw',
             'camera_info_topic' : '/camera/camera/color/camera_info',
-            'frame_id' : 'base_footprint',
+            'frame_id' : 'base_link',
             'publish_tf_odom' : 'true',
             'odom_topic' : '/odom',
             'odom_frame_id' : 'odom',
