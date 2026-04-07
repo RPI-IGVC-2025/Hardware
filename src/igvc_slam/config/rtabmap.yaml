@@ -28,6 +28,10 @@ queue_size: 10
 
 scan_normal_k:  0
 
+Mem:
+    IncrementalMemory: true
+    InitWithAllNodes: false
+
 Grid:
     3D:                     true
     FlatObstacleDetected:   true
