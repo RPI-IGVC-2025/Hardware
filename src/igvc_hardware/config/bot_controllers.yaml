@@ -53,23 +53,23 @@ bot_drive_controller:
     linear.x.min_velocity: -2.2352
 
     # TODO
-    linear.x.max_acceleration: NaN
-    linear.x.max_deceleration: NaN
-    linear.x.max_acceleration_reverse: NaN
-    linear.x.max_deceleration_reverse: NaN
+    linear.x.max_acceleration: .NAN
+    linear.x.max_deceleration: .NAN
+    linear.x.max_acceleration_reverse: .NAN
+    linear.x.max_deceleration_reverse: .NAN
 
     #TODO
-    linear.x.max_jerk: NaN
-    linear.x.min_jerk: NaN
+    linear.x.max_jerk: .NAN
+    linear.x.min_jerk: .NAN
 
     # TODO
-    angular.z.max_velocity: NaN
-    angular.z.min_velocity: NaN
+    angular.z.max_velocity: .NAN
+    angular.z.min_velocity: .NAN
 
     # TODO
-    angular.z.max_acceleration: NaN
-    angular.z.min_acceleration: NaN
+    angular.z.max_acceleration: .NAN
+    angular.z.min_acceleration: .NAN
 
     # TODO
-    angular.z.max_jerk: NaN
-    angular.z.min_jerk: NaN
+    angular.z.max_jerk: .NAN
+    angular.z.min_jerk: .NAN
