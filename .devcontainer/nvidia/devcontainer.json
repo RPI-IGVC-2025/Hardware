@@ -34,7 +34,7 @@
         "MESA_D3D12_DEFAULT_ADAPTER_NAME": "NVIDIA",
         "MESA_LOADER_DRIVER_OVERRIDE": "d3d12",
         "GALLIUM_DRIVER": "d3d12",
-        "LIBGL_ALWAYS_INDIRECT": "0"
+        "LIBGL_ALWAYS_INDIRECT": "0",
         "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
     },
     "runArgs": [
@@ -44,7 +44,7 @@
         "--gpus=all",
         "--runtime=nvidia",
         "--device=/dev/dxg",
-        "--privileged"
+        "--privileged",
         "-p", "8765:8765"
     ],
     "mounts": [
