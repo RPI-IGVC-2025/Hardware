@@ -33,7 +33,6 @@
         "--net=host",
         "--pid=host",
         "--ipc=host",
-        "-e", "DISPLAY=${env:DISPLAY}",
         "-p", "8765:8765"
         
     ],
