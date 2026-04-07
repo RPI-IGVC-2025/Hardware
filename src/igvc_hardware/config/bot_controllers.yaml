@@ -49,33 +49,27 @@ bot_drive_controller:
     # TODO work w/ mech. & auton to find kinematic limits
 
     # TODO
-    linear.x.has_velocity_limits: true
     linear.x.max_velocity: 2.2352 # 5 mph in meters/second
     linear.x.min_velocity: -2.2352
 
     # TODO
-    linear.x.has_acceleration_limits: false 
-    linear.x.max_acceleration: 1.0
-    linear.x.max_deceleration: -1.0
-    linear.x.max_acceleration_reverse: -1.0
-    linear.x.max_deceleration_reverse: 1.0
+    linear.x.max_acceleration: NaN
+    linear.x.max_deceleration: NaN
+    linear.x.max_acceleration_reverse: NaN
+    linear.x.max_deceleration_reverse: NaN
 
     #TODO
-    linear.x.has_jerk_limits: false
-    linear.x.max_jerk: 0.0
-    linear.x.min_jerk: 0.0
+    linear.x.max_jerk: NaN
+    linear.x.min_jerk: NaN
 
     # TODO
-    angular.z.has_velocity_limits: false
-    angular.z.max_velocity: 1.0
-    angular.z.min_velocity: -1.0
+    angular.z.max_velocity: NaN
+    angular.z.min_velocity: NaN
 
     # TODO
-    angular.z.has_acceleration_limits: false
-    angular.z.max_acceleration: 1.0
-    angular.z.min_acceleration: -1.0
+    angular.z.max_acceleration: NaN
+    angular.z.min_acceleration: NaN
 
     # TODO
-    angular.z.has_jerk_limits: false
-    angular.z.max_jerk: 0.0
-    angular.z.min_jerk: 0.0
+    angular.z.max_jerk: NaN
+    angular.z.min_jerk: NaN
