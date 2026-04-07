@@ -153,7 +153,18 @@ common_costmap_parameters: &common_costmap_parameters # parameters that appear i
   robot_base_frame: base_link
   robot_radius: 0.22
   resolution: 0.05
-  
+
+scan_parameters: &scan_parameters 
+  scan:
+    topic: /scan
+    max_obstacle_height: 2.0
+    clearing: True
+    marking: True
+    data_type: "LaserScan"
+    raytrace_max_range: 3.0
+    raytrace_min_range: 0.0
+    obstacle_max_range: 2.5
+    obstacle_min_range: 0.0
 
 local_costmap:
   local_costmap:
@@ -208,16 +219,7 @@ global_costmap:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
         observation_sources: scan
-        scan:
-          topic: /scan
-          max_obstacle_height: 2.0
-          clearing: True
-          marking: True
-          data_type: "LaserScan"
-          raytrace_max_range: 3.0
-          raytrace_min_range: 0.0
-          obstacle_max_range: 2.5
-          obstacle_min_range: 0.0
+        <<: *scan_parameters
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
@@ -337,9 +339,4 @@ collision_monitor:
       visualize: False
       enabled: True
     observation_sources: ["scan"]
-    scan:
-      type: "scan"
-      topic: "scan"
-      min_height: 0.15
-      max_height: 2.0
-      enabled: True
+    <<: *scan_parameters
