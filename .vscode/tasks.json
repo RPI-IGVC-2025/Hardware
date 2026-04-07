@@ -87,7 +87,6 @@
 			"dependsOn": [
 				"IGVC: Open non-SLAM simulation scenario",
 				"IGVC: Open RTAB",
-				"IGVC: Open input keyboard",
 			],
 			"problemMatcher": []
 		},
