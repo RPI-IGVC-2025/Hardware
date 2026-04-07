@@ -23,7 +23,7 @@
         }
     },
     "containerEnv": {
-        "DISPLAY": "unix:0",
+        "DISPLAY": "${env:DISPLAY}",
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
         "ROS_DOMAIN_ID": "42",
         "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp",
@@ -33,7 +33,6 @@
         "--net=host",
         "--pid=host",
         "--ipc=host",
-        "-e", "DISPLAY=${env:DISPLAY}",
         "-p", "8765:8765"
         
     ],

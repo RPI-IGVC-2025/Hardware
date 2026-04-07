@@ -25,13 +25,13 @@
         }
     },
     "containerEnv": {
+        "DISPLAY": "host.docker.internal:0",
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
         "ROS_DOMAIN_ID": "42",
         "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
     },
     "runArgs": [
-        "-p", "5900:5900",
-        "-e", "DISPLAY=host.docker.internal:0"
+        "-p", "5900:5900"
     ],
     "postCreateCommand": ". .devcontainer/setup.bash && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ install/ || true) && colcon build --symlink-install --packages-skip-regex zed_*",
     "forwardPorts": [5900]
