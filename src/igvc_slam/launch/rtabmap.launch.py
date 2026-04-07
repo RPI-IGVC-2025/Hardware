@@ -40,7 +40,7 @@ def generate_launch_description():
             'camera_info_topic' : '/camera/camera/color/camera_info',
             'frame_id' : 'base_link',
             'publish_tf_odom' : 'true',
-            'odom_topic' : '/odom',
+            'odom_topic' : 'odom',
             'odom_frame_id' : 'odom',
 	        'approx_sync' : 'true',
             'rgbd_sync' : 'true',

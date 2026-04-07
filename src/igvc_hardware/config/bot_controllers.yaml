@@ -31,7 +31,7 @@ bot_drive_controller:
 
     publish_rate: 50.0 # Hz
     odom_frame_id: odom
-    base_frame_id: base_footprint
+    base_frame_id: base_link
 
     #TODO These need physical testing
     pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
