@@ -19,7 +19,8 @@
                 "twxs.cmake",
                 "donjayamanne.python-extension-pack",
                 "eamodio.gitlens",
-                "Ranch-Hand-Robotics.rde-pack"
+                "Ranch-Hand-Robotics.rde-pack",
+                "ms-vsliveshare.vsliveshare"
             ]
         }
     },
