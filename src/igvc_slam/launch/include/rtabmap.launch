@@ -11,10 +11,10 @@
 
     <!-- Visual Odometry -->
     <node name="rtabmap_stereo_odometry" pkg="rtabmap_odom" exec="stereo_odometry" output="screen" args="" launch-prefix="">    
-        <remap from="/left/image_rect"      to="zed/zed_node/left/image_rect_color"/>
-        <remap from="/right/image_rect"     to="zed/zed_node/right/image_rect_color"/>
-        <remap from="/left/camera_info"     to="zed/zed_node/left/camera_info"/>
-        <remap from="/right/camera_info"    to="zed/zed_node/right/camera_info"/>
+        <remap from="/left/image_rect"      to="/zed/zed_node/left/image_rect_color"/>
+        <remap from="/right/image_rect"     to="/zed/zed_node/right/image_rect_color"/>
+        <remap from="/left/camera_info"     to="/zed/zed_node/left/camera_info"/>
+        <remap from="/right/camera_info"    to="/zed/zed_node/right/camera_info"/>
     </node>
 
     <!-- RTABmapviz -->

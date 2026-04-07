@@ -15,6 +15,32 @@
 
 # Depth Camera 
 
+- ros_topic_name: "zed/zed_node/left/image_rect_color"
+  gz_topic_name: "oak/left"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: "GZ_TO_ROS"
+  qos_profile: SENSOR_DATA
+
+- ros_topic_name: "zed/zed_node/right/image_rect_color"
+  gz_topic_name: "oak/right"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: "GZ_TO_ROS"
+  qos_profile: SENSOR_DATA
+
+- ros_topic_name: "zed/zed_node/left/camera_info" #TODO: verify this matches real ros topic
+  gz_topic_name: "oak/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "zed/zed_node/right/camera_info" #TODO: verify this matches real ros topic
+  gz_topic_name: "oak/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+
 - ros_topic_name: "camera/camera/color/image_raw"
   gz_topic_name: "oak/color"
   ros_type_name: "sensor_msgs/msg/Image"

@@ -72,4 +72,66 @@
             <topic>oak/color</topic>
         </sensor>
     </gazebo>
+
+    <gazebo reference="oak_infra1_frame">
+        <sensor name="camera_right" type="camera">
+            <camera>
+                <horizontal_fov>1.51843645</horizontal_fov>
+                <image>
+                    <width>1280</width>
+                    <height>720</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>20</far>
+                </clip>
+                <noise>
+                    <type>gaussian</type>
+                    <!-- Noise is sampled independently per pixel on each frame.
+                        That pixel's noise value is added to each of its color
+                        channels, which at that point lie in the range [0,1]. -->
+                    <mean>0.0</mean>
+                    <stddev>0.007</stddev>
+                </noise>
+                <optical_frame_id>oak_infra1_optical_frame</optical_frame_id>
+                <camera_info_topic>oak/camera_info</camera_info_topic>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>20</update_rate>
+            <visualize>true</visualize>
+            <topic>oak/right</topic>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="oak_infra2_frame">
+        <sensor name="camera_left" type="camera">
+            <camera>
+                <horizontal_fov>1.51843645</horizontal_fov>
+                <image>
+                    <width>1280</width>
+                    <height>720</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>20</far>
+                </clip>
+                <noise>
+                    <type>gaussian</type>
+                    <!-- Noise is sampled independently per pixel on each frame.
+                        That pixel's noise value is added to each of its color
+                        channels, which at that point lie in the range [0,1]. -->
+                    <mean>0.0</mean>
+                    <stddev>0.007</stddev>
+                </noise>
+                <optical_frame_id>oak_infra2_optical_frame</optical_frame_id>
+                <camera_info_topic>oak/camera_info</camera_info_topic>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>20</update_rate>
+            <visualize>true</visualize>
+            <topic>oak/left</topic>
+        </sensor>
+    </gazebo>
 </robot>
