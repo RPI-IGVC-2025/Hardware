@@ -47,16 +47,15 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner",
         arguments=["bot_drive_controller",
-                   "--controller-manager", "/controller_manager"],
+                   "--controller-manager", "/controller_manager", "--switch-timeout", "20.0"],
         remappings=[('~/cmd_vel','/cmd_vel')]
-
     )
     
     
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager", "--switch-timeout", "20.0"],
     )
 
     

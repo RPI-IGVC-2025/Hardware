@@ -12,10 +12,12 @@
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
   
-  <depend>depthai_descriptions</depend>
+  <depend>depthai_descriptions</depend> <!-- TODO Remove when we properly integrate zed description -->
   <depend>foxglove_bridge</depend>
+  <depend>zed_description</depend>
   <exec_depend>joint_state_publisher</exec_depend>
-  <exec_depend>joint_state_publisher_gui</exec_depend>
+  
+  <exec_depend>joint_state_publisher_gui</exec_depend> 
 
   <export>
     <build_type>ament_cmake</build_type>
