@@ -81,7 +81,7 @@ def generate_launch_description():
         condition=UnlessCondition(use_mock_hardware)
     )
 
-    slam_description = IncludeLaunchDescription(
+    sim_rtab_description = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             FindPackageShare('igvc_slam'),
             '/launch',
@@ -90,15 +90,12 @@ def generate_launch_description():
         condition=IfCondition(use_slam)
     )
     
-        # SLAM
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_slam'),
-                 '/launch',
-                 '/sim_rtabmap.launch.py']
-            ),
-            condition = IfCondition(LaunchConfiguration('use_slam'))
-        ),
-        
-        # TODO Nav
-    ])
+    Node = [
+        publisher_description,
+        sim_description,
+        control_description,
+        hardware_description,
+        sim_rtab_description
+    ]
+
+    return LaunchDescription(declared_arguments + Node)
