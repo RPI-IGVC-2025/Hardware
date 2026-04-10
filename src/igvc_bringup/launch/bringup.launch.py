@@ -7,6 +7,37 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+    declared_arguments = []
+    
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'use_sim',
+            default_value='false',
+            description='Run in Simulation'
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'sim_world',
+            default_value='track_v1',
+            description='The name of the scenario to open in Gazebo'
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'use_mock_hardware',
+            default_value=LaunchConfiguration('use_sim'),
+            description='Mocks all hardware'
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'use_slam',
+            default_value='true',
+            description='Launch rtabmap for SLAM'
+        )
+    )
+    
     use_sim = LaunchConfiguration('use_sim')
     use_mock_hardware = LaunchConfiguration('use_mock_hardware')
 
@@ -19,7 +50,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             'sim_world',
-            default_value='empty_world',
+            default_value='track_v1',
             description='The name of the scenario to open in Gazebo'
         ),
         DeclareLaunchArgument(
