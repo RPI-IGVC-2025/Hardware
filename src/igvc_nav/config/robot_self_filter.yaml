@@ -5,13 +5,11 @@ self_filter:
   ros__parameters:
     sensor_frame: "laser_frame"
     default_sphere_scale: 1.0
-    default_sphere_padding: 0.02
+    default_sphere_padding: 0.01
     default_box_scale: [1.0, 1.0, 1.0]
-    # Padding per axis (m), ~2% of L / W / Z envelope for box primitives
-    default_box_padding: [0.020, 0.013, 0.019]
+    default_box_padding: [0.01, 0.01, 0.01]
     default_cylinder_scale: [1.0, 1.0]
-    # Radial / length padding (m) for cylinder primitives (lidar housing)
-    default_cylinder_padding: [0.02, 0.02]
+    default_cylinder_padding: [0.01, 0.01]
     keep_organized: false
     zero_for_removed_points: false
     invert: false
