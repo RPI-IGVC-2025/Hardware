@@ -17,7 +17,7 @@ if $ENABLE_IMU; then
         git clone https://github.com/analogdevicesinc/imu_ros2.git
     fi
 
-    if [ ! -d "libiio" && "$IMU_ENABLED" ]; then
+    if [ ! -d "libiio" ]; then
         git clone https://github.com/analogdevicesinc/libiio.git --branch v0.26
     fi
     
