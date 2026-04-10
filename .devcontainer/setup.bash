@@ -1,3 +1,5 @@
+cd /home/ros2_ws
+
 mkdir -p lib
 cd lib
 
@@ -62,8 +64,15 @@ if $ENABLE_IMU; then
     make && sudo make install
 
     cd ../..
+else 
+    rm -rfv adi_imu libiio
 fi
 
 cd ..
 
 echo '. /opt/ros/jazzy/setup.sh' >> ~/.bashrc
+
+echo ' if [ -d '/home/ros2_ws/install' ]; then 
+    . /home/ros2_ws/install/setup.bash
+fi ' >> ~/.bashrc
+
