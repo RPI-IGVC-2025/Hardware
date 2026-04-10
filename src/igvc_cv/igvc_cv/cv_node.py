@@ -102,7 +102,7 @@ class CVNode(Node):
         white_v, white_u = np.where(line_mask > 0)
         distances = depth_frame[white_v, white_u]
         
-        valid = np.isfinite(distances) & distances > 0
+        valid = distances > 0
         white_u = white_u[valid]
         white_v = white_v[valid]
         distances = distances[valid]
