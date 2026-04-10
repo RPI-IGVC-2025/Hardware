@@ -1,6 +1,9 @@
 # RTAB-Map configuration
 rtabmap:
     ros__parameters:
+        use_sim_time:           true
+        
+
         subscribe_depth:        true
         subscribe_rgbd:         false
         subscribe_stereo:       false
