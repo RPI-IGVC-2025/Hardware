@@ -67,55 +67,29 @@ def generate_launch_description():
     control_description = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             FindPackageShare('igvc_hardware'),
-            '/launch/control.launch.py'
+            '/launch',
+            '/control.launch.py'
         ])
     )
     
+    hardware_description = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            FindPackageShare('igvc_hardware'),
+            '/launch',
+            '/hardware.launch.py'
+        ]),
+        condition=UnlessCondition(use_mock_hardware)
+    )
+
+    slam_description = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            FindPackageShare('igvc_slam'),
+            '/launch',
+            '/sim_rtabmap.launch.py'
+        ]),
+        condition=IfCondition(use_slam)
+    )
     
-    return LaunchDescription([
-        # Publishers & URDF
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_description'),
-                 '/launch',
-                 '/publisher.launch.py']
-            ),
-            launch_arguments={
-                'use_mock_hardware': use_mock_hardware
-                }.items()
-        ),
-
-        # Simulation
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_gazebo'),
-                 '/launch/',
-                 LaunchConfiguration('sim_world'),
-                 '.launch.py'
-                ]
-            ),
-            condition=IfCondition(use_sim),
-        ),
-
-        # ROS2_Control
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_hardware'),
-                 '/launch',
-                 '/control.launch.py']
-            ),
-        ),
-
-        # Real hardware
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_hardware'),
-                 '/launch',
-                 '/hardware.launch.py']
-            ),
-            condition = UnlessCondition(use_mock_hardware)
-        ),
-
         # SLAM
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
