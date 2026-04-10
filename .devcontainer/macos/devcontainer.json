@@ -28,7 +28,8 @@
         "DISPLAY": "host.docker.internal:0",
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
         "ROS_DOMAIN_ID": "42",
-        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
+        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp",
+        "GNOME_TERMINAL_SCREEN": ""
     },
     "runArgs": [
         "-p", "5900:5900"
