@@ -1,10 +1,5 @@
-# robot_self_filter — IGVC CAD envelope (m):
+# robot_self_filter — IGVC CAD:
 #   length (x) 1.013, width (y) 0.646, max height (z) 0.974
-# Half-extents (m): ~0.5065, 0.323, 0.487 — same numbers as Nav2 footprint notes.
-#
-# Body links use mesh collision from URDF/STL; in this fork mesh bodies do not consume
-# default_box_* / default_cylinder_* (see self_mask MESH case). Those defaults still apply
-# to primitive collision (e.g. laser_frame cylinder). Keep URDF meshes aligned with CAD.
 
 self_filter:
   ros__parameters:
