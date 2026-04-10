@@ -27,12 +27,21 @@
         }
     },
     "containerEnv": {
-        "DISPLAY": "unix:0",
+        "DISPLAY": "${env:DISPLAY}",
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
         "ROS_DOMAIN_ID": "42",
         "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp",
         "HAS_ZED_DEPS": "true",
         "GNOME_TERMINAL_SCREEN": ""
+        "NVIDIA_VISIBLE_DEVICES": "all",
+        "NVIDIA_DRIVER_CAPABILITES": "all",
+        "WAYLAND_DISPLAY": "${env:WAYLAND_DISPLAY}",
+        "LD_LIBRARY_PATH": "/usr/lib/wsl/lib",
+        "MESA_D3D12_DEFAULT_ADAPTER_NAME": "NVIDIA",
+        "MESA_LOADER_DRIVER_OVERRIDE": "d3d12",
+        "GALLIUM_DRIVER": "d3d12",
+        "LIBGL_ALWAYS_INDIRECT": "0"
+
     },
     "runArgs": [
         "--net=host",
@@ -42,15 +51,6 @@
         "--runtime=nvidia",
         "--device=/dev/dxg",
         "--privileged",
-        "-e", "NVIDIA_VISIBLE_DEVICES=all",
-        "-e", "NVIDIA_DRIVER_CAPABILITES=all",
-        "-e", "DISPLAY=${env:DISPLAY}",
-        "-e", "WAYLAND_DISPLAY=${env:WAYLAND_DISPLAY}",
-        "-e", "LD_LIBRARY_PATH=/usr/lib/wsl/lib",
-        "-e", "MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA",
-        "-e", "MESA_LOADER_DRIVER_OVERRIDE=d3d12",
-        "-e", "GALLIUM_DRIVER=d3d12",
-        "-e", "LIBGL_ALWAYS_INDIRECT=0",
         "-p", "8765:8765"
 
     ],
