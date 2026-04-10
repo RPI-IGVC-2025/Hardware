@@ -39,33 +39,40 @@ def generate_launch_description():
     )
     
     use_sim = LaunchConfiguration('use_sim')
+    sim_world = LaunchConfiguration('sim_world')
     use_mock_hardware = LaunchConfiguration('use_mock_hardware')
+    use_slam = LaunchConfiguration('use_slam')
+   
+    publisher_description = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            FindPackageShare('igvc_description'),
+            '/launch',
+            '/publisher.launch.py'
+        ]),
+        launch_arguments={
+            'use_mock_hardware': use_mock_hardware
+        }.items()
+    )
+    
+    sim_description = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            FindPackageShare('igvc_gazebo'),
+            '/launch/',
+            sim_world,
+            '.launch.py'
+        ]),
+        condition=IfCondition(use_sim)
+    )
 
+    control_description = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            FindPackageShare('igvc_hardware'),
+            '/launch/control.launch.py'
+        ])
+    )
+    
+    
     return LaunchDescription([
-        # Launch Arguments
-        DeclareLaunchArgument(
-            'use_sim',
-            default_value='false',
-            description='Run in Simulation'
-        ),
-        DeclareLaunchArgument(
-            'sim_world',
-            default_value='track_v1',
-            description='The name of the scenario to open in Gazebo'
-        ),
-        DeclareLaunchArgument(
-            'use_mock_hardware',
-            default_value=use_sim, # You are always mocking in simulation, but can specify if you need to bypass physical descriptors for testing
-            description='Mocks all hardware'
-        ),
-        
-        DeclareLaunchArgument(
-            'use_slam',
-            default_value='true', 
-            description='Launch rtabmap for SLAM'
-        ),
-
-
         # Publishers & URDF
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
