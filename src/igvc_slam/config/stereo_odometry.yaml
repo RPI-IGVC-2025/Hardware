@@ -1,0 +1,26 @@
+stereo_odometry:
+  ros__parameters:
+
+    subscribe_rgbd: false
+
+    publish_tf: true
+    wait_imu_to_init: false
+    always_check_imu_tf: false
+  
+    frame_id: "base_link"
+    odom_frame_id: "odom"
+    ground_truth_frame_id: ""
+    ground_truth_base_frame_id: ""
+    guess_frame_id: ""
+    config_path: "~/.ros/rtabmap.cfg" #unverified, copied from rtabmap.yaml
+    
+    wait_for_transform: 0.2
+    approx_sync: false
+    approx_sync_max_interval: 0.0
+    topic_queue_size: 10
+    sync_queue_size: 10
+    qos: 1
+    qos_camera_info: 1
+    qos_imu: 1
+    guess_min_translation: 0.0
+    guess_min_rotation: 0.0

@@ -11,6 +11,8 @@
 
     <!-- Visual Odometry -->
     <node name="rtabmap_stereo_odometry" pkg="rtabmap_odom" exec="stereo_odometry" output="screen" args="" launch-prefix="">    
+        <param from="$(find-pkg-share igvc_slam)/config/stereo_odometry.yaml" />
+        
         <remap from="/left/image_rect"      to="/zed/zed_node/left/image_rect_color"/>
         <remap from="/right/image_rect"     to="/zed/zed_node/right/image_rect_color"/>
         <remap from="/left/camera_info"     to="/zed/zed_node/left/camera_info"/>
