@@ -21,12 +21,15 @@ class GoalSettingNode(Node):
 
         self.create_timer(0.1, self.publish_goal)
 
+    # subscribe to /left_boundary
     def left_callback(self, msg):
         self.left_boundary = msg
 
+    # subscribe to /right_boundary
     def right_callback(self, msg):
         self.right_boundary = msg
 
+    # publish goal to nav2
     def publish_goal(self):
         if self.left_boundary is None or self.right_boundary is None:
             return
