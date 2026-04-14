@@ -95,7 +95,7 @@
                     <stddev>0.007</stddev>
                 </noise>
                 <optical_frame_id>oak_infra1_optical_frame</optical_frame_id>
-                <camera_info_topic>oak/camera_info</camera_info_topic>
+                <camera_info_topic>oak/camera_info_left</camera_info_topic>
             </camera>
             <always_on>1</always_on>
             <update_rate>20</update_rate>
@@ -126,7 +126,7 @@
                     <stddev>0.007</stddev>
                 </noise>
                 <optical_frame_id>oak_infra2_optical_frame</optical_frame_id>
-                <camera_info_topic>oak/camera_info</camera_info_topic>
+                <camera_info_topic>oak/camera_info_right</camera_info_topic>
             </camera>
             <always_on>1</always_on>
             <update_rate>20</update_rate>
