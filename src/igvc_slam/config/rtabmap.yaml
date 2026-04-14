@@ -54,6 +54,10 @@
     GridGlobal:
       FullUpdate: true
 
+/zed/rgbd_odometry:
+  ros__parameters:
+    use_sim_time: true
+
 /zed/rgbd_sync: 
   ros__parameters:
     use_sim_time: true
