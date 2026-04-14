@@ -58,7 +58,6 @@ def generate_launch_description():
         executable="spawner",
         arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager","--switch-timeout", "20.0"],
     )
-
     
     delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
@@ -66,9 +65,7 @@ def generate_launch_description():
             on_exit=[robot_controller_spawner],
         )
     )
-
-
-
+    
     nodes = [
         control_node,
         joint_state_broadcaster_spawner,
