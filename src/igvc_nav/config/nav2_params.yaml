@@ -447,8 +447,9 @@ collision_monitor:
     pointcloud:
       type: pointcloud
       source_timeout: 3.0
-      topic: /scan/points
-      min_range: 1.0
+      # Filtered by igvc_nav/launch/robot_self_filter.launch.py robot_self_filter
+      topic: /scan/points_filtered
+      # min_range: 0.3 # commmented out bc we have robot_self_filter
       clearing: True
       marking: True
       data_type: "PointCloud2"

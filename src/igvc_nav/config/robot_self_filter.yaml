@@ -1,0 +1,24 @@
+# robot_self_filter — IGVC CAD:
+#   length (x) 1.013, width (y) 0.646, max height (z) 0.974
+
+self_filter:
+  ros__parameters:
+    sensor_frame: "laser_frame"
+    default_sphere_scale: 1.0
+    default_sphere_padding: 0.01
+    default_box_scale: [1.0, 1.0, 1.0]
+    default_box_padding: [0.01, 0.01, 0.01]
+    default_cylinder_scale: [1.0, 1.0]
+    default_cylinder_padding: [0.01, 0.01]
+    keep_organized: false
+    zero_for_removed_points: false
+    invert: false
+    min_sensor_dist: 0.05
+    self_see_links:
+      names:
+        - part_1
+        - part_34
+        - part_35
+        - part_36
+        - part_37
+        - laser_frame

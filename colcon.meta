@@ -1,0 +1,7 @@
+names:
+  odrive_ros2_control:
+    cmake-args:
+        - "-DCMAKE_CXX_FLAGS=-w"
+  robot_self_filter:
+    cmake-args:
+        - "-DCMAKE_POLICY_DEFAULT_CMP0144=NEW"
