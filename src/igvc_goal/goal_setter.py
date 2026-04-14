@@ -5,6 +5,7 @@ from rclpy.node import Node
 
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
+from rclpy.action import ActionClient
 
 # this node publishes to /goal_update on PoseStamped, which is 
 # part of the geometry_msgs package. Nav2 subscribes to PoseStamped
@@ -19,7 +20,7 @@ class GoalSettingNode(Node):
         self.create_subscription(Path, '/left_boundary', self.left_callback, 10)
         self.create_subscription(Path, '/right_boundary', self.right_callback, 10)
 
-        self.goal_pub = self.create_publisher(PoseStamped, '/goal_update', 10)
+        self.goal_pub = self.create_publisher(PoseStamped, '/goal_pose', 10)
 
         self.create_timer(0.1, self.publish_goal)
 
@@ -38,7 +39,7 @@ class GoalSettingNode(Node):
 
         goal = PoseStamped()
         goal.header.stamp = self.get_clock().now().to_msg()
-        goal.header.frame_id = 'base_footprint'
+        goal.header.frame_id = 'map' # may have to be base_footprint. TODO look into 
 
         # placeholder goal
         goal.pose.position.x = 1.0
