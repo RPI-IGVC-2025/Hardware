@@ -33,7 +33,7 @@ class GoalSettingNode(Node):
 
         goal = PoseStamped()
         goal.header.stamp = self.get_clock().now().to_msg()
-        goal.header.frame_id = 'base_link'
+        goal.header.frame_id = 'base_footprint'
 
         # placeholder goal
         goal.pose.position.x = 1.0
