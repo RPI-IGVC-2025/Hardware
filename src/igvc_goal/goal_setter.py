@@ -6,7 +6,9 @@ from rclpy.node import Node
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 
-
+# this node publishes to /goal_update on PoseStamped, which is 
+# part of the geometry_msgs package. Nav2 subscribes to PoseStamped
+# to determine next points 
 class GoalSettingNode(Node):
     def __init__(self):
         super().__init__('goal_setting_node')
