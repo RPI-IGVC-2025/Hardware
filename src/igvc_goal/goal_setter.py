@@ -39,7 +39,7 @@ class GoalSettingNode(Node):
 
         goal = PoseStamped()
         goal.header.stamp = self.get_clock().now().to_msg()
-        goal.header.frame_id = 'map' # may have to be base_footprint. TODO look into 
+        goal.header.frame_id = 'base_footprint' # may have to change base_footprint. TODO look into 
 
         # placeholder goal
         goal.pose.position.x = 1.0
