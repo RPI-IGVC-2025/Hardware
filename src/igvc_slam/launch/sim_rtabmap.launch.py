@@ -21,10 +21,10 @@ def generate_launch_description():
             'rgb_topic' : '/camera/camera/color/image_raw',
             'camera_info_topic' : '/camera/camera/depth/camera_info',
             'approx_sync' : 'true',
-            'frame_id' : 'base_footprint',
+            'frame_id' : 'base_link',
             'log_level' : 'debug', 
             'publish_tf_odom' : 'true',
-            'odom_topic' : '/odom',
+            'odom_topic' : 'odom',
             'odom_frame_id' : 'odom',
             'sync_queue_size' : '10', #TODO verify
             'topic_queue_size' : '10', #TODO verify
