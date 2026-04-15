@@ -57,6 +57,15 @@
 /zed/rgbd_odometry:
   ros__parameters:
     use_sim_time: true
+    approx_sync_max_interval: 0.0
+    frame_id: base_link
+    ground_truth_base_frame_id: base_link
+    odom_frame_id: odom
+    qos: 0
+    qos_camera_info: 0
+    subscribe_rgbd: false
+    sync_queue_size: 5
+    wait_for_transform: 0.1
 
 /zed/rgbd_sync: 
   ros__parameters:
