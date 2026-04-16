@@ -8,7 +8,13 @@ apt-get upgrade -y
 
 . /opt/ros/jazzy/setup.sh
 
-if [ ! -d "ros_odrive" ] && [ $ENABLE_ODRIVE ]; then
+
+if [ ! -d "rplidar_ros" ] && $ENABLE_LIDAR ; then 
+    git clone -b ros2 https://github.com/Slamtec/rplidar_ros.git
+fi
+
+if [ ! -d "ros_odrive" ] && $ENABLE_ODRIVE ; then
+    echo fuck
     git clone https://github.com/odriverobotics/ros_odrive.git
 fi
 
