@@ -14,7 +14,6 @@ if [ ! -d "rplidar_ros" ] && $ENABLE_LIDAR ; then
 fi
 
 if [ ! -d "ros_odrive" ] && $ENABLE_ODRIVE ; then
-    echo fuck
     git clone https://github.com/odriverobotics/ros_odrive.git
 fi
 
