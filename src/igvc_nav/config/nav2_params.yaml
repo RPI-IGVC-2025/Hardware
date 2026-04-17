@@ -2,7 +2,7 @@ bt_navigator:
   ros__parameters:
     global_frame: map
     robot_base_frame: base_link
-    odom_topic: /odom
+    odom_topic: odom
     bt_loop_duration: 10
     default_server_timeout: 20
     wait_for_service_timeout: 1000
@@ -149,18 +149,33 @@ controller_server:
       #   twirling_cost_power: 1
       #   twirling_cost_weight: 10.0
 
+common_costmap_parameters: &common_costmap_parameters # parameters that appear in both local and global
+  robot_base_frame: base_link
+  robot_radius: 0.22
+  resolution: 0.05
+
+scan_parameters: &scan_parameters 
+  scan:
+    topic: /scan
+    max_obstacle_height: 2.0
+    clearing: True
+    marking: True
+    data_type: "LaserScan"
+    raytrace_max_range: 3.0
+    raytrace_min_range: 0.0
+    obstacle_max_range: 2.5
+    obstacle_min_range: 0.0
+
 local_costmap:
   local_costmap:
     ros__parameters:
+      <<: *common_costmap_parameters # includes all parameters in common_costmap_parameters
       update_frequency: 5.0
       publish_frequency: 2.0
       global_frame: odom
-      robot_base_frame: base_link
       rolling_window: true
       width: 3
       height: 3
-      resolution: 0.05
-      robot_radius: 0.22
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -194,28 +209,17 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
+      <<: *common_costmap_parameters # includes all parameters in common_costmap_parameters
       update_frequency: 1.0
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: base_link
-      robot_radius: 0.22
-      resolution: 0.05
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
         observation_sources: scan
-        scan:
-          topic: /scan
-          max_obstacle_height: 2.0
-          clearing: True
-          marking: True
-          data_type: "LaserScan"
-          raytrace_max_range: 3.0
-          raytrace_min_range: 0.0
-          obstacle_max_range: 2.5
-          obstacle_min_range: 0.0
+        <<: *scan_parameters
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
@@ -313,7 +317,7 @@ velocity_smoother:
 
 collision_monitor:
   ros__parameters:
-    base_frame_id: "base_footprint"
+    base_frame_id: "base_link"
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
     cmd_vel_out_topic: "cmd_vel"
@@ -335,9 +339,4 @@ collision_monitor:
       visualize: False
       enabled: True
     observation_sources: ["scan"]
-    scan:
-      type: "scan"
-      topic: "scan"
-      min_height: 0.15
-      max_height: 2.0
-      enabled: True
+    <<: *scan_parameters

@@ -37,11 +37,27 @@ def generate_launch_description():
     robot_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=[
-            "bot_drive_controller",
-            "--controller-manager", "/controller_manager"
-        ],
+        arguments=["bot_drive_controller",
+                   "--controller-manager", "/controller_manager", "--switch-timeout", "20.0"],
+        remappings=[('~/cmd_vel','/cmd_vel')]
     )
+    
+    
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager", "--switch-timeout", "20.0"],
+    )
+
+    
+    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[robot_controller_spawner],
+        )
+    )
+
+
 
     nodes = [
         control_node,

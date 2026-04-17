@@ -21,8 +21,20 @@ def generate_launch_description():
     )
     # Check here for published topics: https://www.stereolabs.com/docs/ros2/zed-node
     
+    launch_rplidar_node = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            [FindPackageShare("rplidar_ros"),
+             '/launch',
+             'rplidar_s2e_launch.py']
+        ),
+        launch_arguments={
+            # TODO if we want to change anything
+        }
+    )
+
     declared_arguments = [
-        launch_zed_node
+        launch_zed_node,
+        launch_rplidar_node
     ]
     
     # Get nodes    
@@ -31,9 +43,6 @@ def generate_launch_description():
         executable="adi_imu_node",
         ros_arguments=["-p", f"imu_device_name:=${IMU_NAME}"]
     )
-
-    # TODO In the examples, the controller manager is not spawned until the joint state broadcaster is finished spawning. Implement if we have problems regarding that.
-    
     nodes = [
         imu_node
     ]

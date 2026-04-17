@@ -6,7 +6,7 @@
         "dockerfile": "../Dockerfile",
         "args": {
             "USERNAME": "ros_user",
-            "IS_MACOS": "true"
+            "PLATFORM": "MAC"
         }
     },
     "workspaceFolder": "/home/ros2_ws",
@@ -19,19 +19,21 @@
                 "twxs.cmake",
                 "donjayamanne.python-extension-pack",
                 "eamodio.gitlens",
-                "Ranch-Hand-Robotics.rde-pack"
+                "Ranch-Hand-Robotics.rde-pack",
+                "ms-vsliveshare.vsliveshare"
             ]
         }
     },
     "containerEnv": {
+        "DISPLAY": "host.docker.internal:0",
         "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
         "ROS_DOMAIN_ID": "42",
-        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp"
+        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp",
+        "GNOME_TERMINAL_SCREEN": ""
     },
     "runArgs": [
-        "-p", "5900:5900",
-        "-e", "DISPLAY=host.docker.internal:0"
+        "-p", "5900:5900"
     ],
-    "postCreateCommand": ". .devcontainer/setup.sh && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ install/ || true) && colcon build --symlink-install --packages-skip-regex zed_*",
+    "postCreateCommand": ". .devcontainer/setup.bash && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ install/ || true) && colcon build --symlink-install --packages-skip-regex zed_*",
     "forwardPorts": [5900]
 }
