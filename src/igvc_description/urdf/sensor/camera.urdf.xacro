@@ -14,7 +14,7 @@
     <xacro:include filename="$(find depthai_descriptions)/urdf/depthai_descr.urdf.xacro" />
 
     <joint name="camera_base_joint" type="fixed">
-        <parent link="base_footprint"/>
+        <parent link="base_link"/>
         <child link="oak_parent"/>
         <origin xyz="-0.05 -0.05 0.95" rpy="0 0 ${pi/2}"/>
     </joint>
