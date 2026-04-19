@@ -15,7 +15,7 @@ def generate_launch_description():
     world = LaunchConfiguration('world')
     bridge_params = os.path.join(get_package_share_directory('igvc_gazebo'), 'config', 'gz_bridge.yaml')
     default_world = os.path.join(get_package_share_directory('igvc_gazebo'), 'worlds','empty_world.sdf')
-   
+
     declared_arguments.append(
         DeclareLaunchArgument(
             'world',
@@ -39,7 +39,7 @@ def generate_launch_description():
         output='screen'
     )
 
-    
+
     ros_gz_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
@@ -49,11 +49,9 @@ def generate_launch_description():
             f'config_file:={bridge_params}',
         ]
     )
-    Node = [
+    Nodes = [
         spawn_entity,
         ros_gz_bridge
     ]
-    return LaunchDescription(declared_arguments + Node)  
-                         
-
     
+    return LaunchDescription(declared_arguments + Nodes)  

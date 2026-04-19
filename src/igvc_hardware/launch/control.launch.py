@@ -17,7 +17,7 @@ def generate_launch_description():
     )
 
     use_sim = LaunchConfiguration("use_sim")
-    
+
     # Get nodes
     robot_controllers = PathJoinSubstitution([
         FindPackageShare("igvc_hardware"),
@@ -33,35 +33,20 @@ def generate_launch_description():
         ],
         output="both",
     )
-
+    
     robot_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["bot_drive_controller",
-                   "--controller-manager", "/controller_manager", "--switch-timeout", "20.0"],
-        remappings=[('~/cmd_vel','/cmd_vel')]
-    )
-    
-    
-    joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager", "--switch-timeout", "20.0"],
+        arguments=[
+            "bot_drive_controller",
+            "--controller-manager", "/controller_manager",
+            "--switch-timeout", "20.0"
+        ],
     )
 
-    
-    delay_robot_controller_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[robot_controller_spawner],
-        )
-    )
-
-
-
-    nodes = [
+    Nodes = [
         control_node,
         robot_controller_spawner
     ]
 
-    return LaunchDescription(declared_arguments + nodes)
+    return LaunchDescription(declared_arguments + Nodes)

@@ -63,8 +63,6 @@ def generate_launch_description():
   use_sim_time = LaunchConfiguration('use_sim_time')
   rviz_config_file = LaunchConfiguration('rviz_config_file')
   use_rviz = LaunchConfiguration('use_rviz')
-
-  
  
   rviz_node = Node(
     package='rviz2',
@@ -74,10 +72,12 @@ def generate_launch_description():
     output='screen',
     arguments=['-d', rviz_config_file]
   )
-  Node = [
+  
+  Nodes = [
     rviz_node
   ]
-  return LaunchDescription(declared_arguments + Node)
+  
+  return LaunchDescription(declared_arguments + Nodes)
   
  
 

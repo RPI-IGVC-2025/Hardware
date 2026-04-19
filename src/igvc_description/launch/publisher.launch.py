@@ -17,7 +17,7 @@ def generate_launch_description():
         'robot.urdf.xacro'
         ]
     )
-    
+
 
     declared_arguments.append( 
         DeclareLaunchArgument(
@@ -83,6 +83,7 @@ def generate_launch_description():
         package='foxglove_bridge',
         executable='foxglove_bridge'
     )
+    
     Nodes = [
         joint_state_publisher_node,
         joint_state_publisher_gui_node,
@@ -90,4 +91,3 @@ def generate_launch_description():
         foxglove_bridge_node]
 
     return LaunchDescription(declared_arguments + Nodes)
-

@@ -90,7 +90,7 @@ def generate_launch_description():
         condition=IfCondition(use_slam)
     )
     
-    Node = [
+    Nodes = [
         publisher_description,
         sim_description,
         control_description,
@@ -98,4 +98,4 @@ def generate_launch_description():
         sim_rtab_description
     ]
 
-    return LaunchDescription(declared_arguments + Node)
+    return LaunchDescription(declared_arguments + Nodes)
