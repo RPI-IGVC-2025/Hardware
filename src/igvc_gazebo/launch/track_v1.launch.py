@@ -1,61 +1,71 @@
-import os
-
-from ament_index_python.packages import get_package_share_directory
-
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
-
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    ros_gz_sim_package = get_package_share_directory('ros_gz_sim')
-    package_description = FindPackageShare(package='igvc_description').find('igvc_description')
+    declared_arguments = []
 
-    gz_launch_path = os.path.join(ros_gz_sim_package, 'launch', 'gz_sim.launch.py')
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'world',
+            default_value=PathJoinSubstitution([
+                FindPackageShare('igvc_gazebo'),
+                'worlds',
+                'track_v1.sdf'
+            ]),
+            description='World to load'
+        )
+    )
 
     world = LaunchConfiguration('world')
 
-    default_world = os.path.join(
-        get_package_share_directory('igvc_gazebo'),
-        'worlds',
-        'track_v1.sdf'
+    gz_sim_description = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([
+                FindPackageShare('ros_gz_sim'),
+                'launch',
+                'gz_sim.launch.py'
+            ])
+        ),
+        launch_arguments={
+            'gz_args': ['-r -v4 ', world],
+            'on_exit_shutdown': 'true'
+        }.items()
     )
 
-    world_arg = DeclareLaunchArgument(
-        'world',
-        default_value=default_world,
-        description='World to load'
-    )
-
-    gazebo = IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(gz_launch_path),
-            launch_arguments={'gz_args': ['-r -v4 ', world], 'on_exit_shutdown': 'true'}.items()
-        )
-
-    spawn_entity = Node(package='ros_gz_sim', executable='create',
-        arguments=['-topic', 'robot_description',
-                    '-name', 'igvc_robot'],
+    spawn_entity_node = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=[
+            '-topic', 'robot_description',
+            '-name', 'igvc_robot'
+        ],
         output='screen'
     )
 
-    bridge_params = os.path.join(get_package_share_directory('igvc_gazebo'), 'config', 'gz_bridge.yaml')
-    
-    ros_gz_bridge = Node(
-        package="ros_gz_bridge",
-        executable="parameter_bridge",
+    bridge_params = PathJoinSubstitution([
+        FindPackageShare('igvc_gazebo'),
+        'config',
+        'gz_bridge.yaml'
+    ])
+
+    ros_gz_bridge_node = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
         arguments=[
             '--ros-args',
             '-p',
-            f'config_file:={bridge_params}',
+            f'config_file:={bridge_params}'
         ]
     )
-    
-    return LaunchDescription([
-        world_arg,
-        gazebo,
-        spawn_entity,
-        ros_gz_bridge
-    ])
+
+    Nodes = [
+        gz_sim_description,
+        spawn_entity_node,
+        ros_gz_bridge_node
+    ]
+
+    return LaunchDescription(declared_arguments + Nodes)
