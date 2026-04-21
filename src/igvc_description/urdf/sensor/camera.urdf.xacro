@@ -1,75 +1,140 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:arg name="camera_name"   default="oak" />
-    <xacro:arg name="camera_model"  default="OAK-D-POE" />
-    <xacro:arg name="base_frame"    default="oak_base" />
-    <xacro:arg name="parent_frame"  default="oak_parent" />
-    <xacro:arg name="cam_pos_x"     default="0.0" />
-    <xacro:arg name="cam_pos_y"     default="0.0" />
-    <xacro:arg name="cam_pos_z"     default="0.0" />
-    <xacro:arg name="cam_roll"      default="0.0" />
-    <xacro:arg name="cam_pitch"     default="0.0" />
-    <xacro:arg name="cam_yaw"       default="0.0" />
-    <xacro:arg name="rs_compat"     default="true" />
-    <xacro:include filename="$(find depthai_descriptions)/urdf/depthai_descr.urdf.xacro" />
 
-    <joint name="camera_base_joint" type="fixed">
-        <parent link="base_footprint"/>
-        <child link="oak_parent"/>
-        <origin xyz="-0.05 -0.05 0.95" rpy="0 0 ${pi/2}"/>
-    </joint>
+  <link name="zed2i_base_link">
+    <visual>
+      <geometry>
+        <box size="0.175 0.03 0.03"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
 
-    <gazebo reference="oak_color_frame">
-        <sensor name="oak_depth" type="depth">
-            <pose> 0 0 0 0 0 0 </pose>
-            <topic>oak/depth</topic>
-            <update_rate>20</update_rate>
-            <always_on>1</always_on>
-            <gz_frame_id>oak_color_optical_frame</gz_frame_id>
-            <camera>
-                <horizontal_fov>1.51843645</horizontal_fov>
-                <image>
-                    <format>R_FLOAT32</format>
-                    <width>1280</width>
-                    <height>720</height>
-                </image>
-                <clip>
-                    <near>0.28</near>
-                    <far>10</far>
-                </clip>
-            </camera>
-            <plugin filename="libgz-sim8-sensors-system.so" name="gz::sim::v8::systems::Sensors"></plugin>
-        </sensor>
-    </gazebo>
+  <joint name="camera_base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="zed2i_base_link"/>
+    <origin xyz="-0.05 -0.05 0.95" rpy="0 0 1.5708"/>
+  </joint>
 
-    <gazebo reference="oak_color_frame">
-        <sensor name="camera" type="camera">
-            <camera>
-                <horizontal_fov>1.51843645</horizontal_fov>
-                <image>
-                    <width>1280</width>
-                    <height>720</height>
-                    <format>R8G8B8</format>
-                </image>
-                <clip>
-                    <near>0.05</near>
-                    <far>20</far>
-                </clip>
-                <noise>
-                    <type>gaussian</type>
-                    <!-- Noise is sampled independently per pixel on each frame.
-                        That pixel's noise value is added to each of its color
-                        channels, which at that point lie in the range [0,1]. -->
-                    <mean>0.0</mean>
-                    <stddev>0.007</stddev>
-                </noise>
-                <optical_frame_id>oak_color_optical_frame</optical_frame_id>
-                <camera_info_topic>oak/camera_info</camera_info_topic>
-            </camera>
-            <always_on>1</always_on>
-            <update_rate>20</update_rate>
-            <visualize>true</visualize>
-            <topic>oak/color</topic>
-        </sensor>
-    </gazebo>
+  <link name="zed2i_left_camera_frame"/>
+  <joint name="zed2i_left_joint" type="fixed">
+    <parent link="zed2i_base_link"/>
+    <child link="zed2i_left_camera_frame"/>
+    <origin xyz="0 0.03 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="zed2i_left_camera_optical_frame"/>
+  <joint name="zed2i_left_optical_joint" type="fixed">
+    <parent link="zed2i_left_camera_frame"/>
+    <child link="zed2i_left_camera_optical_frame"/>
+
+    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
+  </joint>
+
+  <link name="zed2i_right_camera_frame"/>
+  <joint name="zed2i_right_joint" type="fixed">
+    <parent link="zed2i_base_link"/>
+    <child link="zed2i_right_camera_frame"/>
+    <origin xyz="0 -0.03 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="zed2i_right_camera_optical_frame"/>
+  <joint name="zed2i_right_optical_joint" type="fixed">
+    <parent link="zed2i_right_camera_frame"/>
+    <child link="zed2i_right_camera_optical_frame"/>
+    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
+  </joint>
+
+  <gazebo reference="zed2i_left_camera_frame">
+    <sensor name="zed2i_rgb" type="camera">
+      <pose>0 0 0 0 0 0</pose>
+
+      <camera>
+        <horizontal_fov>1.5708</horizontal_fov>
+
+        <image>
+          <width>1280</width>
+          <height>720</height>
+          <format>R8G8B8</format>
+        </image>
+
+        <clip>
+          <near>0.05</near>
+          <far>30.0</far>
+        </clip>
+
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.005</stddev>
+        </noise>
+
+        <optical_frame_id>zed2i_left_camera_optical_frame</optical_frame_id>
+        <camera_info_topic>zed2i/camera_info</camera_info_topic>
+      </camera>
+
+      <always_on>1</always_on>
+      <update_rate>30</update_rate>
+      <visualize>true</visualize>
+      <topic>zed2i/image_raw</topic>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="zed2i_left_camera_frame">
+    <sensor name="zed2i_depth" type="depth">
+      <pose>0 0 0 0 0 0</pose>
+
+      <topic>zed2i/depth</topic>
+      <update_rate>30</update_rate>
+      <always_on>1</always_on>
+
+      <gz_frame_id>zed2i_left_camera_optical_frame</gz_frame_id>
+
+      <camera>
+        <horizontal_fov>1.5708</horizontal_fov>
+
+        <image>
+          <width>1280</width>
+          <height>720</height>
+          <format>R_FLOAT32</format>
+        </image>
+
+        <clip>
+          <near>0.3</near>
+          <far>20.0</far>
+        </clip>
+      </camera>
+
+      <plugin filename="libgz-sim8-sensors-system.so"
+              name="gz::sim::v8::systems::Sensors"/>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="zed2i_right_camera_frame">
+    <sensor name="zed2i_right" type="camera">
+      <pose>0 0 0 0 0 0</pose>
+
+      <camera>
+        <horizontal_fov>1.5708</horizontal_fov>
+
+        <image>
+          <width>1280</width>
+          <height>720</height>
+          <format>R8G8B8</format>
+        </image>
+
+        <clip>
+          <near>0.05</near>
+          <far>30.0</far>
+        </clip>
+
+        <optical_frame_id>zed2i_right_camera_optical_frame</optical_frame_id>
+      </camera>
+
+      <always_on>1</always_on>
+      <update_rate>30</update_rate>
+      <topic>zed2i/right/image_raw</topic>
+    </sensor>
+  </gazebo>
+
 </robot>

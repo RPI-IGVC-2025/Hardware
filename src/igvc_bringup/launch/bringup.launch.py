@@ -44,7 +44,7 @@ def generate_launch_description():
             ),
             launch_arguments={
                 'use_mock_hardware': use_mock_hardware
-                }.items()
+                }.items(),
         ),
 
         # Simulation
