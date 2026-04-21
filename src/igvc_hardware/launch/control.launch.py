@@ -1,5 +1,6 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
+from launch.conditions import UnlessCondition
 from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
@@ -32,6 +33,7 @@ def generate_launch_description():
             robot_controllers
         ],
         output="both",
+        condition = UnlessCondition(use_sim)
     )
     
     robot_controller_spawner = Node(
