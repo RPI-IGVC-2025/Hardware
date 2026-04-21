@@ -14,7 +14,7 @@
 
     <xacro:include filename="$(find igvc_description)/urdf/model.urdf.xacro"/>
     <xacro:include filename="$(find igvc_description)/urdf/sensors.urdf.xacro"/>
-
+    <xacro:include filename="$(find igvc_description)/urdf/caster.urdf.xacro"/>
     <xacro:include filename="$(find igvc_description)/control/bot.ros2_control.xacro" />
 
     <xacro:bot_ros2_control name="IGVC_Bot" prefix="$(arg prefix)" use_mock_hardware="$(arg use_mock_hardware)"/>

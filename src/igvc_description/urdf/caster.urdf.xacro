@@ -1,0 +1,332 @@
+<?xml version="1.0" ?>
+<robot name="igvc_description" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Import all Gazebo related items from .gazebo file -->
+<xacro:include filename="$(find igvc_gazebo)/urdf/(gazebo stuff)" />
+
+<!-- Constants -->
+    <xacro:property name="pi" value="3.1415926535897931" />
+
+      <!--base link values-->
+      <xacro:property name="base_link_length_width_height" value="_.___ _.___ _.___" />
+      <xacro:property name="base_link_length" value="_.___" />
+      <xacro:property name="base_link_width" value="_.___" />
+      <xacro:property name="base_link_height" value="_.___" />
+      <xacro:property name="base_link_mass" value="__"/> <!--__ kg-->
+      
+      <!--left and right drive wheel values (both are same size)-->
+      <xacro:property name="drive_wheel_length" value="_.___" />
+      <xacro:property name="drive_wheel_radius" value="_.___" />
+      <xacro:property name="drive_wheel_mass" value="_"/> <!--_ kg-->
+
+      <!--left and right castor mount plate size (both are same size)-->
+      <xacro:property name="castor_mount_link_length_width_height" value="_.___ _.___ _.___" />
+      <xacro:property name="castor_mount_link_length" value="_.___" />
+      <xacro:property name="castor_mount_link_width" value="_.___" />
+      <xacro:property name="castor_mount_link_height" value="_.___" />
+      <xacro:property name="castor_mount_link_mass" value="_.___"/> <!--_.___ kg-->
+
+      <!--dummy link to give castors rotation about the Z axis-->
+      <xacro:property name="castor_mount_dummy_link_length" value="_.___" />
+      <xacro:property name="castor_mount_dummy_link_width" value="_.___" />
+      <xacro:property name="castor_mount_dummy_link_height" value="_.___" />
+      <xacro:property name="castor_mount_dummy_link_mass" value="_.___"/> <!--_.___ kg-->
+
+      <!-- left and right castor wheels (both are same size) -->
+      <xacro:property name="castor_wheel_length" value="_.___" />
+      <xacro:property name="castor_wheel_radius" value="_.___" />
+      <xacro:property name="castor_wheel_mass" value=""/> <!--_ kg-->
+
+      <!--dimensions of shaft which is tuned by A.M.P. servo motor               -->
+      <xacro:property name="lms_rotating_shaft_length" value="_.___" />
+      <xacro:property name="lms_rotating_shaft_radius" value="_.___" />
+      <xacro:property name="lms_rotating_shaft_mass" value="_._"/> <!--_._ kg-->
+
+      <!--dimensions of plate on which the LMS sits                              -->
+      <xacro:property name="lms_plate_link_length_width_height" value="_.___ _.___ _.___" />
+      <xacro:property name="lms_plate_link_length" value="_.___" />
+      <xacro:property name="lms_plate_link_width" value="_.___" />
+      <xacro:property name="lms_plate_link_height" value="_.___" />
+      <xacro:property name="lms_plate_link_mass" value="_._"/> <!--_._ kg-->
+
+      <!--Box representing a collision space for the actual LMS. according to    -->
+      <!--docs, using meshes for collisions is very computationally intensive, so-->
+      <!--it is much better to define collision space as a regular box.          -->
+      <xacro:property name="lms_collision_space_length_width_height" value="_.___ _.___ _.___" />
+
+      <!--The dimensions of the aluminum extrusion holding the entire lms system -->
+      <xacro:property name="lms_structural_extrusion_link_length_width_height" value="_.___ _.___ _.___" />
+      <xacro:property name="lms_structural_extrusion_link_length" value="_.___" />
+      <xacro:property name="lms_structural_extrusion_link_width" value="_.___" />
+      <xacro:property name="lms_structural_extrusion_link_height" value="_.___" />
+      <xacro:property name="lms_structural_extrusion_link_mass" value="_._"/> <!--_._ kg-->
+
+      <!--Friction for joints-->
+      <xacro:property name="friction_val" value="_.___"/>
+
+
+<!-- Macros -->
+    <xacro:macro name="box_link" params="link_name length width height material mass *origin">
+      <link name="${link_name}_link">
+        <!--If you do not explicitly specify a <collision> element. Gazebo will 
+        treat your link as "invisible" to laser scanners and collision checking-->
+        <collision>
+          <geometry>
+            <box size="${length} ${width} ${height}"/>
+          </geometry>
+          <!-- line below allows us to insert:<origin rpy="${rpy}" xyz="${xyz}"/>-->
+          <xacro:insert_block name="origin" />
+        </collision>
+        
+        <visual>
+          <geometry>
+            <!--box dimensions is Meters. L X W X H where the L X H is a ractange, 
+                and the H extrudes it upwards -->
+            <box size="${length} ${width} ${height}"/>
+          </geometry>
+          <!-- line below allows us to insert:<origin rpy="${rpy}" xyz="${xyz}"/>-->
+          <xacro:insert_block name="origin" />
+          <material name="${material}"/>
+        </visual>
+        
+        
+        <inertial>
+          <!-- line below allows us to insert:<origin rpy="${rpy}" xyz="${xyz}"/>-->
+          <xacro:insert_block name="origin" />
+          <!--all blocks now need a 'mass' argument-->
+          <mass value="${mass}"/>
+          <!--This is the 3x3 inertial matrix. See: https://wiki.ros.org/urdf/XML/link -->
+          <!--where x=length; y=width; z=height. these lines of code came from 
+          Emiliano Borghi's project-->
+          <inertia
+            ixx="${mass*(width*width+height*height)/12}" 
+          ixy = "0" 
+          ixz = "0"
+          iyy="${mass*(length*length+height*height)/12}" 
+          iyz = "0"
+          izz="${mass*(length*length+height*height)/12}"/>
+        </inertial>      
+        
+      </link>
+    </xacro:macro>
+
+  <!-- Cylinder -->
+  <xacro:macro name="cylinder_link" params="link_name length radius material mass *origin">
+      <link name="${link_name}_link">
+        <!--If you do not explicitly specify a <collision> element. Gazebo will 
+        treat your link as "invisible" to laser scanners and collision checking-->
+        <collision>
+          <geometry>
+            <cylinder length="${length}" radius="${radius}"/>
+          </geometry>
+          <xacro:insert_block name="origin" />
+        </collision>
+
+        <visual>
+          <geometry>
+            <cylinder length="${length}" radius="${radius}"/>
+          </geometry>
+            <!-- roll pitch and yaw will move the item in 3D space to arrange it how
+                we want it in relation to the origin. the XYZ is to move it around
+              the 3D space relative to the origin. Note that 1.57075 is pi/2 -->
+          <xacro:insert_block name="origin" />
+          <material name="${material}"/>
+        </visual>
+        
+        <!--TODO-->
+        <inertial>
+          <!-- line below allows us to insert:<origin rpy="${rpy}" xyz="${xyz}"/>-->
+          <xacro:insert_block name="origin" />
+          <!--all blocks now need a 'mass' argument-->
+          <mass value="${mass}"/>
+          
+          <!--This is the 3x3 inertial matrix. See: https://wiki.ros.org/urdf/XML/link -->
+          <inertia
+            ixx="${mass*(3*radius*radius+length*length)/12}" 
+          ixy = "0" 
+          ixz = "0"
+          iyy="${mass*(3*radius*radius+length*length)/12}" 
+          iyz = "0"
+          izz="${mass*radius*radius/2}"
+          />
+        </inertial>
+
+      </link>
+    </xacro:macro>
+
+  <!-- Continuous Joint -->
+  <xacro:macro name="continuous_joint" params="name rpy xyz parent child friction *origin">
+      <joint name="${name}_joint" type="continuous">
+        <axis rpy="${rpy}" xyz="${xyz}"/>
+        <parent link="${parent}_link"/>
+        <child link="${child}_link"/>
+        <!-- this is the point at which the two parts attach to one another    -->
+        <xacro:insert_block name="origin" />
+        <!--This introduces friction so that continious joints don't spin indefinitly
+        damping is only used in Gazebo4 and earlier.... -->
+        <dynamics damping="0.0" friction="${friction}"/> 
+      </joint>
+    </xacro:macro>
+
+  <!-- Fixed Joint -->
+  <xacro:macro name="fixed_joint" params="name parent child *origin">
+      <joint name="${name}_joint" type="fixed">
+        <parent link="${parent}_link"/>
+        <child link="${child}_link"/>
+        <!-- this is the point at which the two parts attach to one another    -->
+        <xacro:insert_block name="origin" />
+      </joint>
+    </xacro:macro>
+
+
+<!-- Link & Joint Definitions --> 
+  <xacro:box_link link_name="base" length="${base_link_length}"
+                                   width="${base_link_width}"
+                                   height="${base_link_height}" material="white" mass="${base_link_mass}">
+    <!--origin rpy="0 0 0" xyz="-0.325 -0.1905 0.066"/-->
+    <origin rpy="0 0 0" xyz="-0.325 -0.1905 0.066"/>
+  </xacro:box_link>
+
+  <!--left_drive_wheel_link is a well named link :-) -->
+  <xacro:cylinder_link link_name="left_drive_wheel" length="${drive_wheel_length}" radius="${drive_wheel_radius}" material="black" mass="${drive_wheel_mass}"> 
+    <origin xyz="0 0 0" rpy="${pi/2} 0 0"/> 
+  </xacro:cylinder_link>
+
+  <!--        -->
+  <xacro:continuous_joint name="base_to_left_drive_wheel" rpy="0 0 0" xyz="0 1 0" parent="base" child="left_drive_wheel" 
+                          friction="${friction_val}">
+    <origin xyz="-0.52835 0.037 -0.035"/>
+  </xacro:continuous_joint>
+
+  <!--right_drive_wheel_link is a well named link :-) -->
+  <xacro:cylinder_link link_name="right_drive_wheel" length="${drive_wheel_length}" radius="${drive_wheel_radius}" material="black" mass="${drive_wheel_mass}"> 
+    <origin xyz="0 0 0" rpy="${pi/2} 0 0"/> 
+  </xacro:cylinder_link>
+
+  <!--        -->
+  <xacro:continuous_joint name="base_to_right_drive_wheel" rpy="0 0 0" xyz="0 1 0" parent="base" child="right_drive_wheel"
+                          friction="${friction_val}">
+    <origin xyz="-0.52835 -0.421 -0.035"/>
+  </xacro:continuous_joint>
+  <!--left_caster_mount -->
+  <xacro:box_link link_name="left_castor_mount" length="${castor_mount_link_length}" 
+                                                width="${castor_mount_link_width}" 
+                                                height="${castor_mount_link_height}" material="white"
+                                                mass="${castor_mount_link_mass}">  
+    <origin xyz="0 0 0" rpy="0 0 0" /> 
+  </xacro:box_link>
+
+   <!--joint-->
+  <xacro:fixed_joint name="base_to_left_castor_mount" parent="base" child="left_castor_mount">
+    <origin xyz="-0.09445 -0.041 -0.03265"/>
+  </xacro:fixed_joint>
+
+
+  <!--left_caster_dummy to give the castor wheel rotation about the Z axis -->
+  <xacro:box_link link_name="left_castor_dummy" length="${castor_mount_dummy_link_length}" 
+                                                width="${castor_mount_dummy_link_width}" 
+                                                height="${castor_mount_dummy_link_height}" material="white"
+                                                mass="${castor_mount_dummy_link_mass}">  
+    <origin xyz="0 0 0" rpy="0 0 0" /> 
+  </xacro:box_link>
+
+  <!--joint between left castor mount and dummy link to allow rotation of castor wheel about z axis-->
+  <xacro:continuous_joint name="left_castor_mount_to_left_castor_dummy" rpy="0 0 0" xyz="0 0 1" 
+                          parent="left_castor_mount" child="left_castor_dummy" friction="${friction_val}">
+    <origin xyz="0.0 0.0 -0.01"/>
+  </xacro:continuous_joint>
+
+  <!--left_castor_wheel_link is a well named link :-) -->
+  <xacro:cylinder_link link_name="left_castor_wheel" length="${castor_wheel_length}" radius="${castor_wheel_radius}" material="Black" mass="${castor_wheel_mass}"> 
+    <origin xyz="0 0 0" rpy="${pi/2} 0 0"/> 
+  </xacro:cylinder_link>
+
+  <!--        -->
+  <xacro:continuous_joint name="left_castor_dummy_to_left_castor_wheel" rpy="0 0 0" xyz="0 1 0" 
+                          parent="left_castor_dummy" child="left_castor_wheel" friction="${friction_val}">
+    <origin xyz="-0.037 0.0 -0.10785"/>
+  </xacro:continuous_joint>
+
+  <!-- Right Cast-->
+
+
+  <!--right_caster_plate_link is a well named link :-) -->
+  <xacro:box_link link_name="right_castor_mount" length="${castor_mount_link_length}" 
+                                                 width="${castor_mount_link_width}"
+                                                 height="${castor_mount_link_height}" material="black"
+                                                 mass="${castor_mount_link_mass}">  
+    <origin xyz="0 0 0" rpy="0 0 0" /> 
+  </xacro:box_link>
+
+   <!--        -->
+  <xacro:fixed_joint name="base_to_right_castor_mount" parent="base" child="right_castor_mount">
+    <origin xyz="-0.09445 -0.344 -0.03265"/>
+  </xacro:fixed_joint>
+
+  <!--right_caster_dummy to give the castor wheel rotation about the Z axis -->
+  <xacro:box_link link_name="right_castor_dummy" length="${castor_mount_dummy_link_length}" 
+                                                 width="${castor_mount_dummy_link_width}" 
+                                                 height="${castor_mount_dummy_link_height}" material="orange"
+                                                 mass="${castor_mount_dummy_link_mass}">  
+    <origin xyz="0 0 0" rpy="0 0 0" /> 
+  </xacro:box_link>
+
+  <!--joint between right castor mount and dummy link to allow rotation of castor wheel about z axis-->
+  <xacro:continuous_joint name="right_castor_mount_to_right_castor_dummy" rpy="0 0 0" xyz="0 0 1" 
+                          parent="right_castor_mount" child="right_castor_dummy" friction="${friction_val}">
+    <origin xyz="0.0 0.0  -0.01"/>
+  </xacro:continuous_joint>
+
+
+  <!--right_castor_wheel_link is a well named link :-) -->
+  <xacro:cylinder_link link_name="right_castor_wheel" length="${castor_wheel_length}" radius="${castor_wheel_radius}"
+                       material="Black" mass="${castor_wheel_mass}"> 
+    <origin xyz="0 0 0" rpy="${pi/2} 0 0"/> 
+  </xacro:cylinder_link>
+
+  <!--        -->
+  <xacro:continuous_joint name="right_castor_dummy_to_right_castor_wheel" rpy="0 0 0" xyz="0 1 0" 
+                          parent="right_castor_dummy" child="right_castor_wheel" friction="${friction_val}">
+    <origin xyz="-0.037 0 -0.10785"/>
+  </xacro:continuous_joint>
+
+
+  <!--lms_structrual_extrusion is the aluminum extrusion that is supporting   -->
+  <!-- the entire LMS structure. I put it here for aestetics.                -->
+  <xacro:box_link link_name="lms_structural_extrusion" length="${lms_structural_extrusion_link_length}" 
+                                                      width="${lms_structural_extrusion_link_width}"
+                                                      height="${lms_structural_extrusion_link_height}" material="white" mass="${lms_structural_extrusion_link_mass}">  
+    <origin xyz="0 0 0" rpy="0 0 0" /> 
+  </xacro:box_link>
+
+
+  <!--    -->
+  <xacro:fixed_joint name="base_link_to_lms_structural_extrusion" parent="base" child="lms_structural_extrusion">
+    <origin xyz="-0.3531 -0.1905 0.2173"/>
+  </xacro:fixed_joint>
+
+
+  <!--This is the rotating shaft on which the LMS sits, and which the servo  -->
+  <!--motor rotates.                                                         -->
+  <xacro:cylinder_link link_name="lms_rotating_shaft" length="${lms_rotating_shaft_length}" radius="${lms_rotating_shaft_radius}" material="white" mass="${lms_rotating_shaft_mass}"> 
+    <origin xyz="0 0 0" rpy="0 0 0"/> 
+  </xacro:cylinder_link>
+
+  <!-- This joint attaches the rotating_lms_shaft to the base link -->
+  <xacro:continuous_joint name="base_link_to_rotating_lms_shaft" rpy="0 0 0" xyz="0 0 1" 
+                          parent="base" child="lms_rotating_shaft" friction="${friction_val}">
+    <origin xyz="-0.2531 -0.1905 0.3195"/>
+  </xacro:continuous_joint>
+
+
+  <!--lms_plate is the plate onto which I mounted the lms :-) -->
+  <xacro:box_link link_name="lms_plate" length="${lms_plate_link_length}"
+                                        width="${lms_plate_link_width}"
+                                        height="${lms_plate_link_height}" material="white" mass="${lms_plate_link_mass}">  
+    <origin xyz="0 0 0" rpy="0 0 0" /> 
+  </xacro:box_link>
+
+   <!-- -->
+  <xacro:fixed_joint name="lms_rotating_shaft_to_lms_plate" parent="lms_rotating_shaft" child="lms_plate">
+    <origin xyz="-0.04905 0 0.120675"/>
+  </xacro:fixed_joint>
