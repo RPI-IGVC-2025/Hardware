@@ -10,6 +10,9 @@ from sensor_msgs.msg import PointCloud2
 from std_msgs.msg import Header
 import sensor_msgs_py.point_cloud2 as pc2
 
+from rclpy.qos import QoSProfile, ReliabilityPolicy
+from message_filters import Subscriber
+
 class CVNode(Node):
     def __init__(self):
         super().__init__('cv_node')
@@ -32,10 +35,30 @@ class CVNode(Node):
         self.declare_parameter("hough_max_line_gap", 5)
 
         self.declare_parameter("line_thickness", 10)
+        
+        
 
         # Synchronised RGB + PointCloud subscribers
-        self.rgb_sub = Subscriber(self, Image, '/camera/camera/color/image_raw')
-        self.pc_sub = Subscriber(self, Image, '/camera/camera/depth/image_rect_raw')
+        qos = QoSProfile(
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            depth=10
+        )
+
+        self.rgb_sub = Subscriber(
+            self,
+            Image,
+            '/camera/camera/color/image_raw',
+            qos_profile=qos
+        )
+
+        self.pc_sub = Subscriber(
+            self,
+            Image,
+            '/camera/camera/depth/image_rect_raw',
+            qos_profile=qos
+        )
+        
+        
         self.sync = ApproximateTimeSynchronizer(
             [self.rgb_sub, self.pc_sub],
             queue_size=10,
@@ -43,7 +66,10 @@ class CVNode(Node):
         )
         self.sync.registerCallback(self.process)
         # ===== Publishers =====
-        self.image_pub = self.create_publisher(Image, 'image_processed', 10)
+
+        self.pc_pub = self.create_publisher(PointCloud2, 'cv_points', 10)
+        
+        self.get_logger().info("Node started")
 
         # Camera parameters based on factor calibration file
         self.fx = 1401.07
@@ -102,7 +128,7 @@ class CVNode(Node):
         white_v, white_u = np.where(line_mask > 0)
         distances = depth_frame[white_v, white_u]
         
-        valid = distances > 0
+        valid = np.isfinite(distances) & (distances > 0)
         white_u = white_u[valid]
         white_v = white_v[valid]
         distances = distances[valid]
@@ -120,16 +146,13 @@ class CVNode(Node):
         header.frame_id = ""
 
         cloud_msg = pc2.create_cloud_xyz32(header, points.tolist())
-        self.pub.publish(cloud_msg)
         
-        """
-        # Publish image 
-        result = cv2.addWeighted(frame, 0.8, line_image, 1.0, 1)
-        ros_image = self.bridge.cv2_to_imgmsg(result, 'bgr8')
-        ros_image.header = rgb_msg.header
-        self.image_pub.publish(ros_image)
-        self.get_logger().info("Published Image")
-        """
+        self.get_logger().info(f"cloud: {pc2.read_points(cloud_msg, field_names=("x", "y", "z"), skip_nans=True)[0][0]}")
+        self.get_logger().info(f"points shape: {points.shape}")
+        self.get_logger().info(f"num points: {len(points)}")
+        
+        self.pc_pub.publish(cloud_msg)
+        
         
 def main(args=None):
     rclpy.init(args=args)
