@@ -9,7 +9,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     declared_arguments = []
-    igvc_description_package = FindPackageShare(package='igvc_description').find('igvc_description')
+    package_description = FindPackageShare(package='igvc_description').find('igvc_description')
     ros_gz_sim_package = get_package_share_directory('ros_gz_sim')
     gz_launch_path = os.path.join(ros_gz_sim_package, 'launch', 'gz_sim.launch.py')
     world = LaunchConfiguration('world')
@@ -31,14 +31,16 @@ def generate_launch_description():
         )
     )
 
-
     spawn_entity = Node(
         package='ros_gz_sim', executable='create',
-        arguments=['-topic', 'robot_description',
-                    '-name', 'igvc_robot'],
+        arguments=[
+            '-topic', 
+            'robot_description',
+            '-name', 
+            'igvc_robot'
+        ],
         output='screen'
     )
-
 
     ros_gz_bridge = Node(
         package="ros_gz_bridge",
@@ -49,6 +51,7 @@ def generate_launch_description():
             f'config_file:={bridge_params}',
         ]
     )
+    
     Nodes = [
         spawn_entity,
         ros_gz_bridge
