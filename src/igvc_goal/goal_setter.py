@@ -22,7 +22,7 @@ class GoalSettingNode(Node):
 
         self.goal_pub = self.create_publisher(PoseStamped, '/goal_pose', 10)
 
-        self.create_timer(0.1, self.publish_goal)
+        self.create_timer(1.0, self.publish_goal)
 
     # subscribe to /left_boundary
     def left_callback(self, msg):
