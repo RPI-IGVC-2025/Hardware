@@ -81,6 +81,36 @@ class CVNode(Node):
         self.cx = 1062.32
         self.cy = 634.124
         
+    def lines_to_path(self, lines, depth_frame, stamp):
+        path = Path()
+        path.header.stamp = stamp
+        path.header.frame_id = 'camera_link' # TODO check if this matches TF tree
+        
+        for line in lines:
+            x1, y1, x2, y2 = line.reshape(4)
+            
+            # add both endpoints as separate poses
+            for u, v in [(x1, y1), (x2, y2)]:
+                if v >= depth_frame.shape[0] or u >= depth_frame.shape[1]:
+                    continue
+                
+                Z = float(depth_frame[v, u])
+                if not np.isfinite(Z) or Z <= 0:
+                    continue
+                
+                X = (u - self.cx) * Z / self.fx
+                Y = (v - self.cy) * Z / self.fy
+                
+                pose = PoseStamped()
+                pose.header = path.header
+                pose.pose.position.x = X
+                pose.pose.position.y = Y
+                pose.pose.position.z = Z
+                pose.pose.orientation.w = 1.0
+                path.poses.append(pose)
+                
+        return path
+        
     def process(self, rgb_msg: Image, depth_msg: Image):
         self.get_logger().info("Called Process()")
         # Fetch parameters
