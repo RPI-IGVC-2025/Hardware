@@ -12,6 +12,7 @@ from geometry_msgs.msg import PoseStamped, Quaternion
 # part of the geometry_msgs package. Nav2 subscribes to PoseStamped
 # to determine next points 
 
+#helper to convert angle to quaternion
 def yaw_to_quaternion(yaw):
     q = Quaternion()
     q.x = 0.0
@@ -27,7 +28,7 @@ class GoalSettingNode(Node):
         self.right_boundary = None
         
         self.lookahead = 5
-        self.goal_frame = 'map' #placeholder, change later
+        self.goal_frame = 'base_footprint' #TODO need to verify
 
         self.create_subscription(Path, '/left_boundary', self.left_callback, 10)
         self.create_subscription(Path, '/right_boundary', self.right_callback, 10)
@@ -48,10 +49,6 @@ class GoalSettingNode(Node):
     def publish_goal(self):
         if self.left_boundary is None or self.right_boundary is None:
             return
-
-        goal = PoseStamped()
-        goal.header.stamp = self.get_clock().now().to_msg()
-        goal.header.frame_id = 'base_footprint' # may have to change base_footprint. TODO look into 
         
         left_ahead_point = min(self.lookahead, len(self.left_boundary.poses) - 1)
         right_ahead_point = min(self.lookahead, len(self.right_boundary.poses) - 1)
@@ -74,17 +71,18 @@ class GoalSettingNode(Node):
         next_mid_x = (left_ahead.x + right_ahead.x) / 2.0
         next_mid_y = (left_ahead.y + right_ahead.y) / 2.0
 
-        # determine heading
+        # determine heading, calculate heading angle 
         yaw = math.atan2(next_mid_y - mid_y, next_mid_x - mid_x)
+        #convert to ROS Quaternion (need an x, y, z, w)
         q = yaw_to_quaternion(yaw)
         
         # set the goal --> find the basic "halfway" point to determine path for now
         goal = PoseStamped()
-        goal.header.stmp = self.get_clock().now().to_msg()
+        goal.header.stamp = self.get_clock().now().to_msg()
         goal.header.frame_id = self.goal_frame
         
         goal.pose.position.x = mid_x
-        goal.pose.postion.y = mid_y
+        goal.pose.position.y = mid_y
 
         goal.pose.position.z = 0.0
         goal.pose.orientation = q
