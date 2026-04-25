@@ -12,6 +12,8 @@ import sensor_msgs_py.point_cloud2 as pc2
 
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 from message_filters import Subscriber
+from nav_msgs.msg import Path
+from geometry_msgs.msg import PoseStamped
 
 class CVNode(Node):
     def __init__(self):
@@ -68,6 +70,8 @@ class CVNode(Node):
         # ===== Publishers =====
 
         self.pc_pub = self.create_publisher(PointCloud2, 'cv_points', 10)
+        self.left_pub = self.create_publisher(Path, '/left_boundary', 10)
+        self.right_pub = self.create_publisher(Path, '/right_boundary', 10)
         
         self.get_logger().info("Node started")
 
