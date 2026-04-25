@@ -147,6 +147,11 @@ class CVNode(Node):
             minLineLength=hough_min_len,
             maxLineGap=hough_max_gap
         )
+        
+        # Classify lines into left and right
+        left_lines = []
+        right_lines = []
+        mid_x = w/2
 
         # Mask of detected line segments
         line_mask  = np.zeros((h, w), dtype=np.uint8)
@@ -157,6 +162,24 @@ class CVNode(Node):
                 x1, y1, x2, y2 = line.reshape(4)
                 cv2.line(line_image, (x1, y1), (x2, y2), (0, 255, 255), thickness)
                 cv2.line(line_mask, (x1, y1), (x2, y2), 255, thickness)
+                
+                # skip vertical lines
+                if x2 == x1:
+                    continue
+                
+                slope = (y2 - y1) / (x2 - x1)
+                avg_x = (x1 + x2) / 2
+                
+                if slope < 0 and avg_x < mid_x:
+                    left_lines.append(line)
+                elif slope > 0 and avg_x > mid_x:
+                    right_lines.append(line)
+                    
+        stamp = self.get_clock().now().to_msg()
+        left_path = self.lines_to_path(left_lines, depth_frame, stamp)
+        right_path = self.lines_to_path(right_lines, depth_frame, stamp)
+        self.left_pub.publish(left_path)
+        self.right_pub.publish(right_path)
 
         # Look up depth for each white pixel directly
         white_v, white_u = np.where(line_mask > 0)
