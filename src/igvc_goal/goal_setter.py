@@ -8,7 +8,7 @@ from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped, Quaternion
 # from rclpy.action import ActionClient
 
-# this node publishes to /goal_update on PoseStamped, which is 
+# this node publishes to /goal_pose on PoseStamped, which is 
 # part of the geometry_msgs package. Nav2 subscribes to PoseStamped
 # to determine next points 
 
@@ -27,6 +27,8 @@ class GoalSettingNode(Node):
         self.left_boundary = None
         self.right_boundary = None
         
+        self.test_mode = True
+        
         self.lookahead = 5
         self.goal_frame = 'base_footprint' #TODO need to verify
 
@@ -36,6 +38,23 @@ class GoalSettingNode(Node):
         self.goal_pub = self.create_publisher(PoseStamped, '/goal_pose', 10)
 
         self.create_timer(1.0, self.publish_goal)
+        
+    def make_test_path(self, y_offset):
+        path = Path()
+        path.header.stamp = self.get_clock().now().to_msg()
+        path.header.frame_id = self.goal_frame
+
+        for i in range(8):
+            pose = PoseStamped()
+            pose.header.stamp = self.get_clock().now().to_msg()
+            pose.header.frame_id = self.goal_frame
+            pose.pose.position.x = float(i)
+            pose.pose.position.y = y_offset
+            pose.pose.position.z = 0.0
+            pose.pose.orientation.w = 1.0
+            path.poses.append(pose)
+
+        return path
 
     # subscribe to /left_boundary
     def left_callback(self, msg):
@@ -47,6 +66,10 @@ class GoalSettingNode(Node):
 
     # publish goal to nav2
     def publish_goal(self):
+        if self.test_mode:
+            self.left_boundary = self.make_test_path(1.0)
+            self.right_boundary = self.make_test_path(-1.0)
+            
         if self.left_boundary is None or self.right_boundary is None:
             return
         
