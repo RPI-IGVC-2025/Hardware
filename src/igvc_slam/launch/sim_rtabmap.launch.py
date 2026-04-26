@@ -1,20 +1,20 @@
-import os
-
-from ament_index_python.packages import get_package_share_directory
-
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
+from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
-from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
-    rtabmap_package = get_package_share_directory('rtabmap_launch')
-
-    rtabmap_launch_path = os.path.join(rtabmap_package, 'launch', 'rtabmap.launch.py')
+    declared_arguments = []
 
     rtabmap = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(rtabmap_launch_path),
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([
+                FindPackageShare('rtabmap_launch'),
+                'launch',
+                'rtabmap.launch.py'
+            ])
+        ),
         launch_arguments={
             'args' : '--delete_db_on_start',
             'depth_topic' : '/camera/camera/depth/image_rect_raw',
@@ -44,6 +44,8 @@ def generate_launch_description():
         }.items()
     )
 
-    return LaunchDescription([
+    Nodes = [
         rtabmap
-    ])
+    ]
+
+    return LaunchDescription(declared_arguments + Nodes)
