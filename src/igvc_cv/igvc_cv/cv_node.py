@@ -142,7 +142,7 @@ class CVNode(Node):
 
         header = Header()
         header.stamp = self.get_clock().now().to_msg()
-        header.frame_id = ""
+        header.frame_id = "" #TODO verify the camera frame id
 
         cloud_msg = pc2.create_cloud_xyz32(header, points.tolist())
         
