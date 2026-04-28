@@ -146,7 +146,7 @@ class CVNode(Node):
 
         cloud_msg = pc2.create_cloud_xyz32(header, points.tolist())
         
-        self.get_logger().info(f"cloud: {pc2.read_points(cloud_msg, field_names=("x", "y", "z"), skip_nans=True)[0][0]}")
+        self.get_logger().info(f"cloud: {pc2.read_points(cloud_msg, field_names=('x', 'y', 'z'), skip_nans=True)[0][0]}")
         self.get_logger().info(f"points shape: {points.shape}")
         self.get_logger().info(f"num points: {len(points)}")
         
