@@ -11,7 +11,6 @@ from std_msgs.msg import Header
 import sensor_msgs_py.point_cloud2 as pc2
 
 from rclpy.qos import QoSProfile, ReliabilityPolicy
-from message_filters import Subscriber
 
 class CVNode(Node):
     def __init__(self):
