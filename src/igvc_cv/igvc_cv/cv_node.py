@@ -34,9 +34,7 @@ class CVNode(Node):
         self.declare_parameter("hough_threshold", 10)
         self.declare_parameter("hough_min_line_length", 4)
         self.declare_parameter("hough_max_line_gap", 5)
-
         self.declare_parameter("line_thickness", 10)
-        
         
 
         # Synchronised RGB + PointCloud subscribers
@@ -59,7 +57,6 @@ class CVNode(Node):
             qos_profile=qos
         )
         
-        
         self.sync = ApproximateTimeSynchronizer(
             [self.rgb_sub, self.pc_sub],
             queue_size=10,
@@ -73,13 +70,14 @@ class CVNode(Node):
         self.leftlane = self.create_publisher(Path, '/left_boundary', 10)
         self.rightlane = self.create_publisher(Path, '/right_boundary', 10) 
         
-        self.get_logger().info("Node started")
-
+        
         # Camera parameters based on factor calibration file
         self.fx = 1401.07
         self.fy = 1401.07
         self.cx = 1062.32
         self.cy = 634.124
+        
+        self.get_logger().info("Node started")
         
     def process(self, rgb_msg: Image, depth_msg: Image):
         self.get_logger().info("Called Process()")
@@ -151,6 +149,27 @@ class CVNode(Node):
 
         cloud_msg = pc2.create_cloud_xyz32(header, points.tolist())
         
+        #gather forward points
+        base_x = Z
+        #gather left and right points
+        base_y = -X
+        base_z = np.zeros_like(Z)
+        
+        base_points = np.vstack((base_x, base_y, base_z)).T
+        
+        #split left and right points
+        left_points = base_points[base_points[:,1] > 0]
+        right_points = base_points[base_points[:, 1] < 0]
+        
+        lane_frame_id = "base_footprint" #TODO find this out for sure
+        
+        left_path = self.points_to_path(left_points, lane_frame_id)
+        right_path = self.points_to_path(right_points, lane_frame_id)
+        
+        self.leftlane.publish(left_path)
+        self.rightlane.publish(right_path)
+        
+        
         self.get_logger().info(f"cloud: {pc2.read_points(cloud_msg, field_names=('x', 'y', 'z'), skip_nans=True)[0][0]}")
         self.get_logger().info(f"points shape: {points.shape}")
         self.get_logger().info(f"num points: {len(points)}")
@@ -169,6 +188,7 @@ class CVNode(Node):
             pose.pose.position.x = float(point[0])
             pose.pose.position.y = float(point[1])
             pose.pose.position.z = float(point[2])
+            pose.pose.orientation.w = 1.0 #double check
             path.poses.append(pose)
         
         return path
