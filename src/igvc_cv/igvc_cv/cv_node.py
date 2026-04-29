@@ -9,6 +9,8 @@ import numpy as np
 from sensor_msgs.msg import PointCloud2
 from std_msgs.msg import Header
 import sensor_msgs_py.point_cloud2 as pc2
+from nav_msgs.msg import Path
+from geometry_msgs.msg import PoseStamped 
 
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 
@@ -67,6 +69,9 @@ class CVNode(Node):
         # ===== Publishers =====
 
         self.pc_pub = self.create_publisher(PointCloud2, 'cv_points', 10)
+        # pubs for right and left lanes
+        self.leftlane = self.create_publisher(Path, '/left_boundary', 10)
+        self.rightlane = self.create_publisher(Path, '/right_boundary', 10) 
         
         self.get_logger().info("Node started")
 
@@ -151,6 +156,22 @@ class CVNode(Node):
         self.get_logger().info(f"num points: {len(points)}")
         
         self.pc_pub.publish(cloud_msg)
+    
+    def points_to_path(self, points, frame_id):
+        path = Path()
+        path.header.stamp = self.get_clock().now().to_msg()
+        path.header.frame_id = frame_id
+        
+        for point in points:
+            pose = PoseStamped()
+            pose.header.stamp = path.header.stamp
+            pose.header.frame_id = frame_id
+            pose.pose.position.x = float(point[0])
+            pose.pose.position.y = float(point[1])
+            pose.pose.position.z = float(point[2])
+            path.poses.append(pose)
+        
+        return path
         
         
 def main(args=None):
