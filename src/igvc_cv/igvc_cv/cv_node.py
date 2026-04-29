@@ -184,6 +184,9 @@ class CVNode(Node):
         
         self.get_logger().info(f"points shape: {points.shape}")
         self.get_logger().info(f"num points: {len(points)}")
+        self.get_logger().info(
+            f"left path: {len(left_path.poses)}, right path: {len(right_path.poses)}"
+        )
         
         self.pc_pub.publish(cloud_msg)
     def run_fake_test(self):
