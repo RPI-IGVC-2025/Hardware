@@ -219,6 +219,10 @@ class CVNode(Node):
         path.header.stamp = self.get_clock().now().to_msg()
         path.header.frame_id = frame_id
         
+        # sort by forward distance
+        if len(points) > 0:
+            points = points[points[:, 0].argsort()]
+        
         for point in points:
             pose = PoseStamped()
             pose.header.stamp = path.header.stamp
