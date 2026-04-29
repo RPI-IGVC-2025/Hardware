@@ -27,7 +27,7 @@ class GoalSettingNode(Node):
         self.left_boundary = None
         self.right_boundary = None
         
-        self.test_mode = True
+        self.test_mode = False
         
         self.lookahead = 5
         self.goal_frame = 'base_footprint' #TODO need to verify
@@ -72,6 +72,15 @@ class GoalSettingNode(Node):
             
         if self.left_boundary is None or self.right_boundary is None:
             return
+        
+        if len(self.left_boundary.poses) == 0 or len(self.right_boundary.poses) == 0:
+            self.get_logger().warn("Received empty boundary path.")
+            return
+        
+        self.get_logger().info(
+            f"Received left={len(self.left_boundary.poses)} points, "
+            f"right={len(self.right_boundary.poses)} points"
+    )
         
         left_ahead_point = min(self.lookahead, len(self.left_boundary.poses) - 1)
         right_ahead_point = min(self.lookahead, len(self.right_boundary.poses) - 1)
