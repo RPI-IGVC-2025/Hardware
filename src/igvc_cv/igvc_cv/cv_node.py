@@ -36,6 +36,12 @@ class CVNode(Node):
         self.declare_parameter("hough_max_line_gap", 5)
         self.declare_parameter("line_thickness", 10)
         
+        # Test mode param
+        self.declare_parameter("test", False)
+        
+        if self.get_parameter("test_mode").value:
+            self.get_logger().info("Running in test mode with fake images")
+            self.create_timer(1.0, self.run_fake_test)
 
         # Synchronised RGB + PointCloud subscribers
         qos = QoSProfile(
@@ -170,7 +176,12 @@ class CVNode(Node):
         self.rightlane.publish(right_path)
         
         
-        self.get_logger().info(f"cloud: {pc2.read_points(cloud_msg, field_names=('x', 'y', 'z'), skip_nans=True)[0][0]}")
+        # self.get_logger().info(f"cloud: {pc2.read_points(cloud_msg, field_names=('x', 'y', 'z'), skip_nans=True)[0][0]}")
+        if len(points) > 0:
+            self.get_logger().info(f"sample point: {points[0]}")
+        else:
+            self.get_logger().warn("No valid points detected")
+        
         self.get_logger().info(f"points shape: {points.shape}")
         self.get_logger().info(f"num points: {len(points)}")
         
