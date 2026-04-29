@@ -39,7 +39,7 @@ class CVNode(Node):
         # Test mode param
         self.declare_parameter("test", False)
         
-        if self.get_parameter("test_mode").value:
+        if self.get_parameter("test").value:
             self.get_logger().info("Running in test mode with fake images")
             self.create_timer(1.0, self.run_fake_test)
 
@@ -151,7 +151,7 @@ class CVNode(Node):
 
         header = Header()
         header.stamp = self.get_clock().now().to_msg()
-        header.frame_id = "" #TODO verify the camera frame id
+        header.frame_id = "camera_color_optical_frame" #TODO chang to real frame id
 
         cloud_msg = pc2.create_cloud_xyz32(header, points.tolist())
         
@@ -186,6 +186,30 @@ class CVNode(Node):
         self.get_logger().info(f"num points: {len(points)}")
         
         self.pc_pub.publish(cloud_msg)
+    def run_fake_test(self):
+        h, w = 1080, 1920
+
+        # Fake black camera image
+        frame = np.zeros((h, w, 3), dtype=np.uint8)
+
+        # Fake white lane lines
+        cv2.line(frame, (600, 1000), (900, 300), (255, 255, 255), 20)
+        cv2.line(frame, (1320, 1000), (1020, 300), (255, 255, 255), 20)
+
+        # Fake depth image: everything is 2 meters away
+        depth_frame = np.full((h, w), 2.0, dtype=np.float32)
+
+        stamp = self.get_clock().now().to_msg()
+
+        rgb_msg = self.bridge.cv2_to_imgmsg(frame, encoding='bgr8')
+        rgb_msg.header.stamp = stamp
+        rgb_msg.header.frame_id = "camera_color_optical_frame"
+
+        depth_msg = self.bridge.cv2_to_imgmsg(depth_frame, encoding='32FC1')
+        depth_msg.header.stamp = stamp
+        depth_msg.header.frame_id = "camera_color_optical_frame"
+
+        self.process(rgb_msg, depth_msg)
     
     def points_to_path(self, points, frame_id):
         path = Path()
@@ -211,3 +235,6 @@ def main(args=None):
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
