@@ -9,7 +9,9 @@
             "PLATFORM": "JETSON_ORIN",
             "SIM_ENABLED": "false",
             "DEPLOYABLE_BUILD": "true",
-            "BASE_IMAGE": "ros2-l4t:jazzy"
+            "BASE_IMAGE": "ros2-l4t:jazzy",
+            "IMU_ENABLED": "false",
+            "ZED_DEV_PLATFORM": "false"
         }
     },
     "workspaceFolder": "/home/ros2_ws",
