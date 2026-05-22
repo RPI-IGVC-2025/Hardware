@@ -37,7 +37,6 @@
         "NVIDIA_VISIBLE_DEVICES": "all",
         "NVIDIA_DRIVER_CAPABILITES": "all",
         "WAYLAND_DISPLAY": "${env:WAYLAND_DISPLAY}",
-        "LD_LIBRARY_PATH": "/usr/lib/wsl/lib",
         "MESA_D3D12_DEFAULT_ADAPTER_NAME": "NVIDIA",
         "MESA_LOADER_DRIVER_OVERRIDE": "d3d12",
         "GALLIUM_DRIVER": "d3d12",
@@ -58,8 +57,6 @@
     "mounts": [
        "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached",
        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
-       "source=/usr/lib/wsl,target=/usr/lib/wsl,type=bind,consistency=cached",
-       "source=/usr/lib/x86_64-linux-gnu/dri,target=/usr/lib/x86_64-linux-gnu/dri,type=bind,consistency=cached",
        "source=//usr/share/glvnd,target=/usr/share/glvnd,type=bind,consistency=cached"
     ],
     "postCreateCommand": ". .devcontainer/setup.bash && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ || true) && colcon build --symlink-install --packages-skip-regex zed_*",
