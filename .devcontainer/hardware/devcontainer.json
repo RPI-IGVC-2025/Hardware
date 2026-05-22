@@ -8,7 +8,8 @@
             "USERNAME": "ros_user",
             "PLATFORM": "JETSON_ORIN",
             "SIM_ENABLED": "false",
-            "DEPLOYABLE_BUILD": "true"
+            "DEPLOYABLE_BUILD": "true",
+            "BASE_IMAGE": "ros2-l4t:jazzy"
         }
     },
     "workspaceFolder": "/home/ros2_ws",
