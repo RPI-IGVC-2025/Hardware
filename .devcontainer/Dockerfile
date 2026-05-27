@@ -41,7 +41,8 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y \
     python3-pip \
     # CycloneDDS package
-    ros-jazzy-rmw-cyclonedds-cpp 
+    ros-jazzy-rmw-cyclonedds-cpp \
+    libturbojpeg
 
 ## Simulation only
 RUN if $SIM_ENABLED ; then \
@@ -91,17 +92,18 @@ RUN if $IMU_ENABLED ; then \
     fi
 
 ## CUDA 
-RUN if $ZED_DEV_PLATFORM ; then \
-        apt-get install -y \
-            zstd pciutils mesa-utils wget gnupg \
         # TODOs:
         #   Figure out mounting CUDA from host
-        && if [ ! $MOUNT_CUDA ] ; then \
-            wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
-            && dpkg -i cuda-keyring_1.1-1_all.deb \
-            && apt-get update \
-            && apt-get install -y cuda-toolkit-13-0 ; \
-        fi ; \
+        # && if [ ! $MOUNT_CUDA ] ; then \
+        #     wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
+        #     && dpkg -i cuda-keyring_1.1-1_all.deb \
+        #     && apt-get update \
+        #     && apt-get install -y cuda-toolkit-13-0 ; \
+        # fi ; \
+
+RUN if $ZED_DEV_PLATFORM ; then \
+        apt-get install -y \
+            zstd pciutils mesa-utils wget gnupg ; \
     fi
 
 ## ZED SDK
