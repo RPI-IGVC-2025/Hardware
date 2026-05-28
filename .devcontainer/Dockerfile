@@ -107,24 +107,30 @@ RUN if $ZED_DEV_PLATFORM ; then \
     fi
 
 ## ZED SDK
-RUN if $ZED_DEV_PLATFORM ; then \
-        # Determine Zed link based on platform
-        case $PLATFORM in \
-            LINUX) \
-                export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24" \
-                ;; \
-            JETSON_ORIN) \
-                export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons" \
-                ;; \
-            JETSON_THOR) \
-                export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t38.4/jetsons" \
-                ;; \
-        esac \
-        # Install SDK
-        && wget -O zed_installer.run $ZED_LINK \
-        && chmod +x zed_installer.run \
-        && ./zed_installer.run -- silent --skip_python --skip_cuda; \
-fi
+# RUN if $ZED_DEV_PLATFORM ; then \
+#         # Determine Zed link based on platform
+#         case $PLATFORM in \
+#             LINUX) \
+#                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24" \
+#                 ;; \
+#             JETSON_ORIN) \
+#                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons" \
+#                 ;; \
+#             JETSON_THOR) \
+#                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t38.4/jetsons" \
+#                 ;; \
+#         esac \
+#         # Install SDK
+#         && wget -O zed_installer.run $ZED_LINK \
+#         && chmod +x zed_installer.run \
+#         && ./zed_installer.run -- silent ; \
+# fi
+
+# RUN wget -q --no-check-certificate -O ZED_SDK_Linux.run https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons && \
+#     chmod +x ZED_SDK_Linux.run ; ./ZED_SDK_Linux.run silent skip_tools skip_drivers && \
+#     rm -rf /usr/local/zed/resources/* \
+#     rm -rf ZED_SDK_Linux.run && \
+#     rm -rf /var/lib/apt/lists/*
 
 ENV SHELL /bin/bash
 

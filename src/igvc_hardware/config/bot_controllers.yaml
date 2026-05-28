@@ -49,8 +49,8 @@ bot_drive_controller:
     # TODO work w/ mech. & auton to find kinematic limits
 
     # TODO
-    linear.x.max_velocity: 2.2352 # 5 mph in meters/second
-    linear.x.min_velocity: -2.2352
+    linear.x.max_velocity: .NAN #2.2352 # 5 mph in meters/second
+    linear.x.min_velocity: .NAN #-2.2352
 
     # TODO
     linear.x.max_acceleration: .NAN
@@ -73,3 +73,4 @@ bot_drive_controller:
     # TODO
     angular.z.max_jerk: .NAN
     angular.z.min_jerk: .NAN
+    right_wheel_radius_multiplier: -1.0

@@ -69,14 +69,14 @@ def generate_launch_description():
         ),
 
         # Real hardware
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_hardware'),
-                 '/launch',
-                 '/hardware.launch.py']
-            ),
-            condition = UnlessCondition(use_mock_hardware)
-        ),
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(
+        #         [FindPackageShare('igvc_hardware'),
+        #          '/launch',
+        #          '/hardware.launch.py']
+        #     ),
+        #     condition = UnlessCondition(use_mock_hardware)
+        # ),
 
         # SLAM
         IncludeLaunchDescription(
