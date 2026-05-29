@@ -13,11 +13,11 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             [FindPackageShare("zed_wrapper"),
              '/launch',
-             'camera.launch.py']
+             '/zed_camera.launch.py']
         ),
         launch_arguments={
-            'camera_model:=zed2i'
-        }
+            'camera_model': 'zed2i'
+        }.items()
     )
     # Check here for published topics: https://www.stereolabs.com/docs/ros2/zed-node
     
@@ -25,11 +25,10 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             [FindPackageShare("rplidar_ros"),
              '/launch',
-             'rplidar_s2e_launch.py']
+             '/rplidar_s2e_launch.py']
         ),
-        launch_arguments={
-            # TODO if we want to change anything
-        }
+	launch_arguments={
+	}
     )
 
     declared_arguments = [
