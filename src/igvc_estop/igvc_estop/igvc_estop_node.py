@@ -8,7 +8,7 @@ import Jetson.GPIO as GPIO
 
 class GpioEStop(Node):
     def __init__(self):
-        super().__init__("gpio_estop")
+        super().__init__("igvc_estop")
 
         self.declare_parameter("gpio_pin", 7)
         self.declare_parameter("gpio_mode", "BOARD")

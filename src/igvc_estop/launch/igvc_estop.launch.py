@@ -6,7 +6,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     twist_mux_config = PathJoinSubstitution([
-        FindPackageShare("gpio_estop"),
+        FindPackageShare("igvc_estop"),
         "config",
         "twist_mux.yaml",
     ])
@@ -25,9 +25,9 @@ def generate_launch_description():
         ),
 
         Node(
-            package="gpio_estop",
-            executable="gpio_estop_node",
-            name="gpio_estop",
+            package="igvc_estop",
+            executable="igvc_estop_node",
+            name="igvc_estop",
             output="screen",
             parameters=[{
                 "gpio_pin": 7,
