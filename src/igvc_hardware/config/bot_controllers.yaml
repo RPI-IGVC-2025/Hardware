@@ -42,7 +42,7 @@ bot_drive_controller:
 
     enable_odom_tf: true # Whether to publish the transformation between the odom & base frame IDs
 
-    cmd_vel_timeout: 0.5 # staling threshold for velocity commands
+    cmd_vel_timeout: 0.1 # staling threshold for velocity commands
     publish_limited_velocity: false # TODO what does this do?
     velocity_rolling_window_size: 10
 
