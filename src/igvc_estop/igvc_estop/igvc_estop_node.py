@@ -45,9 +45,9 @@ class GpioEStop(Node):
         self.last_published = None
         self.sim_gpio_high = False
 
-        self.enabled_pub = self.create_publisher(Bool, self.enabled_topic, 10)
-        self.lock_pub = self.create_publisher(Bool, self.lock_topic, 10)
-        self.estop_cmd_pub = self.create_publisher(Twist, "/cmd_vel_estop", 10)
+        self.enabled_pub = self.create_publisher(Bool, self.enabled_topic, 1)
+        self.lock_pub = self.create_publisher(Bool, self.lock_topic, 1)
+        self.estop_cmd_pub = self.create_publisher(Twist, "/cmd_vel_estop", 1)
         
         self.reset_sub = self.create_subscription(
             Bool,
