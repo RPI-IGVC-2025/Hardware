@@ -31,9 +31,9 @@ def generate_launch_description():
 	}
     )
 
-    declared_arguments = [
+    nodes = [
         launch_zed_node,
         launch_rplidar_node
     ]
 
-    return LaunchDescription(declared_arguments + nodes)
+    return LaunchDescription(nodes)
