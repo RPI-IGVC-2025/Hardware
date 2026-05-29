@@ -27,10 +27,10 @@ def generate_launch_description():
              '/launch',
              '/rplidar_s2e_launch.py']
         ),
-	launch_arguments={
-        'udp_ip' : '10.42.0.5',
-        'frame_id' : 'laser_frame'
-	}
+        launch_arguments={
+            'udp_ip' : '10.42.0.5',
+            'frame_id' : 'laser_frame'
+        }.items()
     )
 
     nodes = [
