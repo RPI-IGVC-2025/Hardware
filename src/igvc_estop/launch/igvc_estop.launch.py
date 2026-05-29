@@ -29,7 +29,18 @@ def generate_launch_description():
             parameters=[twist_mux_config],
             remappings=[
                 # twist_mux output topic -> controller cmd_vel input
-                ("cmd_vel_out", "/cmd_vel"),
+                ("cmd_vel_out", "/cmd_vel_unstamped"),
+            ],
+        ),
+        
+        Node(
+            package="twist_stamper",
+            executable="twist_stamper",
+            name="twist_stamper",
+            output="screen",
+            remappings=[
+                ("cmd_vel_in", "/cmd_vel_unstamped"),
+                ("cmd_vel_out", "/bot_drive_controller/cmd_vel"),
             ],
         ),
 

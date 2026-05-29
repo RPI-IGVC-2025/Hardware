@@ -11,6 +11,7 @@
   <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>twist_mux</depend>
+  <depend>twist_stamper</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
