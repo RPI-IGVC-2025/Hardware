@@ -15,6 +15,10 @@ class GpioEStop(Node):
         self.declare_parameter("gpio_pin", 7)
         self.declare_parameter("gpio_mode", "BOARD")
         self.declare_parameter("active_high", True)
+
+        self.declare_parameter("mechanical_estop_pin", 11)
+        self.declare_parameter("mechanical_active_low", True)
+
         self.declare_parameter("latch", True)
         self.declare_parameter("poll_hz", 50.0)
         self.declare_parameter("lock_topic", "/emergency_stop_lock")
@@ -26,6 +30,10 @@ class GpioEStop(Node):
         self.pin = self.get_parameter("gpio_pin").value
         self.mode = self.get_parameter("gpio_mode").value.upper()
         self.active_high = self.get_parameter("active_high").value
+
+        self.mech_pin = self.get_parameter("mechanical_estop_pin").value
+        self.mech_active_low = self.get_parameter("mechanical_active_low").value
+
         self.latch = self.get_parameter("latch").value
         self.poll_hz = float(self.get_parameter("poll_hz").value)
         self.lock_topic = self.get_parameter("lock_topic").value
@@ -45,34 +53,40 @@ class GpioEStop(Node):
         )
 
         if self.use_sim_gpio:
-            self.sim_sub = self.create_subscription(
+            self.sim_gpio_sub = self.create_subscription(
                 Bool,
                 self.sim_gpio_topic,
                 self.sim_gpio_callback,
                 10,
             )
+
             self.GPIO = None
             self.get_logger().warn(
                 f"Using sim GPIO topic: {self.sim_gpio_topic}"
             )
+
         else:
             import Jetson.GPIO as GPIO
             self.GPIO = GPIO
 
             GPIO.setmode(GPIO.BOARD if self.mode == "BOARD" else GPIO.BCM)
+
             GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+            GPIO.setup(self.mech_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
             self.get_logger().info(
-                f"Using Jetson GPIO pin {self.pin}, mode {self.mode}"
+                f"Using Jetson GPIO pins: main={self.pin}, "
+                f"mechanical={self.mech_pin}, mode={self.mode}"
             )
 
         self.timer = self.create_timer(1.0 / self.poll_hz, self.poll_gpio)
+
         self.publish_lock(False, force=True)
 
     def sim_gpio_callback(self, msg):
         self.sim_gpio_high = msg.data
 
-    def gpio_requests_estop(self):
+    def main_gpio_requests_estop(self):
         if self.use_sim_gpio:
             high = self.sim_gpio_high
         else:
@@ -80,8 +94,26 @@ class GpioEStop(Node):
 
         return high if self.active_high else not high
 
+    def mechanical_gpio_requests_estop(self):
+        # Mechanical e-stop only exists on real robot.
+        if self.use_sim_gpio:
+            return False
+
+        high = self.GPIO.input(self.mech_pin) == self.GPIO.HIGH
+
+        if self.mech_active_low:
+            return not high
+        else:
+            return high
+
+    def any_estop_requested(self):
+        return (
+            self.main_gpio_requests_estop()
+            or self.mechanical_gpio_requests_estop()
+        )
+
     def poll_gpio(self):
-        if self.gpio_requests_estop():
+        if self.any_estop_requested():
             self.estop_active = True
         elif not self.latch:
             self.estop_active = False
@@ -92,8 +124,10 @@ class GpioEStop(Node):
         if not msg.data:
             return
 
-        if self.gpio_requests_estop():
-            self.get_logger().warn("Reset ignored: e-stop signal is still active.")
+        if self.any_estop_requested():
+            self.get_logger().warn(
+                "Reset ignored: one or more e-stop inputs are still active."
+            )
             self.estop_active = True
         else:
             self.get_logger().warn("E-stop latch reset.")
@@ -118,6 +152,7 @@ class GpioEStop(Node):
     def destroy_node(self):
         if not self.use_sim_gpio and self.GPIO is not None:
             self.GPIO.cleanup()
+
         super().destroy_node()
 
 

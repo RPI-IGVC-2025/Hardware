@@ -1,10 +1,13 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
+from launch.actions import DeclareLaunchArgument
 
 
 def generate_launch_description():
+    use_sim_gpio = LaunchConfiguration("use_sim_gpio")
+    
     twist_mux_config = PathJoinSubstitution([
         FindPackageShare("igvc_estop"),
         "config",
@@ -12,6 +15,12 @@ def generate_launch_description():
     ])
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            "use_sim_gpio",
+            default_value="false",
+            description="Use sim GPIO topic instead of Jetson GPIO",
+        ),
+    
         Node(
             package="twist_mux",
             executable="twist_mux",
@@ -30,13 +39,19 @@ def generate_launch_description():
             name="igvc_estop",
             output="screen",
             parameters=[{
-                "use_sim_gpio": True,
+                "use_sim_gpio": use_sim_gpio,
                 "sim_gpio_topic": "/sim_gpio_estop",
+
                 "gpio_pin": 7,
                 "gpio_mode": "BOARD",
                 "active_high": True,
+
+                "mechanical_estop_pin": 11,
+                "mechanical_active_low": True,
+
                 "latch": True,
                 "poll_hz": 50.0,
+
                 "lock_topic": "/emergency_stop_lock",
                 "reset_topic": "/emergency_stop_reset",
             }],
