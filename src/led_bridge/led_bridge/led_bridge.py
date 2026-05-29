@@ -5,7 +5,7 @@ from enum import Enum, auto
 import RPi.GPIO as GPIO
 
 
-output_pin = 16 # board pin 16, gpio8
+output_pin = 23 
 
 class LedStatus(Enum):
     BLINKING = auto(),
@@ -19,7 +19,7 @@ class MyNode(Node):
         # Initialize the node with a name
         super().__init__('led_bridge')
         self.get_logger().info("led bridge started")
-        GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BCM)
         GPIO.setup(output_pin, GPIO.OUT)
         self.led_activity = LedStatus.SOLID
         change_leds(True)
