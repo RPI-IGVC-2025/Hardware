@@ -35,15 +35,5 @@ def generate_launch_description():
         launch_zed_node,
         launch_rplidar_node
     ]
-    
-    # Get nodes    
-    imu_node = Node(
-        package="adi_imu",
-        executable="adi_imu_node",
-        ros_arguments=["-p", f"imu_device_name:=${IMU_NAME}"]
-    )
-    nodes = [
-        imu_node
-    ]
 
     return LaunchDescription(declared_arguments + nodes)
