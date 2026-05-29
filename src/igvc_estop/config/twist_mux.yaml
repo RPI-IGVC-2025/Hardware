@@ -11,11 +11,6 @@ twist_mux:
         timeout: 0.5
         priority: 20
 
-      estop_zero:
-        topic: /cmd_vel_estop
-        timeout: 0.5
-        priority: 255
-
     locks:
       emergency_stop:
         topic: /emergency_stop_lock
