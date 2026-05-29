@@ -42,11 +42,11 @@ def generate_launch_description():
                 "use_sim_gpio": use_sim_gpio,
                 "sim_gpio_topic": "/sim_gpio_estop",
 
-                "gpio_pin": 7,
-                "gpio_mode": "BOARD",
+                "gpio_pin": 27,
+                "gpio_mode": "BCM",
                 "active_high": True,
 
-                "mechanical_estop_pin": 11,
+                "mechanical_estop_pin": 22,
                 "mechanical_active_low": True,
 
                 "latch": True,
