@@ -37,6 +37,7 @@ class GpioEStop(Node):
 
         self.latch = self.get_parameter("latch").value
         self.poll_hz = float(self.get_parameter("poll_hz").value)
+        self.enabled_topic = "/enabled"
         self.lock_topic = self.get_parameter("lock_topic").value
         self.reset_topic = self.get_parameter("reset_topic").value
 
@@ -44,6 +45,7 @@ class GpioEStop(Node):
         self.last_published = None
         self.sim_gpio_high = False
 
+        self.enabled_pub = self.create_publisher(Bool, self.enabled_topic, 10)
         self.lock_pub = self.create_publisher(Bool, self.lock_topic, 10)
         self.estop_cmd_pub = self.create_publisher(Twist, "/cmd_vel_estop", 10)
         
@@ -149,6 +151,7 @@ class GpioEStop(Node):
         msg = Bool()
         msg.data = locked
         self.lock_pub.publish(msg)
+        self.enabled_pub.publish(msg)
         self.last_published = locked
 
         if locked:
