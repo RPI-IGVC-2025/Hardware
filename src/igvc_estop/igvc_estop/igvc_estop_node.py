@@ -4,11 +4,13 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Bool
 
-import Jetson.GPIO as GPIO
 
 class GpioEStop(Node):
     def __init__(self):
-        super().__init__("igvc_estop")
+        super().__init__("gpio_estop")
+
+        self.declare_parameter("use_sim_gpio", False)
+        self.declare_parameter("sim_gpio_topic", "/sim_gpio_estop")
 
         self.declare_parameter("gpio_pin", 7)
         self.declare_parameter("gpio_mode", "BOARD")
@@ -17,6 +19,9 @@ class GpioEStop(Node):
         self.declare_parameter("poll_hz", 50.0)
         self.declare_parameter("lock_topic", "/emergency_stop_lock")
         self.declare_parameter("reset_topic", "/emergency_stop_reset")
+
+        self.use_sim_gpio = self.get_parameter("use_sim_gpio").value
+        self.sim_gpio_topic = self.get_parameter("sim_gpio_topic").value
 
         self.pin = self.get_parameter("gpio_pin").value
         self.mode = self.get_parameter("gpio_mode").value.upper()
@@ -28,15 +33,7 @@ class GpioEStop(Node):
 
         self.estop_active = False
         self.last_published = None
-
-        if self.mode == "BOARD":
-            GPIO.setmode(GPIO.BOARD)
-        elif self.mode == "BCM":
-            GPIO.setmode(GPIO.BCM)
-        else:
-            raise ValueError("gpio_mode must be BOARD or BCM")
-
-        GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        self.sim_gpio_high = False
 
         self.lock_pub = self.create_publisher(Bool, self.lock_topic, 10)
 
@@ -47,17 +44,40 @@ class GpioEStop(Node):
             10,
         )
 
-        self.timer = self.create_timer(1.0 / self.poll_hz, self.poll_gpio)
+        if self.use_sim_gpio:
+            self.sim_sub = self.create_subscription(
+                Bool,
+                self.sim_gpio_topic,
+                self.sim_gpio_callback,
+                10,
+            )
+            self.GPIO = None
+            self.get_logger().warn(
+                f"Using sim GPIO topic: {self.sim_gpio_topic}"
+            )
+        else:
+            import Jetson.GPIO as GPIO
+            self.GPIO = GPIO
 
+            GPIO.setmode(GPIO.BOARD if self.mode == "BOARD" else GPIO.BCM)
+            GPIO.setup(self.pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+            self.get_logger().info(
+                f"Using Jetson GPIO pin {self.pin}, mode {self.mode}"
+            )
+
+        self.timer = self.create_timer(1.0 / self.poll_hz, self.poll_gpio)
         self.publish_lock(False, force=True)
 
-        self.get_logger().info(
-            f"GPIO e-stop started on pin {self.pin}. "
-            f"Publishing twist_mux lock to {self.lock_topic}"
-        )
+    def sim_gpio_callback(self, msg):
+        self.sim_gpio_high = msg.data
 
     def gpio_requests_estop(self):
-        high = GPIO.input(self.pin) == GPIO.HIGH
+        if self.use_sim_gpio:
+            high = self.sim_gpio_high
+        else:
+            high = self.GPIO.input(self.pin) == self.GPIO.HIGH
+
         return high if self.active_high else not high
 
     def poll_gpio(self):
@@ -73,7 +93,7 @@ class GpioEStop(Node):
             return
 
         if self.gpio_requests_estop():
-            self.get_logger().warn("Reset ignored: GPIO e-stop signal is still active.")
+            self.get_logger().warn("Reset ignored: e-stop signal is still active.")
             self.estop_active = True
         else:
             self.get_logger().warn("E-stop latch reset.")
@@ -96,7 +116,8 @@ class GpioEStop(Node):
             self.get_logger().info("E-stop clear: twist_mux unlocked.")
 
     def destroy_node(self):
-        GPIO.cleanup()
+        if not self.use_sim_gpio and self.GPIO is not None:
+            self.GPIO.cleanup()
         super().destroy_node()
 
 

@@ -30,6 +30,8 @@ def generate_launch_description():
             name="igvc_estop",
             output="screen",
             parameters=[{
+                "use_sim_gpio": True,
+                "sim_gpio_topic": "/sim_gpio_estop",
                 "gpio_pin": 7,
                 "gpio_mode": "BOARD",
                 "active_high": True,
