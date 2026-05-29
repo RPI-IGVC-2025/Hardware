@@ -3,6 +3,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Bool
+from geometry_msgs.msg import Twist
 
 
 class GpioEStop(Node):
@@ -44,7 +45,8 @@ class GpioEStop(Node):
         self.sim_gpio_high = False
 
         self.lock_pub = self.create_publisher(Bool, self.lock_topic, 10)
-
+        self.estop_cmd_pub = self.create_publisher(Twist, "/cmd_vel_estop", 10)
+        
         self.reset_sub = self.create_subscription(
             Bool,
             self.reset_topic,
@@ -80,6 +82,7 @@ class GpioEStop(Node):
             )
 
         self.timer = self.create_timer(1.0 / self.poll_hz, self.poll_gpio)
+        self.zero_timer = self.create_timer(0.05, self.publish_zero_cmd_if_estopped)
 
         self.publish_lock(False, force=True)
 
@@ -119,6 +122,10 @@ class GpioEStop(Node):
             self.estop_active = False
 
         self.publish_lock(self.estop_active)
+        
+    def publish_zero_cmd_if_estopped(self):
+        if self.estop_active:
+            self.estop_cmd_pub.publish(Twist())
 
     def reset_callback(self, msg):
         if not msg.data:
