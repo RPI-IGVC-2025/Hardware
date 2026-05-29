@@ -9,7 +9,7 @@
             "PLATFORM": "JETSON_ORIN",
             "SIM_ENABLED": "false",
             "DEPLOYABLE_BUILD": "true",
-            "BASE_IMAGE": "ros2-l4t:humble",
+            "BASE_IMAGE": "ros2-l4t:humble-zed",
             "IMU_ENABLED": "false"
         }
     },
