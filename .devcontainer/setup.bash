@@ -6,7 +6,7 @@ cd lib
 apt-get update --fix-missing
 apt-get upgrade -y
 
-. /opt/ros/jazzy/setup.sh
+. /opt/ros/humble/setup.sh
 
 
 if [ ! -d "rplidar_ros" ] && $ENABLE_LIDAR ; then 
@@ -80,7 +80,7 @@ fi
 
 cd ..
 
-echo '. /opt/ros/jazzy/setup.sh' >> ~/.bashrc
+echo '. /opt/ros/humble/setup.sh' >> ~/.bashrc
 
 echo ' if [ -d '/home/ros2_ws/install' ]; then 
     . /home/ros2_ws/install/setup.bash

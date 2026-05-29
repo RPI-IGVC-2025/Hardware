@@ -37,10 +37,9 @@
         
     ],
     "mounts": [
-       
        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
        "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
     ],
-    "postCreateCommand": ". .devcontainer/setup.bash && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ || true) && colcon build --symlink-install --packages-skip-regex zed_*",
+    "postCreateCommand": ". .devcontainer/setup.bash && sudo rosdep update --rosdistro=humble && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=humble && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ || true) && colcon build --symlink-install --packages-skip-regex zed_*",
     "forwardPorts": [8765]
 }

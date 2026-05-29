@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=ros:jazzy
+ARG BASE_IMAGE=ros:humble
 FROM ${BASE_IMAGE}
 ARG USERNAME=$USERNAME
 ARG USER_UID=1000
@@ -41,16 +41,16 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y \
     python3-pip \
     # CycloneDDS package
-    ros-jazzy-rmw-cyclonedds-cpp \
+    ros-humble-rmw-cyclonedds-cpp \
     libturbojpeg
 
 ## Simulation only
 RUN if $SIM_ENABLED ; then \
         apt-get install -y \
             # RQT packages
-            ros-jazzy-rqt-tf-tree ros-jazzy-rqt-graph ros-jazzy-rqt-image-view \
+            ros-humble-rqt-tf-tree ros-humble-rqt-graph ros-humble-rqt-image-view \
             # Teleop control keyboard
-            ros-jazzy-teleop-twist-keyboard \
+            ros-humble-teleop-twist-keyboard \
             # External terminal
             # TODO: Figure out how to do on mac
             gnome-terminal dbus-x11 ; \

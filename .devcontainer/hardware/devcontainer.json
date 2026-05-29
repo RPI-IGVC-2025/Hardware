@@ -9,7 +9,7 @@
             "PLATFORM": "JETSON_ORIN",
             "SIM_ENABLED": "false",
             "DEPLOYABLE_BUILD": "true",
-            "BASE_IMAGE": "ros2-l4t:jazzy",
+            "BASE_IMAGE": "ros2-l4t:humble",
             "IMU_ENABLED": "false"
         }
     },
@@ -64,6 +64,6 @@
        "source=/usr/local/zed,target=/usr/local/zed,type=bind,consistency=cached",
        "source=/usr/local/cuda,target=/usr/local/cuda,type=bind,consistency=cached" 
     ],
-    "postCreateCommand": ". .devcontainer/setup.bash && sudo rosdep update --rosdistro=jazzy && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=jazzy && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ || true) && colcon build --symlink-install",
+    "postCreateCommand": ". .devcontainer/setup.bash && sudo rosdep update --rosdistro=humble && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=humble && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ || true) && colcon build --symlink-install",
     "forwardPorts": [8765]
 }

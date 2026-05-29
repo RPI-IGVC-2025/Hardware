@@ -69,7 +69,7 @@ Once inside the container, ROS 2 commands require sourcing the setup file.
 ### Source ROS 2 (required each new terminal)
 
 ```bash
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/humble/setup.bash
 ```
 
 ### Make it permanent
@@ -77,7 +77,7 @@ source /opt/ros/jazzy/setup.bash
 Run this once to automatically source ROS 2 in every new terminal:
 
 ```bash
-echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc
+echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
 ```
 
 ### Verify ROS 2 is working
