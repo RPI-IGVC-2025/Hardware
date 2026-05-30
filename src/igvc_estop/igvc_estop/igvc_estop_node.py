@@ -151,7 +151,9 @@ class GpioEStop(Node):
         msg = Bool()
         msg.data = locked
         self.lock_pub.publish(msg)
-        self.enabled_pub.publish(msg)
+        enabled_msg = Bool()
+        enabled_msg.data = not locked
+        self.enabled_pub.publish(enabled_msg)
         self.last_published = locked
 
         if locked:
