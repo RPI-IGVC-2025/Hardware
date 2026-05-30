@@ -2,7 +2,9 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:include filename="$(find zed_description)/urdf/zed_macro.urdf.xacro" />
 
-    <xacro:zed_camera name="zed" model="zed2i" />
+    <xacro:zed_camera name="zed" model="zed2i">   
+        <gnss_origin/>
+    </xacro:zed_camera>
 
     <joint name="zed_camera_joint" type="fixed">
         <parent link="base_link" />
