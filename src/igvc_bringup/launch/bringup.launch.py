@@ -36,12 +36,6 @@ def generate_launch_description():
             default_value='true', 
             description='Launch rtabmap for SLAM'
         ),
-        
-        DeclareLaunchArgument(
-            'use_sim_time',
-            default_value='true',
-            description='Use simulation time'
-       ),
 
 
         #Estop
@@ -64,8 +58,7 @@ def generate_launch_description():
                  '/publisher.launch.py']
             ),
             launch_arguments={
-                'use_mock_hardware': use_mock_hardware, 
-                'use_sim_time' : use_sim_time, 
+                'use_mock_hardware': use_mock_hardware
                 }.items()
         ),
 
@@ -79,9 +72,6 @@ def generate_launch_description():
                 ]
             ),
             condition=IfCondition(use_sim),
-            launch_arguments={
-                'use_sim_time' : use_sim_time, 
-            }.items(),
         ),
 
         # ROS2_Control
@@ -91,9 +81,6 @@ def generate_launch_description():
                  '/launch',
                  '/control.launch.py']
             ),
-            launch_arguments={
-                'use_sim_time' : use_sim_time, 
-            }.items(),
         ),
 
         # Real hardware
@@ -104,9 +91,6 @@ def generate_launch_description():
                   '/hardware.launch.py']
             ),
             condition = UnlessCondition(use_mock_hardware), 
-            launch_arguments={
-                'use_sim_time' : use_sim_time, 
-            }.items(),
         ),
         
         # SLAM
