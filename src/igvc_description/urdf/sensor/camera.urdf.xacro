@@ -1,11 +1,13 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <link name="zed_camera_link"/>
+    <xacro:include filename="$(find zed_wrapper)/urdf/zed_macro.urdf.xacro" />
 
-    <joint name="camera_base_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="zed_camera_link"/>
-        <origin xyz="-0.05 -0.05 0.95" rpy="0 0 ${pi/2}"/>
+    <xacro:zed_camera name="zed" model="zed2i" />
+
+    <joint name="zed_camera_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="zed_camera_link" />
+        <origin xyz="-0.05 -0.05 0.95" rpy="0 0 ${pi/2}" />
     </joint>
 
     <gazebo reference="oak_color_frame">
