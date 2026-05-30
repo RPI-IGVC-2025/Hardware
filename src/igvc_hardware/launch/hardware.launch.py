@@ -12,7 +12,7 @@ def generate_launch_description():
     
     launch_navsat_node = Node(
         package='nmea_navsat_driver',
-        executable='nmea_navsat_driver',
+        executable='nmea_serial_driver',
         name='navsat',
         output='screen',
         parameters=[{
