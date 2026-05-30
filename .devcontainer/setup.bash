@@ -1,4 +1,4 @@
-cd /home/ros2_ws
+cd ~/2026RobotCode
 
 mkdir -p lib
 cd lib
@@ -82,7 +82,7 @@ cd ..
 
 echo '. /opt/ros/humble/setup.sh' >> ~/.bashrc
 
-echo ' if [ -d '/home/ros2_ws/install' ]; then 
-    . /home/ros2_ws/install/setup.bash
+echo ' if [ -d '~/2026RobotCode/install' ]; then 
+    . ~/2026RobotCode/install/setup.bash
 fi ' >> ~/.bashrc
 
