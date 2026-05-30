@@ -46,9 +46,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <arg name="custom_rtabmap_launch_file" default="$(find-pkg-share igvc_slam)/launch/include/rtabmap.launch"/>
         <include file="$(var custom_rtabmap_launch_file)">
             <arg name="odom_topic"              value="$(var zed_node_name)/odom" />
-            <arg name="rgb_topic"               value="$(var zed_node_name)/rgb/image_rect_color" />
+            <arg name="rgb_topic"               value="$(var zed_node_name)/rgb/color/rect/image" />
             <arg name="depth_topic"             value="$(var zed_node_name)/depth/depth_registered" />
-            <arg name="camera_info_topic"       value="$(var zed_node_name)/rgb/camera_info" />
+            <arg name="camera_info_topic"       value="$(var zed_node_name)/rgb/color/rect/camera_info" />
             <arg name="depth_camera_info_topic" value="$(var zed_node_name)/depth/camera_info" />
         </include>   
 
