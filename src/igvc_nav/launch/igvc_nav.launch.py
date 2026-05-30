@@ -14,23 +14,14 @@ def generate_launch_description():
 
     nav2_launch_path = os.path.join(nav2_bringup_package , 'launch', 'navigation_launch.py')
     config_path = os.path.join(igvc_nav_package, 'config', 'nav2_params.yaml')
-    
-    use_sim_time = LaunchConfiguration('use_sim_time')
 
     nav2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(nav2_launch_path),
         launch_arguments={
-            'params_file' : config_path,
-            'use_sim_time' : use_sim_time,
+            'params_file' : config_path
         }.items()
-        
     )
 
     return LaunchDescription([
-        DeclareLaunchArgument(
-            'use_sim_time',
-            default_value='true'
-        ),
-
         nav2
     ])
