@@ -11,15 +11,15 @@ def generate_launch_description():
     # Declare args
     
     launch_navsat_node = Node(
-        package='nmea_navsat_driver',
-        executable='nmea_serial_driver',
+        package='ublox_gps',
+        executable='ublox_gps_node',
         name='navsat',
         output='screen',
         parameters=[{
-            "port" : "/dev/ttyTHS1",
-            "baud" : 115200,
+            "device" : "/dev/ttyTHS1",
+            "uart1.baudrate" : 115200,
             "frame_id" : "navsat_link",
-        }]
+        }],
     )
     
     launch_led_bridge_node = Node(
