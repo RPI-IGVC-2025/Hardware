@@ -51,9 +51,11 @@ def generate_launch_description():
         executable="spawner",
         arguments=["bot_drive_controller",
                    "--controller-manager", "/controller_manager", "--switch-timeout", "20.0"],
-        remappings=[('~/cmd_vel','/cmd_vel')]
+        remappings=[
+            ('~/cmd_vel','/cmd_vel'),
+            ("~/robot_description", "/robot_description")
+        ]
     )
-    
     
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
