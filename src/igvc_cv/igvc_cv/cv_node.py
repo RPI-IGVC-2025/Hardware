@@ -1,0 +1,247 @@
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
+from message_filters import ApproximateTimeSynchronizer, Subscriber
+import cv2
+import numpy as np
+
+from sensor_msgs.msg import PointCloud2
+from std_msgs.msg import Header
+import sensor_msgs_py.point_cloud2 as pc2
+from nav_msgs.msg import Path
+from geometry_msgs.msg import PoseStamped 
+
+from rclpy.qos import QoSProfile, ReliabilityPolicy
+
+class CVNode(Node):
+    def __init__(self):
+        super().__init__('cv_node')
+        self.bridge = CvBridge()
+
+        # Gaussian blur
+        self.declare_parameter("blur_kernel_size", 11)
+        self.declare_parameter("blur_sigma_x", 33.0)
+        self.declare_parameter("blur_sigma_y", 33.0)
+
+        # Canny edge detection
+        self.declare_parameter("canny_low", 10)
+        self.declare_parameter("canny_high", 100)
+
+        # Hough Line Transform
+        self.declare_parameter("hough_rho", 2.0)
+        self.declare_parameter("hough_theta", np.pi / 180)
+        self.declare_parameter("hough_threshold", 10)
+        self.declare_parameter("hough_min_line_length", 4)
+        self.declare_parameter("hough_max_line_gap", 5)
+        self.declare_parameter("line_thickness", 10)
+        
+        # Test mode param
+        self.declare_parameter("test", False)
+        
+        if self.get_parameter("test").value:
+            self.get_logger().info("Running in test mode with fake images")
+            self.create_timer(1.0, self.run_fake_test)
+
+        # Synchronised RGB + PointCloud subscribers
+        qos = QoSProfile(
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            depth=10
+        )
+
+        self.rgb_sub = Subscriber(
+            self,
+            Image,
+            '/camera/camera/color/image_raw',
+            qos_profile=qos
+        )
+
+        self.pc_sub = Subscriber(
+            self,
+            Image,
+            '/camera/camera/depth/image_rect_raw',
+            qos_profile=qos
+        )
+        
+        self.sync = ApproximateTimeSynchronizer(
+            [self.rgb_sub, self.pc_sub],
+            queue_size=10,
+            slop=0.05
+        )
+        self.sync.registerCallback(self.process)
+        # ===== Publishers =====
+
+        self.pc_pub = self.create_publisher(PointCloud2, 'cv_points', 10)
+        # pubs for right and left lanes
+        self.leftlane = self.create_publisher(Path, '/left_boundary', 10)
+        self.rightlane = self.create_publisher(Path, '/right_boundary', 10) 
+        
+        
+        # Camera parameters based on factor calibration file
+        self.fx = 1401.07
+        self.fy = 1401.07
+        self.cx = 1062.32
+        self.cy = 634.124
+        
+        self.get_logger().info("Node started")
+        
+    def process(self, rgb_msg: Image, depth_msg: Image):
+        self.get_logger().info("Called Process()")
+        # Fetch parameters
+        blur_k = self.get_parameter("blur_kernel_size").value
+        blur_sx = self.get_parameter("blur_sigma_x").value
+        blur_sy = self.get_parameter("blur_sigma_y").value
+        canny_low = self.get_parameter("canny_low").value
+        canny_high = self.get_parameter("canny_high").value
+        hough_rho = self.get_parameter("hough_rho").value
+        hough_theta = self.get_parameter("hough_theta").value
+        hough_thresh = self.get_parameter("hough_threshold").value
+        hough_min_len = self.get_parameter("hough_min_line_length").value
+        hough_max_gap = self.get_parameter("hough_max_line_gap").value
+        thickness = self.get_parameter("line_thickness").value
+
+        # Convert ROS image to OpenCV
+        frame = self.bridge.imgmsg_to_cv2(rgb_msg, 'bgr8')
+        depth_frame = self.bridge.imgmsg_to_cv2(depth_msg, desired_encoding='passthrough')
+        h, w  = frame.shape[:2]
+
+        # Convert to grayscale
+        gray  = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        
+        # Gaussian Blur
+        blur  = cv2.GaussianBlur(gray, (blur_k, blur_k), blur_sx, blur_sy)
+        
+        # Canny edge detection
+        edges = cv2.Canny(blur, canny_low, canny_high)
+
+        # Hough Line Transform
+        lines = cv2.HoughLinesP(
+            edges,
+            hough_rho, hough_theta, hough_thresh,
+            minLineLength=hough_min_len,
+            maxLineGap=hough_max_gap
+        )
+
+        # Mask of detected line segments
+        line_mask  = np.zeros((h, w), dtype=np.uint8)
+        line_image = np.zeros_like(frame)
+
+        if lines is not None:
+            for line in lines:
+                x1, y1, x2, y2 = line.reshape(4)
+                cv2.line(line_image, (x1, y1), (x2, y2), (0, 255, 255), thickness)
+                cv2.line(line_mask, (x1, y1), (x2, y2), 255, thickness)
+
+        # Look up depth for each white pixel directly
+        white_v, white_u = np.where(line_mask > 0)
+        distances = depth_frame[white_v, white_u]
+        
+        valid = np.isfinite(distances) & (distances > 0)
+        white_u = white_u[valid]
+        white_v = white_v[valid]
+        distances = distances[valid]
+
+        #points to 3D
+        Z = distances
+        X = (white_u - self.cx) * Z / self.fx
+        Y = (white_v - self.cy) * Z / self.fy
+
+        #create pointcloud
+        points = np.vstack((X, Y, Z)).T
+
+        header = Header()
+        header.stamp = self.get_clock().now().to_msg()
+        header.frame_id = "camera_color_optical_frame" #TODO chang to real frame id
+
+        cloud_msg = pc2.create_cloud_xyz32(header, points.tolist())
+        
+        #gather forward points
+        base_x = Z
+        #gather left and right points
+        base_y = -X
+        base_z = np.zeros_like(Z)
+        
+        base_points = np.vstack((base_x, base_y, base_z)).T
+        
+        #split left and right points
+        left_points = base_points[base_points[:,1] > 0]
+        right_points = base_points[base_points[:, 1] < 0]
+        
+        lane_frame_id = "base_footprint" #TODO find this out for sure
+        
+        left_path = self.points_to_path(left_points, lane_frame_id)
+        right_path = self.points_to_path(right_points, lane_frame_id)
+        
+        self.leftlane.publish(left_path)
+        self.rightlane.publish(right_path)
+        
+        
+        # self.get_logger().info(f"cloud: {pc2.read_points(cloud_msg, field_names=('x', 'y', 'z'), skip_nans=True)[0][0]}")
+        if len(points) > 0:
+            self.get_logger().info(f"sample point: {points[0]}")
+        else:
+            self.get_logger().warn("No valid points detected")
+        
+        self.get_logger().info(f"points shape: {points.shape}")
+        self.get_logger().info(f"num points: {len(points)}")
+        self.get_logger().info(
+            f"left path: {len(left_path.poses)}, right path: {len(right_path.poses)}"
+        )
+        
+        self.pc_pub.publish(cloud_msg)
+    def run_fake_test(self):
+        h, w = 1080, 1920
+
+        # Fake black camera image
+        frame = np.zeros((h, w, 3), dtype=np.uint8)
+
+        # Fake white lane lines
+        cv2.line(frame, (600, 1000), (900, 300), (255, 255, 255), 20)
+        cv2.line(frame, (1320, 1000), (1020, 300), (255, 255, 255), 20)
+
+        # Fake depth image: everything is 2 meters away
+        depth_frame = np.full((h, w), 2.0, dtype=np.float32)
+
+        stamp = self.get_clock().now().to_msg()
+
+        rgb_msg = self.bridge.cv2_to_imgmsg(frame, encoding='bgr8')
+        rgb_msg.header.stamp = stamp
+        rgb_msg.header.frame_id = "camera_color_optical_frame"
+
+        depth_msg = self.bridge.cv2_to_imgmsg(depth_frame, encoding='32FC1')
+        depth_msg.header.stamp = stamp
+        depth_msg.header.frame_id = "camera_color_optical_frame"
+
+        self.process(rgb_msg, depth_msg)
+    
+    def points_to_path(self, points, frame_id):
+        path = Path()
+        path.header.stamp = self.get_clock().now().to_msg()
+        path.header.frame_id = frame_id
+        
+        # sort by forward distance
+        if len(points) > 0:
+            points = points[points[:, 0].argsort()]
+        
+        for point in points:
+            pose = PoseStamped()
+            pose.header.stamp = path.header.stamp
+            pose.header.frame_id = frame_id
+            pose.pose.position.x = float(point[0])
+            pose.pose.position.y = float(point[1])
+            pose.pose.position.z = float(point[2])
+            pose.pose.orientation.w = 1.0 #double check
+            path.poses.append(pose)
+        
+        return path
+        
+        
+def main(args=None):
+    rclpy.init(args=args)
+    node = CVNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
