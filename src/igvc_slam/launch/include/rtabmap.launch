@@ -1,0 +1,61 @@
+<!-- RTAB-Map launcher -->
+
+<launch>
+    <!-- RGB-D related topics -->
+    <arg name="rgb_topic"               default="/zed/zed_node/rgb/image_rect_color" />
+    <arg name="depth_topic"             default="/zed/zed_node/depth/depth_registered" />
+    <arg name="camera_info_topic"       default="/zed/zed_node/rgb/camera_info" />
+    <arg name="depth_camera_info_topic" default="/zed/zed_node/depth/camera_info" />
+    <arg name="scan_topic"              default="/scan" />
+
+    <arg name="odom_topic"              default="/zed/zed_node/odom" />    <!-- Odometry topic name -->
+
+    <!-- Visual Odometry -->
+    <node name="rgbd_odometry" pkg="rtabmap_odom" exec="rgbd_odometry" output="screen" args="" launch-prefix="">    
+        <param from="$(find-pkg-share igvc_slam)/config/rtabmap.yaml" />
+        
+        <remap from="rgb/image"         to="$(var rgb_topic)"/>
+        <remap from="depth/image"       to="$(var depth_topic)"/>
+        <remap from="rgb/camera_info"   to="$(var camera_info_topic)"/>
+
+        <remap from="odom"              to="$(var odom_topic)"/>
+    </node>
+
+    <!-- RTABmapviz -->
+    <node name="rtabmap_viz" pkg="rtabmap_viz" exec="rtabmap_viz" output="screen" args="" launch-prefix="">    
+        <remap from="rgb/image"         to="$(var rgb_topic)"/>
+        <remap from="depth/image"       to="$(var depth_topic)"/>
+        <remap from="rgb/camera_info"   to="$(var camera_info_topic)"/>
+
+        <remap from="grid_map"          to="map" />
+        <remap from="odom"              to="$(var odom_topic)"/>
+    </node> 
+
+    <!-- RGBD Sync -->
+    <!-- RTABmap -->
+    <node pkg="rtabmap_sync" exec="rgbd_sync" output="screen">
+        <param from="$(find-pkg-share igvc_slam)/config/rtabmap.yaml" />
+    
+        <remap from="rgb/image"         to="$(var rgb_topic)"/>
+        <remap from="depth/image"       to="$(var depth_topic)"/>
+        <remap from="rgb/camera_info"   to="$(var camera_info_topic)"/>
+
+        <remap from="grid_map"          to="map" />
+        <remap from="odom"              to="$(var odom_topic)"/>
+    </node>
+
+    <!-- RTABmap -->
+    <node name="rtabmap" pkg="rtabmap_slam" exec="rtabmap" output="screen" args="--delete_db_on_start" launch-prefix="">
+        <param from="$(find-pkg-share igvc_slam)/config/rtabmap.yaml" />
+
+        <remap from="imu" to="/zed/zed_node/imu/data"/>
+    
+        <remap from="rgb/image"         to="$(var rgb_topic)"/>
+        <remap from="depth/image"       to="$(var depth_topic)"/>
+        <remap from="rgb/camera_info"   to="$(var camera_info_topic)"/>
+        <remap from="scan"              to="$(var scan_topic)"/>
+
+        <remap from="grid_map"          to="map" />
+        <remap from="odom"              to="$(var odom_topic)"/>
+    </node>
+</launch>

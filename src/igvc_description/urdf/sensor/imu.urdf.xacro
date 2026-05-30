@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     <joint name="imu_joint" type="fixed">
         <origin xyz="0 0 0" rpy="0 0 0" />
-        <parent link="base_footprint"/>
+        <parent link="base_link"/>
         <child link="imu_link" />
         </joint>
 

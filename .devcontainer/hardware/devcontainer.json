@@ -1,0 +1,69 @@
+{
+    "name": "ROS 2 Development Container (nvidia-hardware)", 
+    "privileged": true,
+    "build": {
+        "context": "..",
+        "dockerfile": "../Dockerfile",
+        "args": {
+            "USERNAME": "ros_user",
+            "PLATFORM": "JETSON_ORIN",
+            "SIM_ENABLED": "false",
+            "DEPLOYABLE_BUILD": "true",
+            "BASE_IMAGE": "ros2-l4t:humble-zed",
+            "IMU_ENABLED": "false"
+        }
+    },
+    "workspaceFolder": "/home/ros2_ws",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/ros2_ws,type=bind",
+    "customizations": {
+        "vscode": {
+            "extensions":[
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-themes",
+                "twxs.cmake",
+                "donjayamanne.python-extension-pack",
+                "eamodio.gitlens",
+                "Ranch-Hand-Robotics.rde-pack",
+                "ms-vsliveshare.vsliveshare"
+            ]
+        }
+    },
+    "containerEnv": {
+        "DISPLAY": "${env:DISPLAY}",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
+        "ROS_DOMAIN_ID": "42",
+        "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp",
+        "HAS_ZED_DEPS": "true",
+        "GNOME_TERMINAL_SCREEN": "",
+        "NVIDIA_VISIBLE_DEVICES": "all",
+        "NVIDIA_DRIVER_CAPABILITES": "all",
+        "WAYLAND_DISPLAY": "${env:WAYLAND_DISPLAY}",
+        "MESA_D3D12_DEFAULT_ADAPTER_NAME": "NVIDIA",
+        "MESA_LOADER_DRIVER_OVERRIDE": "d3d12",
+        "GALLIUM_DRIVER": "d3d12",
+        "LIBGL_ALWAYS_INDIRECT": "0",
+
+        "ZED_SDK_ROOT_DIR": "/usr/local/zed",
+        "CUDA_HOME": "/usr/local/cuda"
+        },
+    "runArgs": [
+        "--net=host",
+        "--pid=host",
+        "--ipc=host",
+        "--gpus=all",
+        "--runtime=nvidia",
+        "--device=/dev/dxg",
+        "--privileged",
+        "-p", "8765:8765"
+
+    ],
+    "mounts": [
+       "source=/dev/,target=/dev/,type=bind,consistency=cached",
+       "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
+       "source=//usr/share/glvnd,target=/usr/share/glvnd,type=bind,consistency=cached",
+       "source=/usr/local/zed,target=/usr/local/zed,type=bind,consistency=cached",
+       "source=/usr/local/cuda,target=/usr/local/cuda,type=bind,consistency=cached" 
+    ],
+    "postCreateCommand": ". .devcontainer/setup.bash && sudo rosdep update --rosdistro=humble && sudo rosdep install --from-paths lib src --ignore-src -y --rosdistro=humble && sudo chown -R $(whoami) /home/ros2_ws/ && sudo chmod a+rw . -R && (rm -r build/ || true) && colcon build --symlink-install",
+    "forwardPorts": [8765]
+}

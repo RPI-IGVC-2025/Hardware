@@ -1,0 +1,76 @@
+/zed/rtabmap:
+  ros__parameters:
+    delete_db_on_start: true
+    use_sim_time: false
+
+    frame_id: base_link
+    map_frame_id: map
+    odom_frame_id: odom
+    odom_tf_linear_variance: 0.001
+    odom_tf_angular_variance: 0.001
+
+    publish_tf: true  # publishes map->odom
+
+    subscribe_rgbd: true
+    subscribe_scan: true
+    approx_sync: true
+
+    sync_queue_size: 10
+    wait_for_transform: 0.2
+
+    odom_sensor_sync: false #external odom used
+
+    # Below sourced https://github.com/introlab/rtabmap_ros/blob/ros2/rtabmap_demos/launch/robot_mapping_demo.launch.py
+    RGBD:
+      NeighborLinkRefining: true # Do odometry correction with consecutive laser scans
+      ProximityBySpace: true # Local loop closure detection (using estimated position) with locations in WM
+      ProximityByTime: false # Local loop closure detection with locations in STM
+      ProximityPathMaxNeighbors: 10 # Do also proximity detection by space by merging close scans together.
+      OptimizeFromGraphEnd: false # Optimize graph from initial node so /map -> /odom transform will be generated
+      OptimizeMaxError: 4  # Reject any loop closure causing large errors (>3x link's covariance) in the map
+      LocalRadius: 5 # limit length of proximity detections
+
+    Reg:
+      Strategy: 1 # 0=Visual, 1=ICP, 2=Visual+ICP
+      Force3DoF: true # 2D SLAM
+
+    Icp: 
+      CorrespondenceRatio: 0.2 # minimum scan overlap to accept loop closure
+      PM: false
+      PointToPlane: false
+      MaxCorrespondenceDistance: 0.15
+      VoxelSize: 0.05
+
+    Vis: 
+      MinInliers: 12 # 3D visual words minimum inliers to accept loop closure
+
+    Mem:
+      IncrementalMemory: true
+      STMSize : 30
+
+    Grid:
+      FromDepth: false # Create 2D occupancy grid from laser scan
+
+    GridGlobal:
+      FullUpdate: true
+
+/zed/rgbd_odometry:
+  ros__parameters:
+    use_sim_time: false
+    approx_sync_max_interval: 0.01
+    frame_id: base_link
+    ground_truth_base_frame_id: ''
+    odom_frame_id: odom
+    qos: 1
+    qos_camera_info: 1
+    subscribe_rgbd: true
+    sync_queue_size: 10
+    wait_for_transform: 0.4
+
+
+/zed/rgbd_sync: 
+  ros__parameters:
+    use_sim_time: false
+    approx_sync_max_interval: 0.2
+    wait_for_transform: 0.2
+    sync_queue_size: 10
