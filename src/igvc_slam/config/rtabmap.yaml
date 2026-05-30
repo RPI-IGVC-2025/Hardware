@@ -60,7 +60,7 @@
     approx_sync_max_interval: 0.01
     frame_id: base_link
     ground_truth_base_frame_id: ''
-    odom_frame_id: /odom
+    odom_frame_id: odom
     qos: 1
     qos_camera_info: 1
     subscribe_rgbd: true
