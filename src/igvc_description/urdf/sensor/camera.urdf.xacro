@@ -9,7 +9,7 @@
     <joint name="zed_camera_joint" type="fixed">
         <parent link="base_footprint" />
         <child link="zed_camera_link" />
-        <origin xyz="-0.05 -0.05 1.0033" rpy="0 ${11.5/180*pi} ${pi/2}" />
+        <origin xyz="0 0 1.0033" rpy="0 ${11.5/180*pi} ${pi/2}" />
     </joint>
 
     <gazebo reference="oak_color_frame">
