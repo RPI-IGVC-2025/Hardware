@@ -3,7 +3,7 @@
     delete_db_on_start: true
     use_sim_time: false
 
-    frame_id: base_footprint
+    frame_id: base_link
     map_frame_id: map
     odom_frame_id: odom
     odom_tf_linear_variance: 0.001
