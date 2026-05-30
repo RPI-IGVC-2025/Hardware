@@ -24,7 +24,9 @@ def generate_launch_description():
              '/zed_camera.launch.py']
         ),
         launch_arguments={
-            'camera_model': 'zed2i'
+            'camera_model': 'zed2i',
+            'publish_tf': 'false',
+            'publish_urdf': 'false',
         }.items()
     )
     # Check here for published topics: https://www.stereolabs.com/docs/ros2/zed-node
