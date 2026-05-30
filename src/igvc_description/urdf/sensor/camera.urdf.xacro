@@ -1,21 +1,8 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:arg name="camera_name"   default="oak" />
-    <xacro:arg name="camera_model"  default="OAK-D-POE" />
-    <xacro:arg name="base_frame"    default="oak_base" />
-    <xacro:arg name="parent_frame"  default="oak_parent" />
-    <xacro:arg name="cam_pos_x"     default="0.0" />
-    <xacro:arg name="cam_pos_y"     default="0.0" />
-    <xacro:arg name="cam_pos_z"     default="0.0" />
-    <xacro:arg name="cam_roll"      default="0.0" />
-    <xacro:arg name="cam_pitch"     default="0.0" />
-    <xacro:arg name="cam_yaw"       default="0.0" />
-    <xacro:arg name="rs_compat"     default="true" />
-    <xacro:include filename="$(find depthai_descriptions)/urdf/depthai_descr.urdf.xacro" />
-
     <joint name="camera_base_joint" type="fixed">
         <parent link="base_link"/>
-        <child link="oak_parent"/>
+        <child link="zed_camera_link"/>
         <origin xyz="-0.05 -0.05 0.95" rpy="0 0 ${pi/2}"/>
     </joint>
 
