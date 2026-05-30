@@ -6,7 +6,7 @@ cd lib
 apt-get update --fix-missing
 apt-get upgrade -y
 
-. /opt/ros/jazzy/setup.sh
+. /opt/ros/humble/setup.sh
 
 
 if [ ! -d "rplidar_ros" ] && $ENABLE_LIDAR ; then 
@@ -16,6 +16,11 @@ fi
 if [ ! -d "ros_odrive" ] && $ENABLE_ODRIVE ; then
     git clone https://github.com/odriverobotics/ros_odrive.git
 fi
+
+if [ ! -d zed-ros2-wrapper ] && $HAS_ZED_DEPS; then 
+    git clone https://github.com/stereolabs/zed-ros2-wrapper.git
+fi
+
 
 if $ENABLE_IMU; then 
     if [ ! -d "imu_ros2" ]; then
@@ -75,7 +80,7 @@ fi
 
 cd ..
 
-echo '. /opt/ros/jazzy/setup.sh' >> ~/.bashrc
+echo '. /opt/ros/humble/setup.sh' >> ~/.bashrc
 
 echo ' if [ -d '/home/ros2_ws/install' ]; then 
     . /home/ros2_ws/install/setup.bash

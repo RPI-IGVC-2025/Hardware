@@ -1,4 +1,5 @@
-FROM ros:jazzy
+ARG BASE_IMAGE=ros:humble
+FROM ${BASE_IMAGE}
 ARG USERNAME=$USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -26,8 +27,7 @@ ENV ENABLE_LIDAR=$LIDAR_ENABLED
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 
 # Create the user
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+RUN useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
     #
     # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
     && apt-get update \
@@ -40,15 +40,16 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y \
     python3-pip \
     # CycloneDDS package
-    ros-jazzy-rmw-cyclonedds-cpp 
+    ros-humble-rmw-cyclonedds-cpp \
+    libturbojpeg
 
 ## Simulation only
 RUN if $SIM_ENABLED ; then \
         apt-get install -y \
             # RQT packages
-            ros-jazzy-rqt-tf-tree ros-jazzy-rqt-graph ros-jazzy-rqt-image-view \
+            ros-humble-rqt-tf-tree ros-humble-rqt-graph ros-humble-rqt-image-view \
             # Teleop control keyboard
-            ros-jazzy-teleop-twist-keyboard \
+            ros-humble-teleop-twist-keyboard \
             # External terminal
             # TODO: Figure out how to do on mac
             gnome-terminal dbus-x11 ; \
@@ -90,38 +91,45 @@ RUN if $IMU_ENABLED ; then \
     fi
 
 ## CUDA 
-RUN if $ZED_DEV_PLATFORM ; then \
-        apt-get install -y \
-            zstd pciutils mesa-utils wget gnupg \
         # TODOs:
         #   Figure out mounting CUDA from host
-        && if [ ! $MOUNT_CUDA ] ; then \
-            wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
-            && dpkg -i cuda-keyring_1.1-1_all.deb \
-            && apt-get update \
-            && apt-get install -y cuda-toolkit-13-0 ; \
-        fi ; \
+        # && if [ ! $MOUNT_CUDA ] ; then \
+        #     wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
+        #     && dpkg -i cuda-keyring_1.1-1_all.deb \
+        #     && apt-get update \
+        #     && apt-get install -y cuda-toolkit-13-0 ; \
+        # fi ; \
+
+RUN if $ZED_DEV_PLATFORM ; then \
+        apt-get install -y \
+            zstd pciutils mesa-utils wget gnupg ; \
     fi
 
 ## ZED SDK
-RUN if $ZED_DEV_PLATFORM ; then \
-        # Determine Zed link based on platform
-        case $PLATFORM in \
-            LINUX) \
-                export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24" \
-                ;; \
-            JETSON_ORIN) \
-                export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons" \
-                ;; \
-            JETSON_THOR) \
-                export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t38.4/jetsons" \
-                ;; \
-        esac \
-        # Install SDK
-        && wget -O zed_installer.run $ZED_LINK \
-        && chmod +x zed_installer.run \
-        && ./zed_installer.run -- silent --skip_python --skip_cuda; \
-fi
+# RUN if $ZED_DEV_PLATFORM ; then \
+#         # Determine Zed link based on platform
+#         case $PLATFORM in \
+#             LINUX) \
+#                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/cu13/ubuntu24" \
+#                 ;; \
+#             JETSON_ORIN) \
+#                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons" \
+#                 ;; \
+#             JETSON_THOR) \
+#                 export ZED_LINK="https://download.stereolabs.com/zedsdk/5.2/l4t38.4/jetsons" \
+#                 ;; \
+#         esac \
+#         # Install SDK
+#         && wget -O zed_installer.run $ZED_LINK \
+#         && chmod +x zed_installer.run \
+#         && ./zed_installer.run -- silent ; \
+# fi
+
+# RUN wget -q --no-check-certificate -O ZED_SDK_Linux.run https://download.stereolabs.com/zedsdk/5.2/l4t36.5/jetsons && \
+#     chmod +x ZED_SDK_Linux.run ; ./ZED_SDK_Linux.run silent skip_tools skip_drivers && \
+#     rm -rf /usr/local/zed/resources/* \
+#     rm -rf ZED_SDK_Linux.run && \
+#     rm -rf /var/lib/apt/lists/*
 
 ENV SHELL /bin/bash
 

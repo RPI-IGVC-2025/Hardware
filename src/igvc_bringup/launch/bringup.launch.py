@@ -1,15 +1,18 @@
-from launch import LaunchDescription
+import os
+
+from ament_index_python import get_package_share_directory
+from launch import LaunchDescription, LaunchDescriptionSource
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition, UnlessCondition
-from launch.substitutions import LaunchConfiguration
-from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.launch_description_sources import FrontendLaunchDescriptionSource, PythonLaunchDescriptionSource
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
     use_sim = LaunchConfiguration('use_sim')
     use_mock_hardware = LaunchConfiguration('use_mock_hardware')
-
+    
     return LaunchDescription([
         # Launch Arguments
         DeclareLaunchArgument(
@@ -72,21 +75,19 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_hardware'),
-                 '/launch',
-                 '/hardware.launch.py']
+                  '/launch',
+                  '/hardware.launch.py']
             ),
             condition = UnlessCondition(use_mock_hardware)
         ),
-
-        # SLAM
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_slam'),
-                 '/launch',
-                 '/sim_rtabmap.launch.py']
-            ),
-            condition = IfCondition(LaunchConfiguration('use_slam'))
-        ),
         
-        # TODO Nav
+        # SLAM
+        IncludeLaunchDescription(        
+            FrontendLaunchDescriptionSource(
+                [FindPackageShare('igvc_slam'),
+                '/launch',
+                '/igvc_slam.launch']
+            ),     
+            condition = IfCondition(LaunchConfiguration('use_slam'))
+        )
     ])
