@@ -9,6 +9,13 @@ IMU_NAME = "TODO" # TODO
 
 def generate_launch_description():
     # Declare args
+    
+    launch_led_bridge_node = Node(
+        package='led_bridge',
+        executable='led_bridge',
+        name='led_bridge',
+    )
+
     launch_zed_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [FindPackageShare("zed_wrapper"),
@@ -34,6 +41,7 @@ def generate_launch_description():
     )
 
     nodes = [
+        launch_led_bridge_node,
         launch_zed_node,
         launch_rplidar_node
     ]
