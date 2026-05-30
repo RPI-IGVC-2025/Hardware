@@ -14,6 +14,7 @@ def generate_launch_description():
         package='led_bridge',
         executable='led_bridge',
         name='led_bridge',
+        output='screen',
     )
 
     launch_zed_node = IncludeLaunchDescription(
