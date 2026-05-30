@@ -75,8 +75,8 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_hardware'),
-                 '/launch',
-                 '/hardware.launch.py']
+                  '/launch',
+                  '/hardware.launch.py']
             ),
             condition = UnlessCondition(use_mock_hardware)
         ),
