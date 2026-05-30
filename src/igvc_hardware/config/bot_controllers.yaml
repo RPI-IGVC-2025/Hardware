@@ -8,6 +8,7 @@ controller_manager:
 
     bot_drive_controller:
       type: diff_drive_controller/DiffDriveController
+
 bot_drive_controller:
   ros__parameters:
     type: diff_drive_controller/DiffDriveController
@@ -27,7 +28,7 @@ bot_drive_controller:
 
 
     tf_frame_prefix_enable: true # Enables adding a prefix to each tf frame id
-#    tf_frame_prefix: # Defaults to the controller namespace. Uncomment & specify if there is ever a need.
+    #tf_frame_prefix: # Defaults to the controller namespace. Uncomment & specify if there is ever a need.
 
     publish_rate: 50.0 # Hz
     odom_frame_id: odom
@@ -40,7 +41,7 @@ bot_drive_controller:
     open_loop: true # TODO eventually make false, but keep true for initial sims
     position_feedback: false # TODO we don't have sensors implemented atm
 
-    enable_odom_tf: true # Whether to publish the transformation between the odom & base frame IDs
+    enable_odom_tf: false # Whether to publish the transformation between the odom & base frame IDs
 
     cmd_vel_timeout: 0.1 # staling threshold for velocity commands
     publish_limited_velocity: false # TODO what does this do?
