@@ -155,9 +155,9 @@ class GpioEStop(Node):
         self.last_published = locked
 
         if locked:
-            self.get_logger().error("E-STOP ACTIVE: twist_mux locked.")
+            self.get_logger().error("E-STOP ACTIVE: twist_mux locked." + self.GPIO.input(self.mech_pin))
         else:
-            self.get_logger().info("E-stop clear: twist_mux unlocked.")
+            self.get_logger().info("E-stop clear: twist_mux unlocked." + self.GPIO.input(self.mech_pin))
 
     def destroy_node(self):
         if not self.use_sim_gpio and self.GPIO is not None:
