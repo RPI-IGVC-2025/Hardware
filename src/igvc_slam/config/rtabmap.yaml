@@ -58,7 +58,7 @@
   ros__parameters:
     use_sim_time: false
     approx_sync_max_interval: 0.01
-    frame_id: base_footprint
+    frame_id: base_link
     ground_truth_base_frame_id: ''
     odom_frame_id: /odom
     qos: 1
