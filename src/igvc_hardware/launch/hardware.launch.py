@@ -10,6 +10,18 @@ IMU_NAME = "TODO" # TODO
 def generate_launch_description():
     # Declare args
     
+    launch_navsat_node = Node(
+        package='nmea_navsat_driver',
+        executable='nmea_navsat_driver',
+        name='navsat',
+        output='screen',
+        parameters=[{
+            "port" : "/dev/ttyTHS1",
+            "baud" : 115200,
+            "frame_id" : "navsat_link",
+        }]
+    )
+    
     launch_led_bridge_node = Node(
         package='led_bridge',
         executable='led_bridge',
@@ -44,6 +56,7 @@ def generate_launch_description():
     )
 
     nodes = [
+        launch_navsat_node,
         launch_led_bridge_node,
         launch_zed_node,
         launch_rplidar_node
