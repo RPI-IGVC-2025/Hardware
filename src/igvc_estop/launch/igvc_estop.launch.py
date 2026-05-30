@@ -58,7 +58,7 @@ def generate_launch_description():
                 "active_high": True,
 
                 "mechanical_estop_pin": 22,
-                "mechanical_active_low": True,
+                "mechanical_active_low": False,
 
                 "latch": True,
                 "poll_hz": 50.0,
