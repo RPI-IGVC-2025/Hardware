@@ -153,11 +153,11 @@ class GpioEStop(Node):
         self.lock_pub.publish(msg)
         enabled_msg = Bool()
         enabled_msg.data = not locked
-        self.enabled_pub.publish(enabled_msg)
         self.last_published = locked
 
         if locked:
             self.get_logger().error(f"E-STOP ACTIVE: twist_mux locked. {self.GPIO.input(self.mech_pin)}")
+            self.enabled_pub.publish(enabled_msg)
         else:
             self.get_logger().info(f"E-stop clear: twist_mux unlocked. {self.GPIO.input(self.mech_pin)}")
 
