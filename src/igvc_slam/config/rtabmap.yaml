@@ -1,7 +1,7 @@
 /zed/rtabmap:
   ros__parameters:
     delete_db_on_start: true
-    use_sim_time: true
+    use_sim_time: false
 
     frame_id: base_footprint
     map_frame_id: map
@@ -56,7 +56,7 @@
 
 /zed/rgbd_odometry:
   ros__parameters:
-    use_sim_time: true
+    use_sim_time: false
     approx_sync_max_interval: 0.01
     frame_id: base_footprint
     ground_truth_base_frame_id: ''
@@ -70,7 +70,7 @@
 
 /zed/rgbd_sync: 
   ros__parameters:
-    use_sim_time: true
+    use_sim_time: false
     approx_sync_max_interval: 0.2
     wait_for_transform: 0.2
     sync_queue_size: 10
