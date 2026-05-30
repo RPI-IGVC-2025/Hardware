@@ -90,7 +90,7 @@ def generate_launch_description():
                   '/launch',
                   '/hardware.launch.py']
             ),
-            condition = UnlessCondition(use_mock_hardware), 
+            condition = UnlessCondition(use_mock_hardware)
         ),
         
         # SLAM

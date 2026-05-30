@@ -48,7 +48,6 @@ def generate_launch_description():
     condition=UnlessCondition(gui),
     package='joint_state_publisher',
     executable='joint_state_publisher',
-    parameters=[{'use_sim_time': use_sim_time}],
     name='joint_state_publisher')
   
   # A GUI to manipulate the joint state values
