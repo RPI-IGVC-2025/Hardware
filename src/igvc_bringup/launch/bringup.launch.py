@@ -108,22 +108,6 @@ def generate_launch_description():
                 'use_sim_time' : use_sim_time, 
             }.items(),
         ),
-<<<<<<< HEAD
-
-        # SLAM
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [FindPackageShare('igvc_slam'),
-                 '/launch',
-                 '/sim_rtabmap.launch.py']
-            ),
-            condition = IfCondition(LaunchConfiguration('use_slam')),
-            launch_arguments={
-                'use_sim_time' : use_sim_time, 
-            }.items(),
-        ),
-=======
->>>>>>> 9f129edb6c1b848c452ae71b851cde2a0a48d7a9
         
         # SLAM
         IncludeLaunchDescription(        
