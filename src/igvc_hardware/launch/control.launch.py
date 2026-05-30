@@ -39,7 +39,10 @@ def generate_launch_description():
             # TODO in the ODrive botwheel explorer example, the description contents are also passed in here.
             robot_controllers
         ],
-        output="both",
+        remappings=[
+            ("~/robot_description", "/robot_description"),
+        ],
+        output="screen",
         condition = UnlessCondition(use_sim)
     )
 
@@ -65,8 +68,6 @@ def generate_launch_description():
             on_exit=[robot_controller_spawner],
         )
     )
-
-
 
     nodes = [
         control_node,
