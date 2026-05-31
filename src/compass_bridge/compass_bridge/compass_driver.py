@@ -2,16 +2,6 @@ import smbus2
 import time
 import math
 import struct
-#X: -197.0, Y: 374.5, Z: 739.0
-# x_offset = -197.0
-# y_offset = 374.5
-# z_offset = 739.0
-
-##Scales  -> X: 0.7824858757062146, Y: 1.0146520146520146, Z: 1.3578431372549018
-# scale_x = 0.7824858757062146
-# scale_y = 1.0146520146520146
-# scale_z = 1.3578431372549018
-
 # Main Execution Loop
 JETSON_DEFAULT_I2C_BUS = 7
 DEFAULT_IST8310_ADDR = 0x0E
