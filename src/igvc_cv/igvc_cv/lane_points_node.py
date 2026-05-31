@@ -105,7 +105,6 @@ class LanePointsNode(Node):
                 f"cloud={cloud_msg.width}x{cloud_msg.height}. "
                 "Scaling UVs."
             )
-            return
 
         mask = self.make_lane_mask(bgr)
 
