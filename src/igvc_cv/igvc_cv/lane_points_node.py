@@ -100,16 +100,22 @@ class LanePointsNode(Node):
             return
 
         if cloud_msg.width != width or cloud_msg.height != height:
-            self.get_logger().warn(
+            self.get_logger().warn_throttle(5.0,
                 f"Image/cloud size mismatch: image={width}x{height}, "
                 f"cloud={cloud_msg.width}x{cloud_msg.height}. "
-                "UV association may be wrong."
+                "Scaling UVs."
             )
             return
 
         mask = self.make_lane_mask(bgr)
 
-        uv_samples = self.mask_to_uv_samples(mask)
+        uv_samples = self.mask_to_uv_samples(
+            mask,
+            image_width=width,
+            image_height=height,
+            cloud_width=cloud_msg.width,
+            cloud_height=cloud_msg.height,
+        )
         if not uv_samples:
             self.publish_empty_cloud(cloud_msg.header)
             return
@@ -188,7 +194,14 @@ class LanePointsNode(Node):
 
         return cleaned
 
-    def mask_to_uv_samples(self, mask: np.ndarray) -> List[Tuple[int, int]]:
+    def mask_to_uv_samples(
+        self,
+        mask: np.ndarray,
+        image_width: int,
+        image_height: int,
+        cloud_width: int,
+        cloud_height: int,
+    ) -> List[Tuple[int, int]]:
         stride = int(self.get_parameter("pixel_stride").value)
         max_points = int(self.get_parameter("max_points").value)
 
@@ -197,17 +210,22 @@ class LanePointsNode(Node):
         if len(xs) == 0:
             return []
 
-        # Stride first to reduce pointcloud lookup cost.
         xs = xs[::stride]
         ys = ys[::stride]
 
-        # Cap total points.
         if len(xs) > max_points:
             idx = np.linspace(0, len(xs) - 1, max_points).astype(np.int32)
             xs = xs[idx]
             ys = ys[idx]
 
-        return [(int(u), int(v)) for u, v in zip(xs, ys)]
+        # Scale image pixel coordinates into pointcloud pixel coordinates.
+        scale_x = cloud_width / float(image_width)
+        scale_y = cloud_height / float(image_height)
+
+        cloud_us = np.clip((xs * scale_x).astype(np.int32), 0, cloud_width - 1)
+        cloud_vs = np.clip((ys * scale_y).astype(np.int32), 0, cloud_height - 1)
+
+        return [(int(u), int(v)) for u, v in zip(cloud_us, cloud_vs)]
 
     def sample_cloud_points(
         self,
