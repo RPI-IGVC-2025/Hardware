@@ -12,7 +12,7 @@ def generate_launch_description():
         name='lane_points_node',
         output='screen',
         parameters=[{
-            'image_topic': '/zed/zed_node/rgb/image_rect_color',
+            'image_topic': '/zed/zed_node/rgb/color/rect/image',
             'cloud_topic': '/zed/zed_node/point_cloud/cloud_registered',
             'output_topic': '/lanes/points',
             'roi_top_fraction': 0.45,

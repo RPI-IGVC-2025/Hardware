@@ -35,7 +35,7 @@ def generate_launch_description():
         parameters=[param_file],
         remappings=[
             ('imu/data', '/zed/zed_node/imu/data'), #TODO: change to compass imu
-            ('gps/fix', '/gps/fix'),
+            ('gps/fix', '/fix'),
             ('gps/filtered', '/gps/filtered'),
             ('odometry/gps', '/odometry/gps'),
             ("odometry/filtered", "/odometry/local"),
