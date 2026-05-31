@@ -100,7 +100,7 @@ class LanePointsNode(Node):
             return
 
         if cloud_msg.width != width or cloud_msg.height != height:
-            self.get_logger().warn_throttle(5.0,
+            self.get_logger().warn(
                 f"Image/cloud size mismatch: image={width}x{height}, "
                 f"cloud={cloud_msg.width}x{cloud_msg.height}. "
                 "Scaling UVs."
