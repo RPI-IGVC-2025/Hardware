@@ -226,45 +226,37 @@ class LanePointsNode(Node):
 
         return [(int(u), int(v)) for u, v in zip(cloud_us, cloud_vs)]
 
-    def sample_cloud_points(
-        self,
-        cloud_msg: PointCloud2,
-        uv_samples: List[Tuple[int, int]],
-    ) -> List[Tuple[float, float, float]]:
+    def sample_cloud_points(self, cloud_msg, uv_samples):
+        import struct
+
         min_depth = float(self.get_parameter("min_depth_m").value)
         max_depth = float(self.get_parameter("max_depth_m").value)
-        max_abs_x = float(self.get_parameter("max_abs_x_m").value)
-        max_abs_y = float(self.get_parameter("max_abs_y_m").value)
 
-        points_out: List[Tuple[float, float, float]] = []
+        offsets = {f.name: f.offset for f in cloud_msg.fields}
+        xo, yo, zo = offsets["x"], offsets["y"], offsets["z"]
 
-        # ZED registered cloud in camera optical frame is typically:
-        # x = right, y = down, z = forward.
-        # We keep the original cloud frame. Nav2/TF can transform it.
-        for p in point_cloud2.read_points(
-            cloud_msg,
-            field_names=("x", "y", "z"),
-            skip_nans=True,
-            uvs=uv_samples,
-        ):
-            x = float(p[0])
-            y = float(p[1])
-            z = float(p[2])
+        points = []
+
+        for u, v in uv_samples:
+            if not (0 <= u < cloud_msg.width and 0 <= v < cloud_msg.height):
+                continue
+
+            i = v * cloud_msg.row_step + u * cloud_msg.point_step
+
+            x = struct.unpack_from("f", cloud_msg.data, i + xo)[0]
+            y = struct.unpack_from("f", cloud_msg.data, i + yo)[0]
+            z = struct.unpack_from("f", cloud_msg.data, i + zo)[0]
 
             if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(z)):
                 continue
 
-            # In camera optical frame, z is forward range/depth.
+            # ZED optical frame: z is forward depth
             if z < min_depth or z > max_depth:
                 continue
-            if abs(x) > max_abs_x:
-                continue
-            if abs(y) > max_abs_y:
-                continue
 
-            points_out.append((x, y, z))
+            points.append((x, y, z))
 
-        return points_out
+        return points
 
     def publish_empty_cloud(self, header: Header):
         self.pub_points.publish(point_cloud2.create_cloud_xyz32(header, []))
