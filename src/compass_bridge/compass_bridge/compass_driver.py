@@ -2,16 +2,21 @@ import smbus2
 import time
 import math
 import struct
-# Main Execution Loop
+import logging
+
 JETSON_DEFAULT_I2C_BUS = 7
 DEFAULT_IST8310_ADDR = 0x0E
 
 CNTL_1 = 0x0A
 CNTL_2 = 0x0B
 
+GREEN = "\033[32m"
+RESET = "\033[0m"
+
 
 class Compass:
-    def __init__(self, i2c_bus=JETSON_DEFAULT_I2C_BUS, address=DEFAULT_IST8310_ADDR, CONFIG_FILEPATH=None):
+    def __init__(self, i2c_bus=JETSON_DEFAULT_I2C_BUS, address=DEFAULT_IST8310_ADDR, CONFIG_FILEPATH=None, logger=None):
+        self._logger = logging.getLogger() if logger is None else logger
         try:
             # init compass
             self._bus = smbus2.SMBus(i2c_bus)
@@ -20,10 +25,10 @@ class Compass:
             self.soft_reset()
             self.normal_mode()
         except Exception as e:
-            print(f"Error initializing compass: {e}")
+            self._logger.error(f"Error initializing compass: {e}")
             raise e
 
-        print(f"IST8310 compass on bus {i2c_bus} with address {address} initialized successfully.")
+        self._logger.info(f"{GREEN}IST8310 compass on bus {i2c_bus} with address {address} initialized successfully.{RESET}")
 
         # get configs
         import yaml
@@ -31,9 +36,8 @@ class Compass:
         with open(CONFIG_FILEPATH, "r") as file:
             try:
                 data = yaml.safe_load(file)
-                print(data)
             except yaml.YAMLError as exception:
-                print(f"Error parsing YAML file: {exception}")
+                self._logger.error(f"Error parsing YAML file: {exception}")
 
         self.x_offset = data["offsets"]["x"]
         self.y_offset = data["offsets"]["y"]
@@ -42,7 +46,6 @@ class Compass:
         self.scale_y = data["scales"]["y"]
         self.scale_z = data["scales"]["z"]
         self.declination_angle = data["declination_angle"]
-        
 
 
     def soft_reset(self):
@@ -50,7 +53,7 @@ class Compass:
             self._bus.write_byte_data(self._address, CNTL_2, 0x01)
             time.sleep(0.01)
         except Exception as e:
-            print(f"Error performing soft reset: {e}")
+            self._logger.warn(f"Error performing soft reset: {e}")
             raise e
 
     def normal_mode(self):
@@ -58,7 +61,7 @@ class Compass:
             self._bus.write_byte_data(self._address, CNTL_1, 0x01)
             time.sleep(0.01)
         except Exception as e:
-            print(f"Error setting normal mode: {e}")
+            self._logger.warn(f"Error setting normal mode: {e}")
             raise e
         
     def get_heading(self):
@@ -107,12 +110,12 @@ class Compass:
             scale = 0.3
             return tx * scale, ty * scale,tz * scale
         except Exception as e:
-            print(f"Error reading compass data: {e}")
+            self._logger.warn(f"Error reading compass data: {e}")
             raise e
         
     def cleanup(self):
         try:
             self._bus.close()
         except Exception as e:
-            print(f"Error during cleanup: {e}")
+            self._logger.warn(f"Error during cleanup: {e}")
             raise e
