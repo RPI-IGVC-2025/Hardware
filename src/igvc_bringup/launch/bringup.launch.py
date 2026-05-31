@@ -95,10 +95,10 @@ def generate_launch_description():
         
         # SLAM
         IncludeLaunchDescription(        
-            FrontendLaunchDescriptionSource(
+            PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_slam'),
                 '/launch',
-                '/igvc_slam.launch']
+                '/dual_ekf.launch.py']
             ),     
             condition = IfCondition(LaunchConfiguration('use_slam'))
         )

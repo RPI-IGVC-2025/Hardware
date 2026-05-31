@@ -20,8 +20,8 @@ setup(
     extras_require={
     },
     entry_points={
-        'console_scripts': [
-            'cv_node = igvc_cv.cv_node:main',
-        ],
-    },
+    'console_scripts': [
+        'lane_points_node = igvc_cv.lane_points_node:main',
+    ],
+},
 )
