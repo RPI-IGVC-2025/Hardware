@@ -171,6 +171,18 @@ zed_parameters: &zed_parameters
   obstacle_max_range: 4.0
   obstacle_min_range: 0.35
 
+lane_parameters: &lane_parameters
+  topic: /lanes/points
+  max_obstacle_height: 0.30
+  min_obstacle_height: -0.05
+  clearing: false
+  marking: true
+  data_type: "PointCloud2"
+  raytrace_max_range: 6.0
+  raytrace_min_range: 0.0
+  obstacle_max_range: 6.0
+  obstacle_min_range: 0.0
+
 global_costmap:
   global_costmap:
     ros__parameters:
@@ -234,10 +246,13 @@ local_costmap:
         z_voxels: 16
         unknown_threshold: 15
         mark_threshold: 0
-        observation_sources: zed_cloud
+        observation_sources: zed_cloud white_tape
         combination_method: 1
         zed_cloud:
           <<: *zed_parameters
+
+        white_tape:
+          <<: *white_tape_parameters
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
