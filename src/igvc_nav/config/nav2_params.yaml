@@ -246,13 +246,13 @@ local_costmap:
         z_voxels: 16
         unknown_threshold: 15
         mark_threshold: 0
-        observation_sources: zed_cloud white_tape
+        observation_sources: zed_cloud lanes
         combination_method: 1
         zed_cloud:
           <<: *zed_parameters
 
-        white_tape:
-          <<: *white_tape_parameters
+        lanes:
+          <<: *lane_parameters
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
