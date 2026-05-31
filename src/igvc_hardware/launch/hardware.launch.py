@@ -16,7 +16,7 @@ def generate_launch_description():
         name='navsat',
         output='screen',
         parameters=[{
-            "device" : "/dev/ttyTHS1",
+            "device" : "/dev/ttyUSB0",
             "uart1.baudrate" : 115200,
             "frame_id" : "navsat_link",
         }],
