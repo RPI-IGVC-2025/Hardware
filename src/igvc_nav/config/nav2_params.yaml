@@ -25,124 +25,127 @@ controller_server:
     min_x_velocity_threshold: 0.01
     min_y_velocity_threshold: 0.0
     min_theta_velocity_threshold: 0.01
-    failure_tolerance: 0.3
+    failure_tolerance: 0.5
     progress_checker_plugins: ["progress_checker"]
-    goal_checker_plugins: ["general_goal_checker"] # "precise_goal_checker"
+    goal_checker_plugins: ["general_goal_checker"]
     controller_plugins: ["FollowPath"]
     use_realtime_priority: false
 
-    # Progress checker parameters
     progress_checker:
       plugin: "nav2_controller::SimpleProgressChecker"
-      required_movement_radius: 0.5
-      movement_time_allowance: 10.0
-    # Goal checker parameters
-    #precise_goal_checker:
-    #  plugin: "nav2_controller::SimpleGoalChecker"
-    #  xy_goal_tolerance: 0.25
-    #  yaw_goal_tolerance: 0.25
-    #  stateful: True
+      required_movement_radius: 0.4
+      movement_time_allowance: 12.0
+
     general_goal_checker:
-      stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.25
-      yaw_goal_tolerance: 0.25
+      stateful: true
+      xy_goal_tolerance: 0.75
+      yaw_goal_tolerance: 6.28
+
     FollowPath:
       plugin: "nav2_mppi_controller::MPPIController"
       time_steps: 56
       model_dt: 0.05
       batch_size: 2000
-      ax_max: 1.5
-      ax_min: -1.5
-      ay_max: 0.0
-      az_max: 2.0
-      vx_std: 0.1
-      vy_std: 0.0
-      wz_std: 0.1
-      vx_max: 1.6 #change to 2.2 if robot works
+      iteration_count: 1
+      motion_model: "DiffDrive"
+
+      vx_max: 1.8
       vx_min: -0.2
       vy_max: 0.0
       wz_max: 1.2
-      iteration_count: 1
-      prune_distance: 1.7
+      ax_max: 1.8
+      ax_min: -1.8
+      ay_max: 0.0
+      az_max: 2.0
+
+      vx_std: 0.25
+      vy_std: 0.0
+      wz_std: 0.25
+
+      prune_distance: 2.0
       transform_tolerance: 0.5
       temperature: 0.3
       gamma: 0.015
-      motion_model: "DiffDrive"
       visualize: false
       regenerate_noises: true
+
       TrajectoryVisualizer:
         trajectory_step: 5
         time_step: 3
-      AckermannConstraints:
-        min_turning_r: 0.2
+
       critics: [
         "ConstraintCritic", "CostCritic", "GoalCritic",
-        "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic",
-        "PathAngleCritic", "PreferForwardCritic", "VelocityDeadbandCritic"]
+        "PathAlignCritic", "PathFollowCritic",
+        "PathAngleCritic", "PreferForwardCritic",
+        "VelocityDeadbandCritic"]
+
       ConstraintCritic:
         enabled: true
         cost_power: 1
         cost_weight: 4.0
+
       GoalCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 5.0
-        threshold_to_consider: 1.4
-      GoalAngleCritic:
-        enabled: true
-        cost_power: 1
-        cost_weight: 3.0
-        threshold_to_consider: 0.5
+        cost_weight: 4.0
+        threshold_to_consider: 2.0
+
       PreferForwardCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 5.0
+        cost_weight: 8.0
         threshold_to_consider: 0.5
+
       CostCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 3.81
+        cost_weight: 4.0
         near_collision_cost: 253
         critical_cost: 300.0
-        consider_footprint: false
+        consider_footprint: true
         collision_cost: 1000000.0
         near_goal_distance: 1.0
         trajectory_point_step: 2
+
       PathAlignCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 14.0
+        cost_weight: 10.0
         max_path_occupancy_ratio: 0.05
         trajectory_point_step: 4
         threshold_to_consider: 0.5
         offset_from_furthest: 20
         use_path_orientations: false
+
       PathFollowCritic:
         enabled: true
         cost_power: 1
         cost_weight: 5.0
         offset_from_furthest: 5
         threshold_to_consider: 1.4
+
       PathAngleCritic:
         enabled: true
         cost_power: 1
-        cost_weight: 2.0
+        cost_weight: 1.0
         offset_from_furthest: 4
         threshold_to_consider: 0.5
         max_angle_to_furthest: 1.0
         mode: 0
+
       VelocityDeadbandCritic:
         enabled: true
-        cost_weight: 35.0
+        cost_weight: 20.0
         cost_power: 1
         deadband_velocities: [0.05, 0.0, 0.05]
 
 common_costmap_parameters: &common_costmap_parameters # parameters that appear in both local and global
   robot_base_frame: base_link
-  footprint: "[[0.51, 0.33], [0.51, -0.33], [-0.51, -0.33], [-0.51, 0.33]]"
+  footprint: "[[0.51, 0.33], [0.51, -0.33], [-0.51, -0.33], [-0.51, 0.33]]" #TODO tune for size
   footprint_padding: 0.03
   resolution: 0.05
+  transform_tolerance: 0.5
 
 scan_parameters: &scan_parameters
   topic: /scan
@@ -154,26 +157,59 @@ scan_parameters: &scan_parameters
   raytrace_min_range: 0.25
   obstacle_max_range: 6.0
   obstacle_min_range: 0.25
+  inf_is_valid: true
+
+zed_parameters: &zed_parameters
+  topic: /zed/zed_node/point_cloud/cloud_registered
+  max_obstacle_height: 1.5
+  min_obstacle_height: 0.05
+  clearing: true
+  marking: true
+  data_type: "PointCloud2"
+  raytrace_max_range: 5.0
+  raytrace_min_range: 0.35
+  obstacle_max_range: 4.0
+  obstacle_min_range: 0.35
 
 global_costmap:
   global_costmap:
     ros__parameters:
       <<: *common_costmap_parameters
       global_frame: map
+      update_frequency: 2.0
+      publish_frequency: 1.0
       rolling_window: true
       width: 30.0
       height: 30.0
       track_unknown_space: false
-      plugins: ["obstacle_layer", "inflation_layer"]
+      always_send_full_costmap: true
+      plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]
     
       obstacle_layer:
           plugin: "nav2_costmap_2d::ObstacleLayer"
           enabled: true
           observation_sources: scan
           footprint_clearing_enabled: true
+          combination_method: 1
           scan:
             <<: *scan_parameters
 
+      voxel_layer:
+        plugin: "nav2_costmap_2d::VoxelLayer"
+        enabled: true
+        publish_voxel_map: false
+        footprint_clearing_enabled: true
+        max_obstacle_height: 1.5
+        origin_z: 0.0
+        z_resolution: 0.10
+        z_voxels: 16
+        unknown_threshold: 15
+        mark_threshold: 0
+        observation_sources: zed_cloud
+        combination_method: 1
+        zed_cloud:
+          <<: *zed_pointcloud_parameters
+      
       inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
           enabled: true
@@ -186,13 +222,13 @@ local_costmap:
       <<: *common_costmap_parameters
       update_frequency: 10.0
       publish_frequency: 5.0
-      transform_tolerance: 0.5
       global_frame: odom
       rolling_window: true
       width: 8.0
       height: 8.0
       use_sim_time: false
-      plugins: ["obstacle_layer", "inflation_layer"]
+      always_send_full_costmap: true
+      plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]
 
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
@@ -202,6 +238,22 @@ local_costmap:
         combination_method: 1
         scan:
           <<: *scan_parameters
+
+      voxel_layer:
+        plugin: "nav2_costmap_2d::VoxelLayer"
+        enabled: true
+        publish_voxel_map: false
+        footprint_clearing_enabled: true
+        max_obstacle_height: 1.5
+        origin_z: 0.0
+        z_resolution: 0.10
+        z_voxels: 16
+        unknown_threshold: 15
+        mark_threshold: 0
+        observation_sources: zed_cloud
+        combination_method: 1
+        zed_cloud:
+          <<: *zed_pointcloud_parameters
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
@@ -215,6 +267,7 @@ planner_server:
     expected_planner_frequency: 5.0
     planner_plugins: ["GridBased"]
     costmap_update_timeout: 1.0
+
     GridBased:
       plugin: "nav2_navfn_planner::NavfnPlanner"
       tolerance: 1.0
@@ -246,18 +299,14 @@ behavior_server:
       plugin: "nav2_behaviors::BackUp"
     drive_on_heading:
       plugin: "nav2_behaviors::DriveOnHeading"
-    wait:
-      plugin: "nav2_behaviors::Wait"
-    assisted_teleop:
-      plugin: "nav2_behaviors::AssistedTeleop"
     local_frame: odom
     global_frame: map
     robot_base_frame: base_link
-    transform_tolerance: 0.5 #TODO Change, Excessive
+    transform_tolerance: 0.5
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
-    min_rotational_vel: 0.4
-    rotational_acc_lim: 3.2
+    min_rotational_vel: 0.3
+    rotational_acc_lim: 2.0
 
 waypoint_follower:
   ros__parameters:
@@ -269,81 +318,54 @@ waypoint_follower:
     wait_at_waypoint:
       plugin: "nav2_waypoint_follower::WaitAtWaypoint"
       enabled: True
-      waypoint_pause_duration: 200
+      waypoint_pause_duration: 0
 
 velocity_smoother:
   ros__parameters:
+    enable_stamped_cmd_vel: false
     smoothing_frequency: 20.0
     scale_velocities: false
     feedback: "OPEN_LOOP"
-    max_velocity: [1.6, 0.0, 1.2] #TODO raise as well
+
+    max_velocity: [1.8, 0.0, 1.2]
     min_velocity: [-0.2, 0.0, -1.2]
-    max_accel: [1.5, 0.0, 2.0]
-    max_decel: [-1.5, 0.0, -2.0]
+    max_accel: [1.8, 0.0, 2.0]
+    max_decel: [-1.8, 0.0, -2.0]
     deadband_velocity: [0.0, 0.0, 0.0]
+
     velocity_timeout: 1.0
-    max_accel: [2.5, 0.0, 3.2]
-    max_decel: [-2.5, 0.0, -3.2]
     odom_topic: /odometry/local
     odom_duration: 0.1
     use_realtime_priority: false
-    enable_stamped_cmd_vel: false 
-    stamp_smoothed_velocity_with_smoothing_time: true
+    stamp_smoothed_velocity_with_smoothing_time: false
   
 collision_monitor:
   ros__parameters:
-    base_frame_id: "base_link"
-    odom_frame_id: "odom"
-    cmd_vel_in_topic: "cmd_vel_smoothed"
-    cmd_vel_out_topic: "/nav2/cmd_vel"
-    state_topic: "collision_monitor_state"
-    transform_tolerance: 5.0 #TODO Change, Excessive
-    source_timeout: 5.0
-    base_shift_correction: True
-    stop_pub_timeout: 2.0
-    enable_stamped_cmd_vel: false 
+    enable_stamped_cmd_vel: false
+    base_frame_id: base_link
+    odom_frame_id: odom
+
+    cmd_vel_in_topic: cmd_vel_smoothed
+    cmd_vel_out_topic: /nav2/cmd_vel
+    state_topic: collision_monitor_state
+
+    transform_tolerance: 0.5
+    source_timeout: 0.5
+    stop_pub_timeout: 0.5
+    base_shift_correction: true
     use_realtime_priority: false
-    robot_radius: 0.22
-    polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
-    # Robot overall dimensions from CAD: L=1.013 m, W=0.646 m, max Z=0.974 m (z doesn't matter for polygons).
-    # Half extents are (0.5065m, 0.323m).
-    # I'm using PolygonStop +0.075m margin.
-    # and PolygonSlow goes 0.25m further than PolygonStop.
+
+    polygons: ["PolygonStop"]
+
     PolygonStop:
       type: "polygon"
       points: "[[0.58, 0.40], [0.58, -0.40], [-0.58, -0.40], [-0.58, 0.40]]"
       action_type: "stop"
-      min_points: 4  # max_points: 3 for Humble
-      visualize: True
-      polygon_pub_topic: "polygon_stop"
-      enabled: True
-    PolygonSlow:
-      type: "polygon"
-      points: "[[0.83, 0.65], [0.83, -0.65], [-0.83, -0.65], [-0.83, 0.65]]"
-      action_type: "slowdown"
-      min_points: 4  # max_points: 3 for Humble
-      slowdown_ratio: 0.3
-      visualize: True
-      polygon_pub_topic: "polygon_slowdown"
-      enabled: True
-    PolygonLimit:
-      type: "polygon"
-      points: "[[0.5, 0.5], [0.5, -0.5], [-0.5, -0.5], [-0.5, 0.5]]"
-      action_type: "limit"
-      min_points: 4  # max_points: 3 for Humble
-      linear_limit: 0.4
-      angular_limit: 0.5
-      visualize: True
-      polygon_pub_topic: "polygon_limit"
-      enabled: True
-    FootprintApproach:
-      type: "polygon"
-      action_type: "approach"
-      footprint_topic: "/local_costmap/published_footprint"
-      time_before_collision: 2.0
-      simulation_time_step: 0.02
-      min_points: 6  # max_points: 5 for Humble
-      visualize: False
-      enabled: True
+      min_points: 4
+      visualize: true
+      polygon_pub_topic: polygon_stop
+      enabled: true
+
     observation_sources: ["scan"]
-    <<: *scan_parameters
+    scan:
+      <<: *scan_parameters
