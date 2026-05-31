@@ -152,8 +152,8 @@ global_costmap:
       update_frequency: 2.0
       publish_frequency: 1.0
       rolling_window: true
-      width: 30.0
-      height: 30.0
+      width: 30
+      height: 30
       track_unknown_space: false
       always_send_full_costmap: true
       plugins: ["obstacle_layer", "inflation_layer"]
@@ -194,8 +194,8 @@ local_costmap:
       publish_frequency: 5.0
       global_frame: odom
       rolling_window: true
-      width: 8.0
-      height: 8.0
+      width: 8
+      height: 8
       use_sim_time: false
       always_send_full_costmap: true
       plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]
@@ -269,7 +269,7 @@ planner_server:
     costmap_update_timeout: 1.0
 
     GridBased:
-      plugin: "nav2_navfn_planner::NavfnPlanner"
+      plugin: "nav2_navfn_planner/NavfnPlanner"
       tolerance: 1.0
       use_astar: true
       allow_unknown: true
