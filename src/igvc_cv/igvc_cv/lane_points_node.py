@@ -157,9 +157,33 @@ class LanePointsNode(Node):
         num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
         cleaned = np.zeros_like(mask)
 
+        LANE_MIN_AREA = int(self.get_parameter("min_component_area_px").value)
+        POTHOLE_MIN_AREA = 80
+        LANE_MIN_ASPECT = 2.0
+        POTHOLE_MIN_FILL_RATIO = 0.35
+
         for label in range(1, num_labels):
+            x = stats[label, cv2.CC_STAT_LEFT]
+            y = stats[label, cv2.CC_STAT_TOP]
+            w = stats[label, cv2.CC_STAT_WIDTH]
+            h = stats[label, cv2.CC_STAT_HEIGHT]
             area = stats[label, cv2.CC_STAT_AREA]
-            if area >= min_area:
+
+            if w <= 0 or h <= 0:
+                continue
+
+            aspect = max(w, h) / max(1, min(w, h))
+            fill_ratio = area / float(w * h)
+
+            is_lane = area >= LANE_MIN_AREA and aspect >= LANE_MIN_ASPECT
+
+            is_pothole_candidate = (
+                area >= POTHOLE_MIN_AREA
+                and aspect < LANE_MIN_ASPECT
+                and fill_ratio >= POTHOLE_MIN_FILL_RATIO
+            )
+
+            if is_lane or is_pothole_candidate:
                 cleaned[labels == label] = 255
 
         return cleaned
