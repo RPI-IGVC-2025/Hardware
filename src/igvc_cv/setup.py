@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 import os
 from glob import glob
 
-package_name = 'igvc_estop'
+package_name = 'igvc_cv'
 
 setup(
     name=package_name,
