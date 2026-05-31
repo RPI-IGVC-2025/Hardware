@@ -75,8 +75,8 @@ navsat_transform:
   ros__parameters:
     frequency: 30.0
     delay: 3.0
-    magnetic_declination_radians: 0.0
-    yaw_offset: 0.0
+    magnetic_declination_radians: -0.132 #7.61 deg
+    yaw_offset: 0.0 #TODO: EXPECTS YAW = 0 WHEN FACING EAST! likely pi/2 rads
     zero_altitude: true
     broadcast_cartesian_transform: false #TODO: may have to change if map transform doesn't work
     publish_filtered_gps: true
