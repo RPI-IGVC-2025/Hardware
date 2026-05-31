@@ -17,7 +17,7 @@ def generate_launch_description():
         name='ekf_node_odom',
         output='screen',
         parameters=[param_file],
-        remappings=[('odometry/filtered', 'odometry/local')],
+        remappings=[('odometry/filtered', '/odometry/local')],
     )
     
     ekf_node_map = Node(
@@ -26,21 +26,21 @@ def generate_launch_description():
         name='ekf_node_map',
         output='screen',
         parameters=[param_file],
-        remappings=[('odometry/filtered', 'odometry/global')],
+        remappings=[('odometry/filtered', '/odometry/global')],
     )
     
     navsat_transform = Node(
         package='robot_localization',
-        executable='navsat_transfrom_node',
+        executable='navsat_transform_node',
         name='navsat_transform',
         output='screen',
         parameters=[param_file],
         remappings=[
-            ('imu/data', 'imu/data'),
-            ('gps/fix', 'gps/fix'),
-            ('gps/filtered', 'gps/filtered'),
-            ('odometry/gps', 'odometry/gps'),
-            ("odometry/filtered", "odometry/global"),
+            ('imu/data', '/zed/zed_node/imu/data'), #TODO: change to compass imu
+            ('gps/fix', '/gps/fix'),
+            ('gps/filtered', '/gps/filtered'),
+            ('odometry/gps', '/odometry/gps'),
+            ("odometry/filtered", "/odometry/local"),
         ],
     )
 
