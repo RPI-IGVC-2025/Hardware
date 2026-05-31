@@ -7,7 +7,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     lane_points_node = Node(
-        package='your_package',
+        package='igvc_cv',
         executable='lane_points_node',
         name='lane_points_node',
         output='screen',
