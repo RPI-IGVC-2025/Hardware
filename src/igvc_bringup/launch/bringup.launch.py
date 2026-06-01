@@ -36,6 +36,11 @@ def generate_launch_description():
             default_value='true', 
             description='Launch rtabmap for SLAM'
         ),
+        DeclareLaunchArgument(
+            'use_nav',
+            default_value='true', 
+            description='Launch Nav2'
+        ),
 
 
         #Estop
@@ -110,5 +115,14 @@ def generate_launch_description():
                 '/launch',
                 '/igvc_cv.launch.py']
             )
+        ),
+        
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare('igvc_nav'),
+                '/launch',
+                '/igvc_nav.launch.py']
+            ),
+            condition = IfCondition(LaunchConfiguration('use_nav'))
         )
     ])
