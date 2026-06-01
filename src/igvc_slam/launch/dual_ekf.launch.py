@@ -34,7 +34,7 @@ def generate_launch_description():
         output='screen',
         parameters=[param_file],
         remappings=[
-            ('imu/data', '/compass'), #TODO: change to compass imu
+            ('imu', '/compass'), #TODO: change to compass imu
             ('gps/fix', '/fix'),
             ('gps/filtered', '/gps/filtered'),
             ('odometry/gps', '/odometry/gps'),
