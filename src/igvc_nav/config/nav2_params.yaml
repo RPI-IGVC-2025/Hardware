@@ -229,20 +229,8 @@ local_costmap:
         z_voxels: 16
         unknown_threshold: 15
         mark_threshold: 0
-        observation_sources: zed_cloud lanes
+        observation_sources: lanes
         combination_method: 1
-        zed_cloud:
-          topic: /zed/zed_node/point_cloud/cloud_registered
-          max_obstacle_height: 1.5
-          min_obstacle_height: 0.05
-          clearing: true
-          marking: true
-          data_type: "PointCloud2"
-          raytrace_max_range: 5.0
-          raytrace_min_range: 0.35
-          obstacle_max_range: 4.0
-          obstacle_min_range: 0.35
-
         lanes:
           topic: /lanes/points
           max_obstacle_height: 0.30
