@@ -25,7 +25,7 @@ class CompassNode(Node):
         )
 
         # Create Publisher
-        self.publisher_ = self.create_publisher(Float32, 'compass_heading', 10)
+        self.publisher_ = self.create_publisher(Imu, 'compass', 10)
         self.timer = self.create_timer(0.5, self.timer_callback)
 
     def cleanup(self):
@@ -43,13 +43,14 @@ class CompassNode(Node):
                 imu_msg.header.stamp = self.get_clock().now().to_msg()
                 imu_msg.header.frame_id = 'imu_link'
                 
-                q = tf_transformations.quaternion_from_euler(0, 0, heading_yaw)
                 
-                imu_msg.orientation.x = q[0]
-                imu_msg.orientation.y = q[1]
-                imu_msg.orientation.z = q[2]
-                imu_msg.orientation.w = q[3]
-                        
+                half_yaw = heading_yaw * 0.5
+        
+                imu_msg.orientation.x = 0.0
+                imu_msg.orientation.y = 0.0
+                imu_msg.orientation.z = math.sin(half_yaw)
+                imu_msg.orientation.w = math.cos(half_yaw)
+              
                 imu_msg.orientation_covariance[0] = -1.0
                 imu_msg.angular_velocity_covariance[0] = -1.0
                 imu_msg.linear_acceleration_covariance[0] = -1.0
