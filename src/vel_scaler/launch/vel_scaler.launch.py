@@ -13,7 +13,7 @@ def generate_launch_description():
                 "input_topic": "/cmd_vel",
                 "output_topic": "/cmd_vel_scaled",
                 "linear_scale": 6.35242261,
-                "angular_scale": 0.5,
+                "angular_scale": 39.8,
             }],
         )
     ])
