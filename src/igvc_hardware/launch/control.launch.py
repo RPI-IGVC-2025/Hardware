@@ -39,7 +39,10 @@ def generate_launch_description():
             # TODO in the ODrive botwheel explorer example, the description contents are also passed in here.
             robot_controllers
         ],
-        output="both",
+        remappings=[
+            ("~/robot_description", "/robot_description"),
+        ],
+        output="screen",
         condition = UnlessCondition(use_sim)
     )
 
@@ -48,9 +51,11 @@ def generate_launch_description():
         executable="spawner",
         arguments=["bot_drive_controller",
                    "--controller-manager", "/controller_manager", "--switch-timeout", "20.0"],
-        remappings=[('~/cmd_vel','/cmd_vel')]
+        remappings=[
+            ('~/cmd_vel','/cmd_vel'),
+            ("~/robot_description", "/robot_description")
+        ]
     )
-    
     
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",
@@ -65,8 +70,6 @@ def generate_launch_description():
             on_exit=[robot_controller_spawner],
         )
     )
-
-
 
     nodes = [
         control_node,

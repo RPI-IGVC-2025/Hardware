@@ -9,15 +9,37 @@ IMU_NAME = "TODO" # TODO
 
 def generate_launch_description():
     # Declare args
+    
+    launch_navsat_node = Node(
+        package='ublox_gps',
+        executable='ublox_gps_node',
+        name='navsat',
+        output='screen',
+        parameters=[{
+            "device" : "/dev/ttyUSB0",
+            "uart1.baudrate" : 115200,
+            "frame_id" : "navsat_link",
+        }],
+    )
+    
+    launch_led_bridge_node = Node(
+        package='led_bridge',
+        executable='led_bridge',
+        name='led_bridge',
+        output='screen',
+    )
+
     launch_zed_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [FindPackageShare("zed_wrapper"),
              '/launch',
-             'camera.launch.py']
+             '/zed_camera.launch.py']
         ),
         launch_arguments={
-            'camera_model:=zed2i'
-        }
+            'camera_model': 'zed2i',
+            'publish_tf': 'false',
+            'publish_urdf': 'false',
+        }.items()
     )
     # Check here for published topics: https://www.stereolabs.com/docs/ros2/zed-node
     
@@ -25,26 +47,31 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             [FindPackageShare("rplidar_ros"),
              '/launch',
-             'rplidar_s2e_launch.py']
+             '/rplidar_s2e_launch.py']
         ),
         launch_arguments={
-            # TODO if we want to change anything
-        }
+            'udp_ip' : '10.42.0.5',
+            'frame_id' : 'laser_frame'
+        }.items()
     )
 
-    declared_arguments = [
-        launch_zed_node,
-        launch_rplidar_node
-    ]
-    
-    # Get nodes    
-    imu_node = Node(
-        package="adi_imu",
-        executable="adi_imu_node",
-        ros_arguments=["-p", f"imu_device_name:=${IMU_NAME}"]
+    launch_compass_bridge_node = Node(
+        package='compass_bridge',
+        executable='compass_bridge',
+        name='compass_bridge',
+        output='screen',
+        parameters=[{
+            "i2c_bus" : 7,
+            "device_address" : 0x0E
+        }],
     )
+
     nodes = [
-        imu_node
+        launch_navsat_node,
+        launch_led_bridge_node,
+        launch_zed_node,
+        launch_rplidar_node,
+        launch_compass_bridge_node
     ]
 
-    return LaunchDescription(declared_arguments + nodes)
+    return LaunchDescription(nodes)

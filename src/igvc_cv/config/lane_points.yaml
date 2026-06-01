@@ -1,0 +1,25 @@
+lane_points_node:
+  ros__parameters:
+    image_topic: /zed/zed_node/rgb/color/rect/image
+    cloud_topic: /zed/zed_node/point_cloud/cloud_registered
+    points_topic: /lanes/points
+    debug_topic: /lanes/debug_image
+
+    roi_top_fraction: 0.40
+    min_lightness: 190
+    max_saturation: 255
+
+    blur_kernel_size: 11
+    blur_sigma: 0.0
+
+    canny_low: 25
+    canny_high: 150
+    hough_min_line_length: 5
+    hough_max_line_gap: 40
+    hough_threshold: 45
+    line_sample_step_px: 5
+
+    min_range_m: 0.3
+    max_range_m: 5.0
+    max_abs_xyz_m: 20.0
+    max_points: 3000

@@ -1,15 +1,18 @@
-from launch import LaunchDescription
+import os
+
+from ament_index_python import get_package_share_directory
+from launch import LaunchDescription, LaunchDescriptionSource
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition, UnlessCondition
-from launch.substitutions import LaunchConfiguration
-from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.launch_description_sources import FrontendLaunchDescriptionSource, PythonLaunchDescriptionSource
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
     use_sim = LaunchConfiguration('use_sim')
     use_mock_hardware = LaunchConfiguration('use_mock_hardware')
-
+    
     return LaunchDescription([
         # Launch Arguments
         DeclareLaunchArgument(
@@ -33,7 +36,24 @@ def generate_launch_description():
             default_value='true', 
             description='Launch rtabmap for SLAM'
         ),
+        DeclareLaunchArgument(
+            'use_nav',
+            default_value='true', 
+            description='Launch Nav2'
+        ),
 
+
+        #Estop
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare('igvc_estop'),
+                 '/launch',
+                 '/igvc_estop.launch.py']
+            ),
+            launch_arguments={
+                'use_sim_gpio': use_sim
+            }.items()
+        ),
 
         # Publishers & URDF
         IncludeLaunchDescription(
@@ -72,21 +92,37 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_hardware'),
-                 '/launch',
-                 '/hardware.launch.py']
+                  '/launch',
+                  '/hardware.launch.py']
             ),
             condition = UnlessCondition(use_mock_hardware)
         ),
-
+        
         # SLAM
-        IncludeLaunchDescription(
+        IncludeLaunchDescription(        
             PythonLaunchDescriptionSource(
                 [FindPackageShare('igvc_slam'),
-                 '/launch',
-                 '/sim_rtabmap.launch.py']
-            ),
+                '/launch',
+                '/dual_ekf.launch.py']
+            ),     
             condition = IfCondition(LaunchConfiguration('use_slam'))
         ),
+
+        # CV
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare('igvc_cv'),
+                '/launch',
+                '/igvc_cv.launch.py']
+            )
+        ),
         
-        # TODO Nav
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare('igvc_nav'),
+                '/launch',
+                '/igvc_nav.launch.py']
+            ),
+            condition = IfCondition(LaunchConfiguration('use_nav'))
+        )
     ])
