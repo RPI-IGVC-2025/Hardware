@@ -1,22 +1,36 @@
 lane_points_node:
   ros__parameters:
-    image_topic: /zed/zed_node/rgb/color/rect/image
-    cloud_topic: /zed/zed_node/point_cloud/cloud_registered
+    rgb_topic: /zed/zed_node/rgb/color/rect/image
+    depth_topic: /zed/zed_node/depth/depth_registered
+    camera_info_topic: /zed/zed_node/depth/depth_registered/camera_info
+
     points_topic: /lanes/points
     debug_topic: /lanes/debug_image
+    left_path_topic: /left_boundary
+    right_path_topic: /right_boundary
 
-    roi_top_fraction: 0.40
-    min_lightness: 130
-    max_saturation: 170
+    roi_top_fraction: 0.30
+    roi_bottom_fraction: 0.88
 
-    canny_low: 50
-    canny_high: 150
-    hough_min_line_length: 90
-    hough_max_line_gap: 40
-    hough_threshold: 45
-    line_sample_step_px: 5
+    min_lightness: 120
+    max_saturation: 190
 
-    min_range_m: 0.3
-    max_range_m: 5.0
-    max_abs_xyz_m: 20.0
-    max_points: 3000
+    blur_kernel_size: 11
+    blur_sigma_x: 33.0
+    blur_sigma_y: 33.0
+
+    canny_low: 10
+    canny_high: 100
+
+    hough_rho: 2.0
+    hough_theta: 0.0174533
+    hough_threshold: 10
+    hough_min_line_length: 4
+    hough_max_line_gap: 5
+    line_thickness: 10
+
+    min_depth_m: 0.3
+    max_depth_m: 5.0
+    max_abs_x_m: 4.0
+    pixel_stride: 2
+    max_points: 6000
