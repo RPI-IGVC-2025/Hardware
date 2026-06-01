@@ -12,8 +12,8 @@ def generate_launch_description():
         name="single_gps_goal_node",
         output="screen",
         parameters=[{
-            "latitude": 42.400556255,
-            "longitude": -83.130645144,
+            "latitude": 42.66823105,
+            "longitude": -83.21846028,
             "altitude": 0.0,
             "yaw": 0.0,
             "require_enabled": True,
