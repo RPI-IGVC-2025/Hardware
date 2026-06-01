@@ -101,5 +101,14 @@ def generate_launch_description():
                 '/dual_ekf.launch.py']
             ),     
             condition = IfCondition(LaunchConfiguration('use_slam'))
+        ),
+
+        # CV
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [FindPackageShare('igvc_cv'),
+                '/launch',
+                '/igvc_cv.launch.py']
+            )
         )
     ])
