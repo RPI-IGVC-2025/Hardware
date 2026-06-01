@@ -13,7 +13,7 @@ def generate_launch_description():
 
     nav2_launch_path = os.path.join(nav2_bringup_package , 'launch', 'navigation_launch.py')
     config_path = os.path.join(igvc_nav_package, 'config', 'nav2_params.yaml')
-    vel_scaler_launch_path = os.path.join(igvc_nav_package, 'launch', 'vel_scaler.launch.py')
+    vel_scaler_launch_path = os.path.join(vel_scaler_package, 'launch', 'vel_scaler.launch.py')
 
     nav2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(nav2_launch_path),
