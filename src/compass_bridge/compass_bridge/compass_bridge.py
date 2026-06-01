@@ -3,6 +3,7 @@ from .compass_driver import Compass
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
+from sensor_msgs.msg import Imu
 import sys
 
 class CompassNode(Node):
@@ -34,11 +35,25 @@ class CompassNode(Node):
 
     def timer_callback(self):
         try:
-            heading = self._instance.get_heading()
-            if heading is not None:
-            	msg = Float32()
-            	msg.data = heading
-            	self.publisher_.publish(msg)
+            heading_yaw = self._instance.get_heading()
+            if heading_yaw is not None:
+                imu_msg = Imu()
+                imu_msg.header.stamp = self.get_clock().now().to_msg()
+                imu_msg.header.frame_id = 'imu_link'
+                
+                q = tf_transformations.quaternion_from_euler(0, 0, heading_yaw)
+                
+                imu_msg.orientation.x = q[0]
+                imu_msg.orientation.y = q[1]
+                imu_msg.orientation.z = q[2]
+                imu_msg.orientation.w = q[3]
+                        
+                imu_msg.orientation_covariance[0] = -1.0
+                imu_msg.angular_velocity_covariance[0] = -1.0
+                imu_msg.linear_acceleration_covariance[0] = -1.0
+        
+                self.publisher_.publish(imu_msg)
+
         except Exception as e:
             self.get_logger().error(f"Error in timer callback: {e}")
 
