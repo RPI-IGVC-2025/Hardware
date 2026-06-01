@@ -8,7 +8,7 @@
 
     <joint name="base_joint" type="fixed">
         <parent link="base_link"/>
-        <origin rpy="0 0 3.14159" xyz="0 0 0.01"/>
+        <origin rpy="0 0 0" xyz="0 0 0.01"/>
         <child link="part_1"/>
         <axis xyz="0 0 1"/>
     </joint>
