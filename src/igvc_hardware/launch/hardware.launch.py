@@ -55,11 +55,28 @@ def generate_launch_description():
         }.items()
     )
 
+    launch_compass_bridge_node = Node(
+        package='compass_bridge',
+        executable='compass_bridge',
+        name='compass_bridge',
+        output='screen',
+        parameters=[{
+            "i2c_bus" : 7,
+            "device_address" : 0x0E,
+            "config_filepath": PathJoinSubstitution(
+            FindPackageShare("igvc_hardware"),
+             '/config',
+             '/compass_config.yaml'
+            )
+        }],
+    )
+
     nodes = [
         launch_navsat_node,
         launch_led_bridge_node,
         launch_zed_node,
-        launch_rplidar_node
+        launch_rplidar_node,
+        launch_compass_bridge_node
     ]
 
     return LaunchDescription(nodes)
