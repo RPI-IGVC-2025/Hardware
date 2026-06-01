@@ -10,7 +10,7 @@ bt_navigator:
     action_server_result_timeout: 900.0
     navigators: ["navigate_to_pose", "navigate_through_poses"]
     navigate_to_pose:
-      plugin: "nav2_bt_navigato/NavigateToPoseNavigator"
+      plugin: "nav2_bt_navigator/NavigateToPoseNavigator"
     navigate_through_poses:
       plugin: "nav2_bt_navigator/NavigateThroughPosesNavigator"
     error_code_names:
