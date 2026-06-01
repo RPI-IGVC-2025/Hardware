@@ -29,7 +29,7 @@ setup(
     entry_points={
         'console_scripts': [
             'lane_director_node = igvc_goal.lane_director_node:main',
-            'single_gps_goal_node = your_package.single_gps_goal_node:main',
+            'single_gps_goal_node = igvc_goal.single_gps_goal_node:main',
         ],
     },
 )

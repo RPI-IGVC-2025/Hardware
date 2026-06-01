@@ -7,7 +7,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     single_gps_goal_node = Node(
-        package="your_package",
+        package="igvc_goal",
         executable="single_gps_goal_node",
         name="single_gps_goal_node",
         output="screen",
