@@ -5,6 +5,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32
 from sensor_msgs.msg import Imu
 import sys
+import math
 
 class CompassNode(Node):
     def __init__(self):
@@ -35,8 +36,9 @@ class CompassNode(Node):
 
     def timer_callback(self):
         try:
-            heading_yaw = self._instance.get_heading()
-            if heading_yaw is not None:
+            heading = self._instance.get_heading()
+            if heading is not None:
+                heading_yaw = math.radians(heading)
                 imu_msg = Imu()
                 imu_msg.header.stamp = self.get_clock().now().to_msg()
                 imu_msg.header.frame_id = 'imu_link'
