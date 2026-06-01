@@ -106,26 +106,26 @@ class LaneDirectorNode(Node):
             return
 
         if self.latest_cloud is None:
-            self.get_logger().warn_throttle(2.0, "No /lanes/points received yet.")
+            self.get_logger().warn("No /lanes/points received yet.")
             return
 
         if not self.nav_client.wait_for_server(timeout_sec=0.1):
-            self.get_logger().warn_throttle(2.0, "Nav2 navigate_to_pose action not available.")
+            self.get_logger().warn("Nav2 navigate_to_pose action not available.")
             return
 
         points_base = self.cloud_to_base_points(self.latest_cloud)
         if points_base is None or len(points_base) == 0:
-            self.get_logger().warn_throttle(2.0, "No usable lane points after TF/filtering.")
+            self.get_logger().warn("No usable lane points after TF/filtering.")
             return
 
         center_goal_base = self.compute_center_goal(points_base)
         if center_goal_base is None:
-            self.get_logger().warn_throttle(2.0, "Could not compute lane center goal.")
+            self.get_logger().warn("Could not compute lane center goal.")
             return
 
         goal_map = self.base_goal_to_map_pose(center_goal_base)
         if goal_map is None:
-            self.get_logger().warn_throttle(2.0, "Could not transform lane goal to map.")
+            self.get_logger().warn("Could not transform lane goal to map.")
             return
 
         if not self.should_send_goal(goal_map):
@@ -147,8 +147,7 @@ class LaneDirectorNode(Node):
                 timeout=rclpy.duration.Duration(seconds=0.1),
             )
         except Exception as exc:
-            self.get_logger().warn_throttle(
-                2.0,
+            self.get_logger().warn(
                 f"Could not lookup TF {base_frame} <- {cloud_msg.header.frame_id}: {exc}",
             )
             return None
@@ -288,8 +287,7 @@ class LaneDirectorNode(Node):
             )
             goal_map_point = do_transform_point(goal_base, transform)
         except Exception as exc:
-            self.get_logger().warn_throttle(
-                2.0,
+            self.get_logger().warn(
                 f"Could not transform goal {global_frame} <- {base_frame}: {exc}",
             )
             return None
