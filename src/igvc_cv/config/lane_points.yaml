@@ -6,12 +6,15 @@ lane_points_node:
     debug_topic: /lanes/debug_image
 
     roi_top_fraction: 0.40
-    min_lightness: 130
-    max_saturation: 170
+    min_lightness: 190
+    max_saturation: 255
 
-    canny_low: 50
+    blur_kernel_size: 11
+    blur_sigma: 0.0
+
+    canny_low: 25
     canny_high: 150
-    hough_min_line_length: 90
+    hough_min_line_length: 5
     hough_max_line_gap: 40
     hough_threshold: 45
     line_sample_step_px: 5

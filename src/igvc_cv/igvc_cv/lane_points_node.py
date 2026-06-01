@@ -28,6 +28,10 @@ class LanePointsNode(Node):
         self.declare_parameter("roi_top_fraction", 0.40)
         self.declare_parameter("min_lightness", 130)
         self.declare_parameter("max_saturation", 170)
+        
+        # Blur
+        self.declare_parameter("blur_kernel_size", 11)
+        self.declare_parameter("blur_sigma", 0.0)
 
         # Canny / Hough
         self.declare_parameter("canny_low", 50)
@@ -36,6 +40,7 @@ class LanePointsNode(Node):
         self.declare_parameter("hough_min_line_length", 35)
         self.declare_parameter("hough_max_line_gap", 30)
         self.declare_parameter("line_sample_step_px", 5)
+        
 
         # 3D filtering
         self.declare_parameter("min_range_m", 0.3)
@@ -56,6 +61,10 @@ class LanePointsNode(Node):
             self.get_parameter("debug_topic").value,
             10,
         )
+        self.mask_pub = self.create_publisher(Image, "/lanes/debug_mask", 10)
+        self.blur_pub = self.create_publisher(Image, "/lanes/debug_blur", 10)
+        self.edges_pub = self.create_publisher(Image, "/lanes/debug_edges", 10)
+        self.hough_pub = self.create_publisher(Image, "/lanes/debug_hough", 10)
 
         sensor_qos = QoSProfile(
             reliability=ReliabilityPolicy.BEST_EFFORT,
@@ -121,12 +130,18 @@ class LanePointsNode(Node):
         self.get_logger().info(
             f"lane debug: lines_uv={len(line_uvs_image)}, points={len(points)}"
         )
+        
+    def publish_debug_image(self, pub, img: np.ndarray, frame_id: str = "camera"):
+        msg = self.bridge.cv2_to_imgmsg(img, encoding="mono8" if len(img.shape) == 2 else "bgr8")
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = frame_id
+        pub.publish(msg)
 
     def detect_lane_line_pixels(self, bgr: np.ndarray) -> Tuple[List[Tuple[int, int]], np.ndarray]:
         h, w = bgr.shape[:2]
 
         roi_top = int(h * float(self.get_parameter("roi_top_fraction").value))
-        roi_bottom = int(h * 0.82)
+        roi_bottom = int(h * 0.90)
         min_lightness = int(self.get_parameter("min_lightness").value)
         max_saturation = int(self.get_parameter("max_saturation").value)
 
@@ -143,11 +158,26 @@ class LanePointsNode(Node):
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
+        self.publish_debug_image(self.mask_pub, mask)
+
+        blur_k = int(self.get_parameter("blur_kernel_size").value) if self.has_parameter("blur_kernel_size") else 11
+        blur_sigma = float(self.get_parameter("blur_sigma").value) if self.has_parameter("blur_sigma") else 0.0
+
+        if blur_k % 2 == 0:
+            blur_k += 1
+        blur_k = max(3, blur_k)
+
+        blurred = cv2.GaussianBlur(mask, (blur_k, blur_k), blur_sigma)
+
+        self.publish_debug_image(self.blur_pub, blurred)
+
         edges = cv2.Canny(
-            mask,
+            blurred,
             int(self.get_parameter("canny_low").value),
             int(self.get_parameter("canny_high").value),
         )
+
+        self.publish_debug_image(self.edges_pub, edges)
 
         lines = cv2.HoughLinesP(
             edges,
@@ -159,46 +189,47 @@ class LanePointsNode(Node):
         )
 
         debug = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
-        if lines is None:
-            return [], debug
 
         sample_step = max(1, int(self.get_parameter("line_sample_step_px").value))
         max_points = int(self.get_parameter("max_points").value)
 
         uvs: List[Tuple[int, int]] = []
 
-        for line in lines:
-            x1, y1, x2, y2 = line[0]
+        if lines is not None:
+            for line in lines:
+                x1, y1, x2, y2 = line[0]
 
-            dx = x2 - x1
-            dy = y2 - y1
-            length = math.hypot(dx, dy)
+                dx = x2 - x1
+                dy = y2 - y1
+                length = math.hypot(dx, dy)
 
-            angle = abs(math.degrees(math.atan2(dy, dx)))
+                angle = abs(math.degrees(math.atan2(dy, dx)))
 
-            # Keep lane-like diagonals, reject horizontal noise and nearly vertical artifacts.
-            if angle < 20.0 or angle > 80.0:
-                continue
+                # Keep lane-like diagonals, reject horizontal noise and nearly vertical artifacts.
+                if angle < 20.0 or angle > 80.0:
+                    continue
 
-            # Reject very bottom/near-camera noise.
-            line_mid_v = 0.5 * (y1 + y2)
-            if line_mid_v > h * 0.82:
-                continue
+                # Reject very bottom/near-camera noise.
+                line_mid_v = 0.5 * (y1 + y2)
+                if line_mid_v > h * 0.82:
+                    continue
 
-            cv2.line(debug, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.line(debug, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
-            samples = max(2, int(length / sample_step))
-            for i in range(samples):
-                t = i / float(samples - 1)
-                u = int(round((1.0 - t) * x1 + t * x2))
-                v = int(round((1.0 - t) * y1 + t * y2))
+                samples = max(2, int(length / sample_step))
+                for i in range(samples):
+                    t = i / float(samples - 1)
+                    u = int(round((1.0 - t) * x1 + t * x2))
+                    v = int(round((1.0 - t) * y1 + t * y2))
 
-                if 0 <= u < w and 0 <= v < h:
-                    uvs.append((u, v))
+                    if 0 <= u < w and 0 <= v < h:
+                        uvs.append((u, v))
 
         if len(uvs) > max_points:
             idx = np.linspace(0, len(uvs) - 1, max_points).astype(np.int32)
             uvs = [uvs[i] for i in idx]
+
+        self.publish_debug_image(self.hough_pub, debug)
 
         return uvs, debug
 
