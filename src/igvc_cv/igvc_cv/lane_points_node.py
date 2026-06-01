@@ -19,7 +19,7 @@ class LanePointsNode(Node):
     def __init__(self):
         super().__init__("lane_points_node")
 
-        self.declare_parameter("image_topic", "/zed/zed_node/rgb/image_rect_color")
+        self.declare_parameter("image_topic", "/zed/zed_node/rgb/color/rect/image")
         self.declare_parameter("cloud_topic", "/zed/zed_node/point_cloud/cloud_registered")
         self.declare_parameter("points_topic", "/lanes/points")
         self.declare_parameter("debug_topic", "/lanes/debug_image")
@@ -126,6 +126,7 @@ class LanePointsNode(Node):
         h, w = bgr.shape[:2]
 
         roi_top = int(h * float(self.get_parameter("roi_top_fraction").value))
+        roi_bottom = int(h * 0.82)
         min_lightness = int(self.get_parameter("min_lightness").value)
         max_saturation = int(self.get_parameter("max_saturation").value)
 
@@ -136,6 +137,7 @@ class LanePointsNode(Node):
         mask = np.zeros((h, w), dtype=np.uint8)
         mask[(lightness >= min_lightness) & (saturation <= max_saturation)] = 255
         mask[:roi_top, :] = 0
+        mask[roi_bottom:, :] = 0
 
         kernel = np.ones((3, 3), np.uint8)
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
@@ -167,11 +169,25 @@ class LanePointsNode(Node):
 
         for line in lines:
             x1, y1, x2, y2 = line[0]
-            length = math.hypot(x2 - x1, y2 - y1)
-            samples = max(2, int(length / sample_step))
+
+            dx = x2 - x1
+            dy = y2 - y1
+            length = math.hypot(dx, dy)
+
+            angle = abs(math.degrees(math.atan2(dy, dx)))
+
+            # Keep lane-like diagonals, reject horizontal noise and nearly vertical artifacts.
+            if angle < 20.0 or angle > 80.0:
+                continue
+
+            # Reject very bottom/near-camera noise.
+            line_mid_v = 0.5 * (y1 + y2)
+            if line_mid_v > h * 0.82:
+                continue
 
             cv2.line(debug, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
+            samples = max(2, int(length / sample_step))
             for i in range(samples):
                 t = i / float(samples - 1)
                 u = int(round((1.0 - t) * x1 + t * x2))

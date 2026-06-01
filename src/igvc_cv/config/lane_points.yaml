@@ -1,6 +1,6 @@
 lane_points_node:
   ros__parameters:
-    image_topic: /zed/zed_node/rgb/image_rect_color
+    image_topic: /zed/zed_node/rgb/color/rect/image
     cloud_topic: /zed/zed_node/point_cloud/cloud_registered
     points_topic: /lanes/points
     debug_topic: /lanes/debug_image
@@ -11,9 +11,9 @@ lane_points_node:
 
     canny_low: 50
     canny_high: 150
-    hough_threshold: 25
-    hough_min_line_length: 35
-    hough_max_line_gap: 30
+    hough_min_line_length: 90
+    hough_max_line_gap: 40
+    hough_threshold: 45
     line_sample_step_px: 5
 
     min_range_m: 0.3
