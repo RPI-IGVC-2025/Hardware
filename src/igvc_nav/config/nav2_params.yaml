@@ -51,7 +51,7 @@ controller_server:
       motion_model: "DiffDrive"
 
       vx_max: 1.8
-      vx_min: -0.5 #TODO: likely increase
+      vx_min: -1.8 #TODO: likely increase
       vy_max: 0.0
       wz_max: 1.2
       ax_max: 1.8
