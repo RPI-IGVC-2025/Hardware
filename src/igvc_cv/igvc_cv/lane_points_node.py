@@ -1,265 +1,256 @@
 #!/usr/bin/env python3
 
 import math
+import struct
 from typing import List, Tuple
 
 import cv2
 import numpy as np
 import rclpy
 from cv_bridge import CvBridge
+from message_filters import ApproximateTimeSynchronizer, Subscriber
 from rclpy.node import Node
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
 from sensor_msgs.msg import Image, PointCloud2
 from sensor_msgs_py import point_cloud2
-from std_msgs.msg import Header
-
-from message_filters import Subscriber, ApproximateTimeSynchronizer
 
 
 class LanePointsNode(Node):
-    """
-    Detect lane markings in the ZED RGB image, sample matching pixels from the
-    registered ZED pointcloud, and publish those 3D lane points as PointCloud2.
-
-    Output is intended to be consumed by Nav2's local voxel_layer as a marking
-    source, so lanes become costmap obstacles.
-    """
-
     def __init__(self):
         super().__init__("lane_points_node")
 
-        # Topics
         self.declare_parameter("image_topic", "/zed/zed_node/rgb/image_rect_color")
         self.declare_parameter("cloud_topic", "/zed/zed_node/point_cloud/cloud_registered")
-        self.declare_parameter("output_topic", "/lanes/points")
+        self.declare_parameter("points_topic", "/lanes/points")
+        self.declare_parameter("debug_topic", "/lanes/debug_image")
 
         # Image filtering
-        self.declare_parameter("roi_top_fraction", 0.45)      # ignore top 45% of image
-        self.declare_parameter("min_value", 170)              # HSV V threshold
-        self.declare_parameter("max_saturation", 90)          # HSV S threshold
-        self.declare_parameter("morph_kernel_size", 5)
-        self.declare_parameter("min_component_area_px", 80)
+        self.declare_parameter("roi_top_fraction", 0.40)
+        self.declare_parameter("min_lightness", 130)
+        self.declare_parameter("max_saturation", 170)
 
-        # Sampling and geometry filtering
-        self.declare_parameter("pixel_stride", 4)             # sample every Nth lane pixel
+        # Canny / Hough
+        self.declare_parameter("canny_low", 50)
+        self.declare_parameter("canny_high", 150)
+        self.declare_parameter("hough_threshold", 25)
+        self.declare_parameter("hough_min_line_length", 35)
+        self.declare_parameter("hough_max_line_gap", 30)
+        self.declare_parameter("line_sample_step_px", 5)
+
+        # 3D filtering
+        self.declare_parameter("min_range_m", 0.3)
+        self.declare_parameter("max_range_m", 5.0)
+        self.declare_parameter("max_abs_xyz_m", 20.0)
         self.declare_parameter("max_points", 3000)
-        self.declare_parameter("min_depth_m", 0.4)            # camera optical z
-        self.declare_parameter("max_depth_m", 8.0)
-        self.declare_parameter("max_abs_x_m", 5.0)            # camera optical x left/right
-        self.declare_parameter("max_abs_y_m", 2.5)            # camera optical y up/down
-
-        # Debug
-        self.declare_parameter("publish_debug_image", True)
-        self.declare_parameter("debug_image_topic", "/lanes/debug_mask")
 
         self.bridge = CvBridge()
 
-        self.image_topic = self.get_parameter("image_topic").value
-        self.cloud_topic = self.get_parameter("cloud_topic").value
-        self.output_topic = self.get_parameter("output_topic").value
+        self.points_pub = self.create_publisher(
+            PointCloud2,
+            self.get_parameter("points_topic").value,
+            10,
+        )
 
-        self.pub_points = self.create_publisher(PointCloud2, self.output_topic, 10)
+        self.debug_pub = self.create_publisher(
+            Image,
+            self.get_parameter("debug_topic").value,
+            10,
+        )
 
-        self.publish_debug_image = bool(self.get_parameter("publish_debug_image").value)
-        if self.publish_debug_image:
-            self.pub_debug = self.create_publisher(
-                Image,
-                self.get_parameter("debug_image_topic").value,
-                10,
-            )
-        else:
-            self.pub_debug = None
+        sensor_qos = QoSProfile(
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            durability=DurabilityPolicy.VOLATILE,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=5,
+        )
 
-        self.image_sub = Subscriber(self, Image, self.image_topic)
-        self.cloud_sub = Subscriber(self, PointCloud2, self.cloud_topic)
+        self.image_sub = Subscriber(
+            self,
+            Image,
+            self.get_parameter("image_topic").value,
+            qos_profile=sensor_qos,
+        )
+
+        self.cloud_sub = Subscriber(
+            self,
+            PointCloud2,
+            self.get_parameter("cloud_topic").value,
+            qos_profile=sensor_qos,
+        )
 
         self.sync = ApproximateTimeSynchronizer(
             [self.image_sub, self.cloud_sub],
-            queue_size=10,
-            slop=0.08,
+            queue_size=20,
+            slop=0.25,
         )
         self.sync.registerCallback(self.callback)
 
-        self.get_logger().info(
-            f"LanePointsNode listening to image={self.image_topic}, "
-            f"cloud={self.cloud_topic}, publishing {self.output_topic}"
-        )
+        self.get_logger().info("lane_points_node started")
 
     def callback(self, image_msg: Image, cloud_msg: PointCloud2):
         try:
             bgr = self.bridge.imgmsg_to_cv2(image_msg, desired_encoding="bgr8")
         except Exception as exc:
-            self.get_logger().warn(f"Could not convert image: {exc}")
+            self.get_logger().warn(f"Image conversion failed: {exc}")
+            self.publish_points(cloud_msg.header, [])
             return
-
-        height, width = bgr.shape[:2]
 
         if cloud_msg.height <= 1:
-            self.get_logger().warn(
-                "Input pointcloud is not organized. Need an organized registered ZED cloud."
-            )
+            self.get_logger().warn("PointCloud2 is not organized; cannot UV-index it")
+            self.publish_points(cloud_msg.header, [])
             return
 
-        if cloud_msg.width != width or cloud_msg.height != height:
-            self.get_logger().warn(
-                f"Image/cloud size mismatch: image={width}x{height}, "
-                f"cloud={cloud_msg.width}x{cloud_msg.height}. "
-                "Scaling UVs."
-            )
+        image_h, image_w = bgr.shape[:2]
 
-        mask = self.make_lane_mask(bgr)
-
-        uv_samples = self.mask_to_uv_samples(
-            mask,
-            image_width=width,
-            image_height=height,
-            cloud_width=cloud_msg.width,
-            cloud_height=cloud_msg.height,
+        line_uvs_image, debug_img = self.detect_lane_line_pixels(bgr)
+        line_uvs_cloud = self.scale_uvs_to_cloud(
+            line_uvs_image,
+            image_w,
+            image_h,
+            cloud_msg.width,
+            cloud_msg.height,
         )
-        if not uv_samples:
-            self.publish_empty_cloud(cloud_msg.header)
-            return
 
-        points = self.sample_cloud_points(cloud_msg, uv_samples)
+        points = self.read_cloud_points(cloud_msg, line_uvs_cloud)
+        self.publish_points(cloud_msg.header, points)
 
-        out_msg = point_cloud2.create_cloud_xyz32(cloud_msg.header, points)
-        self.pub_points.publish(out_msg)
+        debug_msg = self.bridge.cv2_to_imgmsg(debug_img, encoding="bgr8")
+        debug_msg.header = image_msg.header
+        self.debug_pub.publish(debug_msg)
 
-        if self.pub_debug is not None:
-            debug_msg = self.bridge.cv2_to_imgmsg(mask, encoding="mono8")
-            debug_msg.header = image_msg.header
-            self.pub_debug.publish(debug_msg)
+        self.get_logger().info(
+            f"lane debug: lines_uv={len(line_uvs_image)}, points={len(points)}"
+        )
 
-    def make_lane_mask(self, bgr: np.ndarray) -> np.ndarray:
-        height, width = bgr.shape[:2]
+    def detect_lane_line_pixels(self, bgr: np.ndarray) -> Tuple[List[Tuple[int, int]], np.ndarray]:
+        h, w = bgr.shape[:2]
 
-        roi_top_fraction = float(self.get_parameter("roi_top_fraction").value)
-        min_value = int(self.get_parameter("min_value").value)
+        roi_top = int(h * float(self.get_parameter("roi_top_fraction").value))
+        min_lightness = int(self.get_parameter("min_lightness").value)
         max_saturation = int(self.get_parameter("max_saturation").value)
-        kernel_size = int(self.get_parameter("morph_kernel_size").value)
-        min_area = int(self.get_parameter("min_component_area_px").value)
 
-        hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
+        hls = cv2.cvtColor(bgr, cv2.COLOR_BGR2HLS)
+        lightness = hls[:, :, 1]
+        saturation = hls[:, :, 2]
 
-        # White-ish lane marking: high brightness, low saturation.
-        lower = np.array([0, 0, min_value], dtype=np.uint8)
-        upper = np.array([180, max_saturation, 255], dtype=np.uint8)
-        mask = cv2.inRange(hsv, lower, upper)
+        mask = np.zeros((h, w), dtype=np.uint8)
+        mask[(lightness >= min_lightness) & (saturation <= max_saturation)] = 255
+        mask[:roi_top, :] = 0
 
-        # Ignore upper part of image.
-        roi_start = int(height * roi_top_fraction)
-        mask[:roi_start, :] = 0
-
-        # Clean small holes/noise.
-        kernel_size = max(3, kernel_size)
-        if kernel_size % 2 == 0:
-            kernel_size += 1
-
-        kernel = np.ones((kernel_size, kernel_size), np.uint8)
+        kernel = np.ones((3, 3), np.uint8)
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
-        # Remove tiny connected components.
-        num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(mask, connectivity=8)
-        cleaned = np.zeros_like(mask)
+        edges = cv2.Canny(
+            mask,
+            int(self.get_parameter("canny_low").value),
+            int(self.get_parameter("canny_high").value),
+        )
 
-        LANE_MIN_AREA = int(self.get_parameter("min_component_area_px").value)
-        POTHOLE_MIN_AREA = 80
-        LANE_MIN_ASPECT = 2.0
-        POTHOLE_MIN_FILL_RATIO = 0.35
+        lines = cv2.HoughLinesP(
+            edges,
+            rho=1,
+            theta=np.pi / 180.0,
+            threshold=int(self.get_parameter("hough_threshold").value),
+            minLineLength=int(self.get_parameter("hough_min_line_length").value),
+            maxLineGap=int(self.get_parameter("hough_max_line_gap").value),
+        )
 
-        for label in range(1, num_labels):
-            x = stats[label, cv2.CC_STAT_LEFT]
-            y = stats[label, cv2.CC_STAT_TOP]
-            w = stats[label, cv2.CC_STAT_WIDTH]
-            h = stats[label, cv2.CC_STAT_HEIGHT]
-            area = stats[label, cv2.CC_STAT_AREA]
+        debug = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+        if lines is None:
+            return [], debug
 
-            if w <= 0 or h <= 0:
-                continue
-
-            aspect = max(w, h) / max(1, min(w, h))
-            fill_ratio = area / float(w * h)
-
-            is_lane = area >= LANE_MIN_AREA and aspect >= LANE_MIN_ASPECT
-
-            is_pothole_candidate = (
-                area >= POTHOLE_MIN_AREA
-                and aspect < LANE_MIN_ASPECT
-                and fill_ratio >= POTHOLE_MIN_FILL_RATIO
-            )
-
-            if is_lane or is_pothole_candidate:
-                cleaned[labels == label] = 255
-
-        return cleaned
-
-    def mask_to_uv_samples(
-        self,
-        mask: np.ndarray,
-        image_width: int,
-        image_height: int,
-        cloud_width: int,
-        cloud_height: int,
-    ) -> List[Tuple[int, int]]:
-        stride = int(self.get_parameter("pixel_stride").value)
+        sample_step = max(1, int(self.get_parameter("line_sample_step_px").value))
         max_points = int(self.get_parameter("max_points").value)
 
-        ys, xs = np.where(mask > 0)
+        uvs: List[Tuple[int, int]] = []
 
-        if len(xs) == 0:
+        for line in lines:
+            x1, y1, x2, y2 = line[0]
+            length = math.hypot(x2 - x1, y2 - y1)
+            samples = max(2, int(length / sample_step))
+
+            cv2.line(debug, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+            for i in range(samples):
+                t = i / float(samples - 1)
+                u = int(round((1.0 - t) * x1 + t * x2))
+                v = int(round((1.0 - t) * y1 + t * y2))
+
+                if 0 <= u < w and 0 <= v < h:
+                    uvs.append((u, v))
+
+        if len(uvs) > max_points:
+            idx = np.linspace(0, len(uvs) - 1, max_points).astype(np.int32)
+            uvs = [uvs[i] for i in idx]
+
+        return uvs, debug
+
+    def scale_uvs_to_cloud(
+        self,
+        image_uvs: List[Tuple[int, int]],
+        image_w: int,
+        image_h: int,
+        cloud_w: int,
+        cloud_h: int,
+    ) -> List[Tuple[int, int]]:
+        if image_w == cloud_w and image_h == cloud_h:
+            return image_uvs
+
+        sx = cloud_w / float(image_w)
+        sy = cloud_h / float(image_h)
+
+        cloud_uvs = []
+        for u, v in image_uvs:
+            cu = int(np.clip(u * sx, 0, cloud_w - 1))
+            cv = int(np.clip(v * sy, 0, cloud_h - 1))
+            cloud_uvs.append((cu, cv))
+
+        return cloud_uvs
+
+    def read_cloud_points(
+        self,
+        cloud_msg: PointCloud2,
+        uvs: List[Tuple[int, int]],
+    ) -> List[Tuple[float, float, float]]:
+        fields = {f.name: f.offset for f in cloud_msg.fields}
+        if not all(k in fields for k in ("x", "y", "z")):
+            self.get_logger().warn("PointCloud2 missing x/y/z fields")
             return []
 
-        xs = xs[::stride]
-        ys = ys[::stride]
-
-        if len(xs) > max_points:
-            idx = np.linspace(0, len(xs) - 1, max_points).astype(np.int32)
-            xs = xs[idx]
-            ys = ys[idx]
-
-        # Scale image pixel coordinates into pointcloud pixel coordinates.
-        scale_x = cloud_width / float(image_width)
-        scale_y = cloud_height / float(image_height)
-
-        cloud_us = np.clip((xs * scale_x).astype(np.int32), 0, cloud_width - 1)
-        cloud_vs = np.clip((ys * scale_y).astype(np.int32), 0, cloud_height - 1)
-
-        return [(int(u), int(v)) for u, v in zip(cloud_us, cloud_vs)]
-
-    def sample_cloud_points(self, cloud_msg, uv_samples):
-        import struct
-
-        min_depth = float(self.get_parameter("min_depth_m").value)
-        max_depth = float(self.get_parameter("max_depth_m").value)
-
-        offsets = {f.name: f.offset for f in cloud_msg.fields}
-        xo, yo, zo = offsets["x"], offsets["y"], offsets["z"]
+        min_range = float(self.get_parameter("min_range_m").value)
+        max_range = float(self.get_parameter("max_range_m").value)
+        max_abs = float(self.get_parameter("max_abs_xyz_m").value)
 
         points = []
 
-        for u, v in uv_samples:
-            if not (0 <= u < cloud_msg.width and 0 <= v < cloud_msg.height):
+        for u, v in uvs:
+            offset = v * cloud_msg.row_step + u * cloud_msg.point_step
+
+            try:
+                x = struct.unpack_from("f", cloud_msg.data, offset + fields["x"])[0]
+                y = struct.unpack_from("f", cloud_msg.data, offset + fields["y"])[0]
+                z = struct.unpack_from("f", cloud_msg.data, offset + fields["z"])[0]
+            except Exception:
                 continue
-
-            i = v * cloud_msg.row_step + u * cloud_msg.point_step
-
-            x = struct.unpack_from("f", cloud_msg.data, i + xo)[0]
-            y = struct.unpack_from("f", cloud_msg.data, i + yo)[0]
-            z = struct.unpack_from("f", cloud_msg.data, i + zo)[0]
 
             if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(z)):
                 continue
 
-            # ZED optical frame: z is forward depth
-            if z < min_depth or z > max_depth:
+            r = math.sqrt(x * x + y * y + z * z)
+            if r < min_range or r > max_range:
+                continue
+
+            if abs(x) > max_abs or abs(y) > max_abs or abs(z) > max_abs:
                 continue
 
             points.append((x, y, z))
 
         return points
 
-    def publish_empty_cloud(self, header: Header):
-        self.pub_points.publish(point_cloud2.create_cloud_xyz32(header, []))
+    def publish_points(self, header, points: List[Tuple[float, float, float]]):
+        msg = point_cloud2.create_cloud_xyz32(header, points)
+        self.points_pub.publish(msg)
 
 
 def main(args=None):
