@@ -12,8 +12,8 @@ def generate_launch_description():
             parameters=[{
                 "input_topic": "/cmd_vel",
                 "output_topic": "/cmd_vel_scaled",
-                "linear_scale": 6.35242261,
-                "angular_scale": -20.0,
+                "linear_scale": 12.35242261,
+                "angular_scale": 20.0,
             }],
         )
     ])
