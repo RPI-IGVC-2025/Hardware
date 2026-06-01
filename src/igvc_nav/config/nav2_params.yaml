@@ -144,7 +144,7 @@ global_costmap:
   global_costmap:
     ros__parameters:
       robot_base_frame: base_link
-      footprint: "[[0.51, 0.33], [0.51, -0.33], [-0.51, -0.33], [-0.51, 0.33]]" #TODO tune for size
+      footprint: "[[0.33, 0.51], [0.33, -0.51], [-0.33, -0.51], [-0.33, 0.51]]" #TODO tune for size
       footprint_padding: 0.03
       resolution: 0.05
       transform_tolerance: 0.5
@@ -186,7 +186,7 @@ local_costmap:
   local_costmap:
     ros__parameters:
       robot_base_frame: base_link
-      footprint: "[[0.51, 0.33], [0.51, -0.33], [-0.51, -0.33], [-0.51, 0.33]]" #TODO tune for size
+      footprint: "[[0.33, 0.51], [0.33, -0.51], [-0.33, -0.51], [-0.33, 0.51]]" #TODO tune for size
       footprint_padding: 0.03
       resolution: 0.05
       transform_tolerance: 0.5
