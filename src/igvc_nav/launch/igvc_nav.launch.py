@@ -22,11 +22,11 @@ def generate_launch_description():
         }.items()
     )
     
-    vel_scaler = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(vel_scaler_launch_path)
-    )
+    # vel_scaler = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(vel_scaler_launch_path)
+    # )
 
     return LaunchDescription([
         nav2,
-        vel_scaler
+        # vel_scaler
     ])
