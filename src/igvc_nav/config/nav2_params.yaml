@@ -156,7 +156,7 @@ global_costmap:
       height: 30
       track_unknown_space: false
       always_send_full_costmap: true
-      plugins: ["obstacle_layer", "inflation_layer"]
+      plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]
     
       obstacle_layer:
           plugin: "nav2_costmap_2d::ObstacleLayer"
@@ -175,6 +175,31 @@ global_costmap:
             obstacle_max_range: 6.0
             obstacle_min_range: 0.25
             inf_is_valid: true
+    
+      voxel_layer:
+          plugin: "nav2_costmap_2d::VoxelLayer"
+          enabled: true
+          publish_voxel_map: false
+          footprint_clearing_enabled: true
+          max_obstacle_height: 1.5
+          origin_z: 0.0
+          z_resolution: 0.10
+          z_voxels: 16
+          unknown_threshold: 15
+          mark_threshold: 0
+          observation_sources: lanes
+          combination_method: 1
+          lanes:
+            topic: /lanes/points
+            max_obstacle_height: 0.30
+            min_obstacle_height: -0.05
+            clearing: false
+            marking: true
+            data_type: "PointCloud2"
+            raytrace_max_range: 4.0
+            raytrace_min_range: 0.0
+            obstacle_max_range: 4.0
+            obstacle_min_range: 0.3
 
       inflation_layer:
           plugin: "nav2_costmap_2d::InflationLayer"
