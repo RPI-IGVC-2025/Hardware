@@ -3,6 +3,7 @@ import time
 import math
 import struct
 import logging
+import yaml
 
 JETSON_DEFAULT_I2C_BUS = 7
 DEFAULT_IST8310_ADDR = 0x0E
@@ -31,7 +32,7 @@ class Compass:
         self._logger.info(f"{GREEN}IST8310 compass on bus {i2c_bus} with address {address} initialized successfully.{RESET}")
 
         # get configs
-        import yaml
+        
 
         with open(CONFIG_FILEPATH, "r") as file:
             try:
