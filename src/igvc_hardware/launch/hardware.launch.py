@@ -62,12 +62,7 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             "i2c_bus" : 7,
-            "device_address" : 0x0E,
-            "config_filepath": PathJoinSubstitution([
-            FindPackageShare("igvc_hardware"),
-             '/config',
-             '/compass_config.yaml'
-            ])
+            "device_address" : 0x0E
         }],
     )
 

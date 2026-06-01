@@ -12,7 +12,7 @@ class CompassNode(Node):
 
         self.declare_parameter('i2c_bus', 7)
         self.declare_parameter('device_address', 0x0E)
-        self.declare_parameter('config_filepath', '/usr/local/compass_config.yaml')
+        self.declare_parameter('config_filepath', '/home/rpirobo3/2026RobotCode/src/igvc_hardware/config/compass_config.yaml')
         
         # Create Compass
         self._instance = Compass(
